@@ -36,6 +36,10 @@ public class RunService {
 
         isRunning = true;
 
+
+
+
+
     }
 
     private static void acceptDeltaTime(double deltaTime) {
@@ -43,6 +47,8 @@ public class RunService {
             method.accept(deltaTime);
         }
     }
+
+
 
 
 
