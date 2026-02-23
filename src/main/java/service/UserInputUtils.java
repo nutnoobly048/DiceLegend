@@ -3,4 +3,14 @@ package service;
 //E = UserInput.assignKey("E")
 //EHold = UserInputUtils.keyHold(E, 1) 1วิ
 public class UserInputUtils {
+
+    public UserInputUtils() {
+    }
+
+    public void listenESC(int keyCode) {
+        if (keyCode == 27) {
+            System.out.println("ESC Is pressed");
+        }
+    }
+
 }

@@ -11,6 +11,8 @@ import java.awt.event.KeyListener;
 
 public class UserInput implements KeyListener{
 
+    private static final UserInputUtils keyOperation = new UserInputUtils();
+
     //Main for testing
 //    public static void main(String[] args) {
 //        JFrame frame = new JFrame("KeyListener Example");
@@ -40,6 +42,7 @@ public class UserInput implements KeyListener{
         char c = e.getKeyChar();
         System.out.println("KeyLOG - Key typed: " + c);
 
+
     }
 
     // Listen to KeyPress As a key code
@@ -48,6 +51,7 @@ public class UserInput implements KeyListener{
 
         int keyCode = e.getKeyCode();
         System.out.println("KeyLOG - Key pressed: " + KeyEvent.getKeyText(keyCode) + "  | Code : " + keyCode);
+        keyOperation.listenESC(keyCode);
 
     }
 
