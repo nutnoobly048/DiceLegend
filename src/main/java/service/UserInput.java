@@ -11,7 +11,7 @@ import java.awt.event.KeyListener;
 
 public class UserInput implements KeyListener{
 
-    private static final UserInputUtils keyOperation = new UserInputUtils();
+    private static int keyCode;
 
     //Main for testing
 //    public static void main(String[] args) {
@@ -28,6 +28,8 @@ public class UserInput implements KeyListener{
 //
 //        frame.add(p);
 //        frame.setVisible(true);
+//
+//
 //    }
     //Main For testing
 
@@ -49,9 +51,8 @@ public class UserInput implements KeyListener{
     @Override
     public void keyPressed(KeyEvent e) {
 
-        int keyCode = e.getKeyCode();
+        keyCode = e.getKeyCode();
         System.out.println("KeyLOG - Key pressed: " + KeyEvent.getKeyText(keyCode) + "  | Code : " + keyCode);
-        keyOperation.listenESC(keyCode);
 
     }
 
@@ -59,9 +60,13 @@ public class UserInput implements KeyListener{
     @Override
     public void keyReleased(KeyEvent e) {
 
-        int keyCode= e.getKeyCode();
+        keyCode= e.getKeyCode();
         System.out.println("KeyLOG - Key release: " + KeyEvent.getKeyText(keyCode));
 
     }
 
+    //Example for key press checking
+    public boolean isPressE() {
+        return keyCode == 69;
+    }
 }
