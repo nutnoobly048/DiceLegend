@@ -13,7 +13,6 @@ public class UserInput implements KeyListener{
 
     private static int keyCode;
 
-    //Main for testing
 //    public static void main(String[] args) {
 //        JFrame frame = new JFrame("KeyListener Example");
 //        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -31,7 +30,6 @@ public class UserInput implements KeyListener{
 //
 //
 //    }
-    //Main For testing
 
 
     public UserInput(){
@@ -66,7 +64,7 @@ public class UserInput implements KeyListener{
     }
 
     //Example for key press checking
-    public boolean isPressE() {
+    public static boolean isPressE() {
         return keyCode == 69;
     }
 }

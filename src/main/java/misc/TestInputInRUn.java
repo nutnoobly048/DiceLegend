@@ -7,13 +7,13 @@ public class TestInputInRUn extends GameObject {
     public TestInputInRUn() {
         super();
     }
-//
-//    @Override
-//    public void OnUpdate(double deltaTime) {
-//        super.OnUpdate(deltaTime);
-//        if (cxcxUserInput.keyPressed('E')) {
-//            System.out.println("Key Activate");
-//        }
-//
-//    }
+
+    @Override
+    public void OnUpdate(double deltaTime) {
+        super.OnUpdate(deltaTime);
+        if (UserInput.isPressE()) {
+            System.out.println("Key Activate");
+        }
+
+    }
 }
