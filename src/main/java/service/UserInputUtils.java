@@ -13,4 +13,10 @@ public class UserInputUtils {
         }
     }
 
+    public void listtenE(int keyCode) {
+        if (keyCode == 0) {
+            System.out.println("E is press");
+        }
+    }
+
 }

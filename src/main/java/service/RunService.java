@@ -1,55 +1,84 @@
 package service;
 
-import java.util.ArrayList;
+import ServiceInterface.ProcessByRunService;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.function.Consumer;
 
-//เป็นนาฬิกาส่วนกลางที่จะ Update เวลาและ Flow ในเกม
 public class RunService {
 
-    private static RunService runService;
+    private static RunService instance;
     private static boolean isRunning = false;
+    
+    private final List<ProcessByRunService> registeredObject = new CopyOnWriteArrayList<>();
+    private final List<Consumer<Double>> functionalListeners = new CopyOnWriteArrayList<>();
 
-    private final static List<Consumer<Double>> listenersMethod = new ArrayList<>();
+    private long lastTime = System.nanoTime();
+    private double deltaTime;
 
-    //private to prevent object creation
     private RunService() {}
 
-    //Get RunService
     public static RunService GetService() {
-        if (runService == null) {
-            runService = new RunService();
+        if (instance == null) {
+            instance = new RunService();
         }
-        return runService;
-    }
-
-    public static void subscribeListener(Consumer<Double> env) {
-        listenersMethod.add(env);
+        return instance;
     }
 
 
-    public static void startRunService() {
-        if (isRunning) {
-            System.out.println("RunService was already run!");
-            return;
-        }
+    public void addProcess(ProcessByRunService process) {
+        process.OnCreate();
+        registeredObject.add(process);
+    }
 
+    public void removeProcess(ProcessByRunService process) {
+        registeredObject.remove(process);
+    }
+
+    public void addRunnable(Consumer<Double> method) {
+        functionalListeners.add(method);
+    }
+
+    public void removeRunnable(Consumer<Double> method) {
+        functionalListeners.remove(method);
+    }
+
+    public void start() {
+        if (isRunning) return;
         isRunning = true;
 
+        new Thread(() -> {
+            while (isRunning) {
+                calculateDeltaTime();
 
 
+                for (ProcessByRunService process : registeredObject) {
+                    process.OnUpdate(deltaTime);
+                }
 
+                for (Consumer<Double> method : functionalListeners) {
+                    method.accept(deltaTime);
+                }
 
+                for (ProcessByRunService process : registeredObject) {
+                    process.OnLateUpdate();
+                }
+
+                try {Thread.sleep(16);} catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                    break;
+                }
+            }
+        }, "GameThread").start();
     }
 
-    private static void acceptDeltaTime(double deltaTime) {
-        for (Consumer<Double> method : listenersMethod) {
-            method.accept(deltaTime);
-        }
+    private void calculateDeltaTime() {
+        long currentTime = System.nanoTime();
+        deltaTime = (currentTime - lastTime) / 1_000_000.0;
+        lastTime = currentTime;
     }
 
+    public double getDeltaTime() { return deltaTime; }
 
-
-
-
+    public void stop() { isRunning = false; }
 }
