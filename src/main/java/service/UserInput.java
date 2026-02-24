@@ -60,6 +60,7 @@ public class UserInput implements KeyListener{
 
         keyCode= e.getKeyCode();
         System.out.println("KeyLOG - Key release: " + KeyEvent.getKeyText(keyCode));
+        keyCode = -1;
 
     }
 
