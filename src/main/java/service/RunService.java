@@ -1,13 +1,18 @@
 package service;
 
 import ServiceInterface.ProcessByRunService;
-import game.window.Main;
+import graphicsUtilities.ImagePreload;
+import graphicsUtilities.SceneUtilities;
 
 import javax.swing.*;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.function.Consumer;
-
+//เครื่องยนต์หลัก (Game Loop)
+//ทำหน้าที่เป็นหัวใจที่คอยสั่งให้ทุกอย่างในเกมขยับ
+//DeltaTime: คำนวณเวลาที่ต่างกันในแต่ละเฟรม เพื่อให้เกมรันเร็วเท่ากันทุกเครื่อง
+//addRunnable:ใช้สำหรับเพิ่ม Custom Method เข้าไปทำงานใน Loop ได้เลยโดยไม่ต้องสร้าง Class ใหม่
+//addProcess: ใช้สำหรับเพิ่ม object ใดๆ ที่ implement จาก ProcessByRunService เพื่อให้มันรัน ~60 Frame Per Second
 public class RunService {
 
     private static MainGame mainGameFrame;
@@ -21,6 +26,7 @@ public class RunService {
 
     private long lastTime = System.nanoTime();
     private double deltaTime;
+    private double rawDeltaTime;
 
     private RunService() {}
 
@@ -52,6 +58,8 @@ public class RunService {
     public void start() {
 
         mainGameFrame.addKeyListener(new UserInput());
+        ImagePreload.preloadAllImage();
+        SceneUtilities.setCurrentGameFrame(mainGameFrame);
 
         if (isRunning) return;
         isRunning = true;
@@ -59,8 +67,6 @@ public class RunService {
         new Thread(() -> {
             while (isRunning) {
                 calculateDeltaTime();
-
-
 
                 for (ProcessByRunService process : registeredObject) {
                     process.OnUpdate(deltaTime);
@@ -90,7 +96,8 @@ public class RunService {
 
     private void calculateDeltaTime() {
         long currentTime = System.nanoTime();
-        deltaTime = (currentTime - lastTime) / 1_000_000.0;
+        rawDeltaTime = (currentTime - lastTime) / 1_000_000.0;
+        deltaTime = rawDeltaTime / 1_000;
         lastTime = currentTime;
     }
 
@@ -100,6 +107,6 @@ public class RunService {
 
     public void setMainGameFrame(MainGame frame) {
         mainGameFrame = frame;
-
     }
+
 }

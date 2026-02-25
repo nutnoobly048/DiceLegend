@@ -37,6 +37,7 @@ public class UserInput implements KeyListener{
 
 
     public UserInput(){
+        System.out.println("User Input Initialized");
     }
 
     // Listen To KeyTyped

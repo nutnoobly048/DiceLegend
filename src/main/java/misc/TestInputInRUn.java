@@ -1,7 +1,6 @@
 package misc;
 
-import service.GameObject;
-import service.RunService;
+import objectClass.GameObject;
 import service.UserInput;
 
 import java.awt.event.KeyEvent;
