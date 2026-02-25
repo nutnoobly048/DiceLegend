@@ -1,11 +1,17 @@
 package service;
 
 import ServiceInterface.ProcessByRunService;
+import game.window.Main;
+
+import javax.swing.*;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.function.Consumer;
 
 public class RunService {
+
+    private static MainGame mainGameFrame;
+    private static UserInput userInput;
 
     private static RunService instance;
     private static boolean isRunning = false;
@@ -44,12 +50,16 @@ public class RunService {
     }
 
     public void start() {
+
+        mainGameFrame.addKeyListener(new UserInput());
+
         if (isRunning) return;
         isRunning = true;
 
         new Thread(() -> {
             while (isRunning) {
                 calculateDeltaTime();
+
 
 
                 for (ProcessByRunService process : registeredObject) {
@@ -63,6 +73,12 @@ public class RunService {
                 for (ProcessByRunService process : registeredObject) {
                     process.OnLateUpdate();
                 }
+
+                //สั่งให้ EDT Thread repaint ในทุกๆ Frame
+                SwingUtilities.invokeLater(() -> {
+                    mainGameFrame.repaint();
+                });
+
 
                 try {Thread.sleep(16);} catch (InterruptedException e) {
                     Thread.currentThread().interrupt();
@@ -81,4 +97,9 @@ public class RunService {
     public double getDeltaTime() { return deltaTime; }
 
     public void stop() { isRunning = false; }
+
+    public void setMainGameFrame(MainGame frame) {
+        mainGameFrame = frame;
+
+    }
 }

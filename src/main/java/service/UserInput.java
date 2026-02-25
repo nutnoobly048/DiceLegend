@@ -8,9 +8,13 @@ package service;
 import javax.swing.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 
 public class UserInput implements KeyListener{
 
+    private static HashMap<Integer, Boolean> keyMap = new HashMap<Integer, Boolean>();
     private static int keyCode;
 
 //    public static void main(String[] args) {
@@ -40,18 +44,29 @@ public class UserInput implements KeyListener{
     public void keyTyped(KeyEvent e) {
 
         char c = e.getKeyChar();
-        System.out.println("KeyLOG - Key typed: " + c);
-
+        //System.out.println("KeyLOG - Key typed: " + c);
 
     }
+
+    public static boolean isKeyHold(int keyCode) {
+        if (keyMap.containsKey(keyCode)) {
+            return keyMap.get(keyCode);
+        }
+        return false;
+    }
+
 
     // Listen to KeyPress As a key code
     @Override
     public void keyPressed(KeyEvent e) {
-
         keyCode = e.getKeyCode();
-        System.out.println("KeyLOG - Key pressed: " + KeyEvent.getKeyText(keyCode) + "  | Code : " + keyCode);
-
+        //System.out.println("KeyLOG - Key pressed: " + KeyEvent.getKeyText(keyCode) + "  | Code : " + keyCode);
+        if (!keyMap.containsKey(keyCode)) {
+            keyMap.put(keyCode, true);
+        }
+        else {
+            keyMap.replace(keyCode, true);
+        }
     }
 
     // Listen to Key Release As a key code
@@ -59,12 +74,14 @@ public class UserInput implements KeyListener{
     public void keyReleased(KeyEvent e) {
 
         keyCode= e.getKeyCode();
-        System.out.println("KeyLOG - Key release: " + KeyEvent.getKeyText(keyCode));
-
+        //System.out.println("KeyLOG - Key release: " + KeyEvent.getKeyText(keyCode));
+        if (keyMap.containsKey(keyCode)) {
+            keyMap.replace(keyCode, false);
+        }
     }
 
     //Example for key press checking
     public static boolean isPressE() {
-        return keyCode == 69;
+        return keyCode == KeyEvent.VK_E;
     }
 }
