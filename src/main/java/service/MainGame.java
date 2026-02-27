@@ -1,8 +1,8 @@
 package service;
 
 import graphicsUtilities.Scene;
+import graphicsUtilities.*;
 import misc.Player;
-import misc.TestInputInRUn;
 
 import javax.swing.*;
 import java.awt.*;
@@ -10,6 +10,7 @@ import java.awt.*;
 public class MainGame extends JFrame {
 
     private static RunService runService;
+    private JPanel container;
     private Scene currentScene;
 
     //Entry Main
@@ -28,12 +29,16 @@ public class MainGame extends JFrame {
         //thanks, AI, for Fullscreen
         GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
 
+        startRunService();
+        startContainerPanel();
+        startDefaultScene();
+
         if (gd.isFullScreenSupported()) {
             this.setUndecorated(true);
             gd.setFullScreenWindow(this);
         }
-        startRunService();
-        startDefaultScene();
+
+
     }
 
 
@@ -41,16 +46,28 @@ public class MainGame extends JFrame {
         runService = RunService.GetService();
         runService.setMainGameFrame(this);
         runService.start();
-        TestInputInRUn test = new TestInputInRUn();
     }
 
+    public void startContainerPanel() {
+        this.setSize(800,800);
+        this.container = new JPanel();
+        this.add(container);
+    }
     public void startDefaultScene() {
         Scene gameScene1 = new Scene();
-        gameScene1.spawnObjectAt(new Player("licoCake144"), 300,300);
-        this.add(gameScene1);
+        Player player = new Player("licoCake144");
+        player.setVisible(true);
+
+        gameScene1.spawnObjectAt(player, 300,300);
+
+        SceneUtilities.changeSceneTo(SceneUtilities.scene2);
+
+    }
+    public Scene getCurrentScene() {
+        return (Scene) this.container.getComponent(0);
     }
 
-    public Scene getDrawingContext() {
-        return this.currentScene;
+    public JPanel getContainer() {
+        return this.container;
     }
 }

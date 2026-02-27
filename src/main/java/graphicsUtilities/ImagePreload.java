@@ -33,8 +33,8 @@ public class ImagePreload {
                         Image img = ImageIO.read(file);
                         preloadedAsset.put(file.getName(), img);
                         System.out.println(file.getName());
-                    } catch (IOException e) {
-                        e.printStackTrace();
+                    } catch (IOException ex) {
+                        ex.printStackTrace();
                     }
                 }
             }

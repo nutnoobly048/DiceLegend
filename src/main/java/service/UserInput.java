@@ -15,6 +15,7 @@ import java.util.HashSet;
 public class UserInput implements KeyListener{
 
     private static HashMap<Integer, Boolean> keyMap = new HashMap<Integer, Boolean>();
+    private static HashMap<Integer, Boolean> copyKeyMap = new HashMap<Integer, Boolean>();
     private static int keyCode;
 
 //    public static void main(String[] args) {
@@ -40,13 +41,13 @@ public class UserInput implements KeyListener{
         System.out.println("User Input Initialized");
     }
 
+    public static void updateAndSync() {
+        copyKeyMap.putAll(keyMap);
+    }
     // Listen To KeyTyped
     @Override
     public void keyTyped(KeyEvent e) {
-
         char c = e.getKeyChar();
-        //System.out.println("KeyLOG - Key typed: " + c);
-
     }
 
     public static boolean isKeyHold(int keyCode) {
@@ -54,6 +55,20 @@ public class UserInput implements KeyListener{
             return keyMap.get(keyCode);
         }
         return false;
+    }
+
+    public static boolean isKeyJustPressed(int keyCode) {
+        boolean current = keyMap.getOrDefault(keyCode, false);
+        boolean previous = copyKeyMap.getOrDefault(keyCode, false);
+
+        return current && !previous;
+    }
+
+    public static boolean isKeyJustReleased(int keyCode) {
+        boolean current = keyMap.getOrDefault(keyCode, false);
+        boolean previous = copyKeyMap.getOrDefault(keyCode, false);
+
+        return !current && previous;
     }
 
 

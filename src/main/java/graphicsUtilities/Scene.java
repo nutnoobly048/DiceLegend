@@ -2,6 +2,7 @@ package graphicsUtilities;
 
 import ServiceInterface.Drawable;
 import objectClass.GameObject;
+import service.RunService;
 
 import javax.swing.*;
 import java.awt.*;
@@ -15,6 +16,9 @@ public class Scene extends JPanel {
     private Scene subScene; //to display subscene using itself maybe for minigame
     private ArrayList<GameObject> currentSceneObject = new ArrayList<>();
 
+    public Scene() {
+        this.setPreferredSize(new Dimension(1920, 1080));
+    }
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
@@ -29,7 +33,15 @@ public class Scene extends JPanel {
     public void spawnObjectAt(GameObject g, int x, int y) {
         g.x = x;
         g.y = y;
+        g.SetCurrentGameScene(this);
+
         currentSceneObject.add(g);
+
+        RunService.GetService().addProcess(g);
+
+    }
+    public ArrayList<GameObject> getAllSceneObject() {
+        return this.currentSceneObject;
     }
 
 }
