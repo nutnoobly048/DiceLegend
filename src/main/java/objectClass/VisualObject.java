@@ -2,6 +2,7 @@ package objectClass;
 
 import ServiceInterface.Drawable;
 import graphicsUtilities.ImagePreload;
+import graphicsUtilities.SceneUtilities;
 
 import java.awt.*;
 //วัตถุที่มีตัวตนและมองเห็นได้
@@ -10,7 +11,9 @@ import java.awt.*;
 //ถ้าหาไฟล์ไม่เจอ จะแสดงรูป blank.png เพื่อป้องกัน Game Crash
 
 public class VisualObject extends GameObject implements Drawable {
-    Image img;
+    private Image img;
+    private boolean isVisible = true;
+
     public VisualObject(String imgFileName, int x, int y) {
         super();
         this.img = ImagePreload.get(imgFileName + ".png");
@@ -30,8 +33,28 @@ public class VisualObject extends GameObject implements Drawable {
     }
 
     @Override
+    public void OnUpdate(double deltaTime) {
+        super.OnUpdate(deltaTime);
+        if (!isActive || currentScene != SceneUtilities.getCurrentGameScene()) return;
+    }
+    @Override
+    public void OnLateUpdate() {
+        super.OnLateUpdate();
+        if (!isActive || currentScene != SceneUtilities.getCurrentGameScene()) return;
+    }
+
+    @Override
     public void draw(Graphics2D g2d) {
-        if (img == null) return;
-        g2d.drawImage(img, this.x, this.y, null);
+        if (img != null && isVisible && isActive) {
+            g2d.drawImage(img, this.x, this.y, null);
+        }
+    }
+
+    public void setVisible(boolean visible) {
+        this.isVisible = visible;
+    }
+
+    public boolean isVisible() {
+        return isVisible;
     }
 }

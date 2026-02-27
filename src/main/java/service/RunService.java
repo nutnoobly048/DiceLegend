@@ -57,8 +57,13 @@ public class RunService {
 
     public void start() {
 
+
         mainGameFrame.addKeyListener(new UserInput());
+
+
+
         ImagePreload.preloadAllImage();
+
         SceneUtilities.setCurrentGameFrame(mainGameFrame);
 
         if (isRunning) return;
@@ -80,10 +85,14 @@ public class RunService {
                     process.OnLateUpdate();
                 }
 
+
+
                 //สั่งให้ EDT Thread repaint ในทุกๆ Frame
                 SwingUtilities.invokeLater(() -> {
                     mainGameFrame.repaint();
                 });
+
+                UserInput.updateAndSync();
 
 
                 try {Thread.sleep(16);} catch (InterruptedException e) {
