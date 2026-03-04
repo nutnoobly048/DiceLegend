@@ -18,8 +18,14 @@ public abstract class GameObject implements ProcessByRunService { //เป็น
     public int y;
     public boolean isActive = true;
 
+    public String networkId = "";
+
     protected Scene currentScene;
     public GameObject() {
+        this.networkId = "obj";
+    }
+    public GameObject(String networkID) {
+        this.networkId = networkID;
     }
 
     @Override //เมื่อ object ถูกสร้างให้ทำอะไร

@@ -1,10 +1,13 @@
 package objectClass;
 
+import Gameplay.SceneList;
 import ServiceInterface.Drawable;
 import graphicsUtilities.ImagePreload;
 import graphicsUtilities.SceneUtilities;
+import service.UserInput;
 
 import java.awt.*;
+import java.awt.event.KeyEvent;
 //วัตถุที่มีตัวตนและมองเห็นได้
 //ตัวนี้ extends GameObject และเพิ่มความสามารถในการ Render เข้ามา
 //จะดึงรูปจาก ImagePreload อัตโนมัติ แค่ใส่ชื่อไฟล์ ไม่ต้องมี Png
@@ -14,8 +17,8 @@ public class VisualObject extends GameObject implements Drawable {
     private Image img;
     private boolean isVisible = true;
 
-    public VisualObject(String imgFileName, int x, int y) {
-        super();
+    public VisualObject(String networkID, String imgFileName, int x, int y) {
+        super(networkID);
         this.img = ImagePreload.get(imgFileName + ".png");
 
         if (this.img == null) {
@@ -25,11 +28,19 @@ public class VisualObject extends GameObject implements Drawable {
         this.y = y;
     }
     public VisualObject(String imgFileName) {
-        this(imgFileName, 0, 0);
+        super("obj");
+        this.img = ImagePreload.get(imgFileName + ".png");
+
+        if (this.img == null) {
+            this.img = ImagePreload.get("blank.png");
+        }
+        this.x = x;
+        this.y = y;
     }
 
+
     public VisualObject() {
-        this("blank", 0, 0);
+        this("obj","blank", 0, 0);
     }
 
     @Override
@@ -37,6 +48,7 @@ public class VisualObject extends GameObject implements Drawable {
         super.OnUpdate(deltaTime);
         if (!isActive || currentScene != SceneUtilities.getCurrentGameScene()) return;
     }
+
     @Override
     public void OnLateUpdate() {
         super.OnLateUpdate();

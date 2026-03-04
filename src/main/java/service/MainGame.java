@@ -1,8 +1,10 @@
 package service;
 
+import Gameplay.SceneList;
 import graphicsUtilities.Scene;
 import graphicsUtilities.*;
 import misc.Player;
+import objectClass.VisualObject;
 
 import javax.swing.*;
 import java.awt.*;
@@ -54,13 +56,10 @@ public class MainGame extends JFrame {
         this.add(container);
     }
     public void startDefaultScene() {
-        Scene gameScene1 = new Scene();
-        Player player = new Player("licoCake144");
+        VisualObject player = new VisualObject("licoCake144");
         player.setVisible(true);
+        SceneUtilities.changeSceneTo(SceneList.mainMenu);
 
-        gameScene1.spawnObjectAt(player, 300,300);
-
-        SceneUtilities.changeSceneTo(SceneUtilities.scene2);
 
     }
     public Scene getCurrentScene() {
