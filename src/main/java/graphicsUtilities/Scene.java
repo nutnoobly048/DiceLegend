@@ -1,6 +1,7 @@
 package graphicsUtilities;
 
 import ServiceInterface.Drawable;
+import objectClass.ClickableObject;
 import objectClass.GameObject;
 import service.RunService;
 
@@ -73,7 +74,6 @@ public class Scene extends JPanel {
         g.SetCurrentGameScene(this);
         currentSceneObject.put(g.networkId, g);
     }
-
 
     public HashMap<String, GameObject> getAllSceneObject() {
         return this.currentSceneObject;
