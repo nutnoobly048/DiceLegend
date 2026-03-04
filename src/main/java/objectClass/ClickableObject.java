@@ -11,8 +11,8 @@ public class ClickableObject extends JPanel {
 
     Image image;
 
-    public ClickableObject(String imagePath) {
-        image = ImagePreload.get(imagePath);
+    public ClickableObject(String imageName) {
+        image = ImagePreload.get(imageName);
         addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -28,8 +28,8 @@ public class ClickableObject extends JPanel {
     }
 
     private void handleImageClick(MouseEvent e) {
-        // Handle the click event (e.g., show a message)
         System.out.println("Image clicked at: " + e.getX() + ", " + e.getY());
+        System.exit(0);
     }
 
 }
