@@ -7,7 +7,6 @@ import service.RunService;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.ArrayList;
 import java.util.HashMap;
 
 //พื้นที่แสดงผล (Stage)
@@ -21,16 +20,27 @@ public class Scene extends JPanel {
     private Image background = ImagePreload.get("blank.png");
     private HashMap<String, GameObject> currentSceneObject = new HashMap<>();
 
+    private Runnable onEnterMethod = () -> {};
+    private Runnable onExitedMethod = () -> {};
+
     public Scene() {
         this.setPreferredSize(new Dimension(1920, 1080));
     }
 
-    public void onSceneEntered() {
 
+    public void setOnSceneExited(Runnable onExitedMethod) {
+        this.onExitedMethod = onExitedMethod;
+    }
+    public void setOnSceneEnter(Runnable onEnterMethod) {
+        this.onEnterMethod = onEnterMethod;
+    }
+
+    public void onSceneEntered() {
+        onEnterMethod.run();
     }
 
     public void onSceneExited() {
-
+        onExitedMethod.run();
     }
 
     @Override
@@ -39,7 +49,7 @@ public class Scene extends JPanel {
         Graphics2D g2d = (Graphics2D) g;
 
         if (background != null) {
-            g2d.drawImage(background, 0, 0, getWidth(), getHeight(), this);
+            g2d.drawImage(background, 0, 0, getWidth(), getHeight(), null);
         }
 
         for (GameObject obj : currentSceneObject.values()) {
@@ -59,20 +69,19 @@ public class Scene extends JPanel {
         this.repaint();
     }
 
+    //สำหรับเพิ่ม
     public void spawnObjectAt(GameObject g, int x, int y) {
         g.x = x;
         g.y = y;
+
         g.SetCurrentGameScene(this);
+
         currentSceneObject.put(g.networkId, g);
 
-        RunService.GetService().addProcess(g);
+        if (SceneUtilities.getCurrentGameScene() == this) {
+            RunService.GetService().addProcess(g);
+        }
 
-    }
-    public void putObjectAt(GameObject g, int x, int y) {
-        g.x = x;
-        g.y = y;
-        g.SetCurrentGameScene(this);
-        currentSceneObject.put(g.networkId, g);
     }
 
     public HashMap<String, GameObject> getAllSceneObject() {

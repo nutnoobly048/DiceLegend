@@ -33,7 +33,7 @@ public class MainGame extends JFrame {
 
         startRunService();
         startContainerPanel();
-        startDefaultScene();
+        SceneUtilities.changeSceneTo(SceneList.mainMenu);
 
         if (gd.isFullScreenSupported()) {
             this.setUndecorated(true);
@@ -51,16 +51,11 @@ public class MainGame extends JFrame {
     }
 
     public void startContainerPanel() {
+        //เป็นฐานรองวาด
         this.setSize(800,800);
         this.container = new JPanel();
+        this.container.setLayout(new FlowLayout(FlowLayout.CENTER, 0, 0));
         this.add(container);
-    }
-    public void startDefaultScene() {
-        VisualObject player = new VisualObject("licoCake144");
-        player.setVisible(true);
-        SceneUtilities.changeSceneTo(SceneList.mainMenu);
-
-
     }
     public Scene getCurrentScene() {
         return (Scene) this.container.getComponent(0);

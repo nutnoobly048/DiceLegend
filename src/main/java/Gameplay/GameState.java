@@ -48,6 +48,14 @@ public class GameState {
             case WAIT_FOR_PLAYERS -> handleWaitForPlayers(event, payload);
             case TURN_START -> handleTurnStart(event, payload);
             case WAIT_FOR_ROLL -> handleWaitForRoll(event, payload);
+            case EXECUTE_MOVEMENT -> {}
+            case WAIT_FOR_READY -> {}
+            case CHECK_TILE -> {}
+            case WAIT_FOR_TARGET -> {}
+            case EXECUTE_ACTION -> {}
+            case TURN_END -> {}
+            case GAME_END -> {}
+
             default -> System.out.println("Unhandled phase: " + currentPhase);
         }
     }
