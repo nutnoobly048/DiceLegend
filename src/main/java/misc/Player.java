@@ -1,39 +1,101 @@
 package misc;
 
-import graphicsUtilities.Scene;
-import graphicsUtilities.SceneList;
 import graphicsUtilities.SceneUtilities;
 import objectClass.VisualObject;
 import service.UserInput;
 
 import java.awt.event.KeyEvent;
+import java.util.ArrayList;
+import java.util.HashMap;
 
-public class Player extends VisualObject {
-    public Player(String imgFileName) {
-        super(imgFileName);
+//A Central class to add Instance
+public class Player {
+
+    private String networkID;
+    private String name;
+
+    private boolean isReadyToPlay;
+    private boolean isReadyToContinue;
+
+    private int remainingSkipTurns = 0;
+
+    private static HashMap<String, Player> playerList = new HashMap<>();
+
+    public Player(String id, String name) {
+        this.networkID = id;
+        this.name = name;
+
+        playerList.put(this.networkID, this);
     }
-    public Player(String imgFileName, int x, int y) {
-        super(imgFileName,x,y);
+
+    public Player(String id) {
+        this(id,id);
     }
 
-    @Override
-    public void OnUpdate(double deltaTime) {
-        super.OnUpdate(deltaTime);
-        if (!isActive || currentScene != SceneUtilities.getCurrentGameScene()) return;
+    public static HashMap<String,Player> getPlayerList() {
+        return playerList;
+    }
 
-        if (UserInput.isKeyHold(KeyEvent.VK_D)) {
-            x += (int) (300 * deltaTime); //ให้ขยับ 300 Pixel ต่อวินาที
-            SceneUtilities.changeSceneTo(SceneUtilities.scene2);
+    public static boolean isAllPlayerReadyToPlay() {
+        for (Player player : playerList.values()) {
+            if (!player.isReadyToPlay()) {
+                return false;
+            }
         }
-        if (UserInput.isKeyJustPressed(KeyEvent.VK_A)) {
-            x -= (int) (300 * deltaTime);
+        return true;
+    }
+    public static boolean isAllPlayerReadyToContinue() {
+        for (Player player : playerList.values()) {
+            if (!player.isReadyToContinue()) {
+                return false;
+            }
+        }
+        return true;
+    }
+    public static void setAllPlayerUnreadyToPlay() {
+        for (Player player : playerList.values()) {
+            player.setReadyToPlay(false);
+        }
+    }
+    public static void setAllPlayerUnreadyToContinue() {
+        for (Player player : playerList.values()) {
+            player.setReadyToPlay(false);
+        }
+    }
 
-        }
-        if (UserInput.isKeyHold(KeyEvent.VK_W)) {
-            y -= (int) (300 * deltaTime);
-        }
-        if (UserInput.isKeyHold(KeyEvent.VK_S)) {
-            y += (int) (300 * deltaTime);
-        }
+
+    public boolean isSkipped() {
+        return this.remainingSkipTurns > 0;
+    }
+
+    public void increaseSkipTurns(int i ) {
+        this.remainingSkipTurns += i;
+    }
+
+    public void decreaseSkipTurns(int i) {
+        this.remainingSkipTurns -= 1;
+    }
+    public int getRemainingSkipTurns() {
+        return this.remainingSkipTurns;
+    }
+
+    public boolean isReadyToContinue() {
+        return this.isReadyToContinue;
+    }
+
+    public void setReadyToContinue(boolean readyToContinue) {
+        this.isReadyToContinue = readyToContinue;
+    }
+
+    public boolean isReadyToPlay() {
+        return this.isReadyToPlay;
+    }
+
+    public void setReadyToPlay(boolean readyToPlay) {
+        this.isReadyToPlay = readyToPlay;
+    }
+
+    public String getNetworkID() {
+        return networkID;
     }
 }

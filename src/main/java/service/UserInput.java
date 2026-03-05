@@ -18,23 +18,7 @@ public class UserInput implements KeyListener{
     private static HashMap<Integer, Boolean> copyKeyMap = new HashMap<Integer, Boolean>();
     private static int keyCode;
 
-//    public static void main(String[] args) {
-//        JFrame frame = new JFrame("KeyListener Example");
-//        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-//        frame.setSize(300, 200);
-//
-//        JPanel p = new JPanel();
-//        UserInput listener = new UserInput();
-//        p.addKeyListener(listener);
-//
-//        p.setFocusable(true);
-//        p.requestFocusInWindow();
-//
-//        frame.add(p);
-//        frame.setVisible(true);
-//
-//
-//    }
+
 
 
     public UserInput(){
