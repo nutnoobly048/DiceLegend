@@ -10,12 +10,12 @@ import java.util.EnumSet;
 public class Cell {
 
     public Cell(int index) {
-        this(index,0,0, 0);
+        this(index,0,0, -1);
     }
 
     public Cell(int index, int xPos, int yPos) {
 
-        this(index, xPos, yPos, 0);
+        this(index, xPos, yPos, -1);
 
     }
 
@@ -33,6 +33,18 @@ public class Cell {
         if (index == 99) {
             attributes.add(CellAttribute.WIN_TILE);
         }
+    }
+
+    public int[] getPosition() {
+
+        return new int[]{xPos, yPos};
+
+    }
+
+    public EnumSet<CellAttribute> getAttributes() {
+
+        return this.attributes;
+
     }
 
     public int index;
