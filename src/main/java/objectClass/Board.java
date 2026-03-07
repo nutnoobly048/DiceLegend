@@ -7,9 +7,12 @@ import java.util.EnumSet;
 
 public class Board {
 
-    private final Cell[] cells = new Cell[100];
+    private Cell[] cells;
 
-    public Board(int[][] positions) {
+    public Board(int[][] positions,int amount) {
+
+        cells = new Cell[amount];
+
         for (int i = 0; i < cells.length; i++) {
 
             cells[i] = new Cell(i);
