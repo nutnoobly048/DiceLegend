@@ -10,6 +10,7 @@ public class CommandHandler {
         if (GameState.currentGame == null || !GameState.currentGame.isHost) return;
 
         boolean isSystemAction = action.equals("JOIN_GAME") || action.equals("LEAVE_GAME") || action.equals("CONTINUE");
+
         if (!isSystemAction) {
             Player sender = GameState.currentGame.allPlayers.get(senderID);
            if (sender == null) return;

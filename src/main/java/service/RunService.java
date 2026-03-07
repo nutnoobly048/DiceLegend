@@ -8,11 +8,8 @@ import graphicsUtilities.SceneUtilities;
 import javax.swing.*;
 import java.util.Arrays;
 import java.util.List;
-<<<<<<< Updated upstream
 import java.util.Scanner;
 import java.util.concurrent.ConcurrentLinkedQueue;
-=======
->>>>>>> Stashed changes
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.function.Consumer;
 //เครื่องยนต์หลัก (Game Loop)
@@ -27,15 +24,11 @@ public class RunService {
 
     private static RunService instance;
     private static boolean isRunning = false;
-<<<<<<< Updated upstream
 
 
     public static final ConcurrentLinkedQueue<String> intentQueue = new ConcurrentLinkedQueue<>();
     public static final ConcurrentLinkedQueue<String> resultQueue = new ConcurrentLinkedQueue<>();
 
-=======
-    
->>>>>>> Stashed changes
     private final List<ProcessByRunService> registeredObject = new CopyOnWriteArrayList<>();
     private final List<Consumer<Double>> functionalListeners = new CopyOnWriteArrayList<>();
 
@@ -74,8 +67,6 @@ public class RunService {
 
 
         mainGameFrame.addKeyListener(new UserInput());
-
-
 
         ImagePreload.preloadAllImage();
 
@@ -143,7 +134,6 @@ public class RunService {
         }, "GameThread").start();
     }
 
-<<<<<<< Updated upstream
     private void processIntentQueue() {
         while (!intentQueue.isEmpty()) {
             String packet = intentQueue.poll();
@@ -184,8 +174,6 @@ public class RunService {
         }
     }
 
-=======
->>>>>>> Stashed changes
     private void calculateDeltaTime() {
         long currentTime = System.nanoTime();
         rawDeltaTime = (currentTime - lastTime) / 1_000_000.0;

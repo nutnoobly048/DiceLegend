@@ -81,10 +81,8 @@ public class Player {
     }
 
     public void decreaseSkipTurns(int i) {
-        // FIXED: This was ignoring 'i' and always subtracting 1
         this.remainingSkipTurns -= i;
 
-        // Safety check so we don't get negative skip turns
         if (this.remainingSkipTurns < 0) {
             this.remainingSkipTurns = 0;
         }
