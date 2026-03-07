@@ -1,3 +1,5 @@
+package ServiceInterface;
+
 import java.nio.charset.StandardCharsets;
 import java.util.UUID;
 import com.hivemq.client.mqtt.MqttClient;
