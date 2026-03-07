@@ -1,5 +1,6 @@
 package service;
 
+import Gameplay.GameState;
 import Gameplay.SceneList;
 import graphicsUtilities.Scene;
 import graphicsUtilities.*;
@@ -8,12 +9,15 @@ import objectClass.VisualObject;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.UUID;
 
 public class MainGame extends JFrame {
 
     private static RunService runService;
     private JPanel container;
-    private Scene currentScene;
+    private static Scene currentScene;
+
+    private static GameState currentGame;
 
     //Entry Main
     public static void main(String[] args) {
@@ -31,18 +35,19 @@ public class MainGame extends JFrame {
         //thanks, AI, for Fullscreen
         GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
 
+        mockPlayer();
         startRunService();
         startContainerPanel();
+
         SceneUtilities.changeSceneTo(SceneList.mainMenu);
 
-        if (gd.isFullScreenSupported()) {
-            this.setUndecorated(true);
-            gd.setFullScreenWindow(this);
-        }
+//        if (gd.isFullScreenSupported()) {
+//            this.setUndecorated(true);
+//            gd.setFullScreenWindow(this);
+//        }
 
 
     }
-
 
     public void startRunService() {
         runService = RunService.GetService();
@@ -57,11 +62,31 @@ public class MainGame extends JFrame {
         this.container.setLayout(new FlowLayout(FlowLayout.CENTER, 0, 0));
         this.add(container);
     }
+
+
+    public void mockPlayer() {
+        String myLocalId = UUID.randomUUID().toString();
+        Player.setLocalPlayerId(myLocalId);
+
+
+        //MOCK
+        currentGame = new GameState(true);
+        RunService.intentQueue.add("INTENT:" + Player.getLocalPlayerId() + ":JOIN_GAME:" + "LICOWELLSPRING");
+        RunService.intentQueue.add("INTENT:" + "TESTER" + ":JOIN_GAME:" + ".getLocalPlayerId()");
+    }
     public Scene getCurrentScene() {
         return (Scene) this.container.getComponent(0);
     }
 
     public JPanel getContainer() {
         return this.container;
+    }
+
+    public static GameState getCurrentGame() {
+        return currentGame;
+    }
+
+    public static void setCurrentGame(GameState currentGame) {
+        MainGame.currentGame = currentGame;
     }
 }

@@ -1,14 +1,7 @@
 package misc;
 
-import graphicsUtilities.SceneUtilities;
-import objectClass.VisualObject;
-import service.UserInput;
-
-import java.awt.event.KeyEvent;
-import java.util.ArrayList;
 import java.util.HashMap;
 
-//A Central class to add Instance
 public class Player {
 
     private String networkID;
@@ -16,65 +9,87 @@ public class Player {
 
     private boolean isReadyToPlay;
     private boolean isReadyToContinue;
+    private boolean openForNetworkInput = true;
 
     private int remainingSkipTurns = 0;
+
+    public static Player localPlayer;
 
     private static HashMap<String, Player> playerList = new HashMap<>();
 
     public Player(String id, String name) {
         this.networkID = id;
         this.name = name;
-
         playerList.put(this.networkID, this);
     }
 
     public Player(String id) {
-        this(id,id);
+        this(id, id);
     }
 
-    public static HashMap<String,Player> getPlayerList() {
+    public static HashMap<String, Player> getPlayerList() {
         return playerList;
+    }
+
+    public static String getLocalPlayerId() {
+        return localPlayer != null ? localPlayer.getNetworkID() : null;
+    }
+
+    public static void setLocalPlayerId(String myLocalId) {
+        if (localPlayer == null) {
+            localPlayer = new Player(myLocalId, "TESTIFICATE");
+        } else {
+            playerList.remove(localPlayer.getNetworkID());
+            localPlayer.networkID = myLocalId;
+            playerList.put(myLocalId, localPlayer);
+        }
     }
 
     public static boolean isAllPlayerReadyToPlay() {
         for (Player player : playerList.values()) {
-            if (!player.isReadyToPlay()) {
-                return false;
-            }
+            if (!player.isReadyToPlay()) return false;
         }
         return true;
     }
+
     public static boolean isAllPlayerReadyToContinue() {
         for (Player player : playerList.values()) {
-            if (!player.isReadyToContinue()) {
-                return false;
-            }
+            if (!player.isReadyToContinue()) return false;
         }
         return true;
     }
+
     public static void setAllPlayerUnreadyToPlay() {
         for (Player player : playerList.values()) {
             player.setReadyToPlay(false);
         }
     }
+
     public static void setAllPlayerUnreadyToContinue() {
         for (Player player : playerList.values()) {
-            player.setReadyToPlay(false);
+            // FIXED: This was accidentally setting ReadyToPlay(false) before
+            player.setReadyToContinue(false);
         }
     }
-
 
     public boolean isSkipped() {
         return this.remainingSkipTurns > 0;
     }
 
-    public void increaseSkipTurns(int i ) {
+    public void increaseSkipTurns(int i) {
         this.remainingSkipTurns += i;
     }
 
     public void decreaseSkipTurns(int i) {
-        this.remainingSkipTurns -= 1;
+        // FIXED: This was ignoring 'i' and always subtracting 1
+        this.remainingSkipTurns -= i;
+
+        // Safety check so we don't get negative skip turns
+        if (this.remainingSkipTurns < 0) {
+            this.remainingSkipTurns = 0;
+        }
     }
+
     public int getRemainingSkipTurns() {
         return this.remainingSkipTurns;
     }
@@ -97,5 +112,21 @@ public class Player {
 
     public String getNetworkID() {
         return networkID;
+    }
+
+    public boolean isOpenForNetworkInput() {
+        return openForNetworkInput;
+    }
+
+    public void setOpenForNetworkInput(boolean openForNetworkInput) {
+        this.openForNetworkInput = openForNetworkInput;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }
