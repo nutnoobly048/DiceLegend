@@ -35,6 +35,7 @@ public class MainGame extends JFrame {
         //thanks, AI, for Fullscreen
         GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
 
+
         mockPlayer();
         startRunService();
         startContainerPanel();
@@ -57,7 +58,7 @@ public class MainGame extends JFrame {
 
     public void startContainerPanel() {
         this.setSize(800,800);
-        this.container = new JPanel();
+        this.container = new JPanel(new FlowLayout(FlowLayout.CENTER,0,0));
         this.add(container);
     }
 
