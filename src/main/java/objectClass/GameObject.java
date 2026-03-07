@@ -5,6 +5,8 @@ import graphicsUtilities.Scene;
 import graphicsUtilities.SceneUtilities;
 import service.RunService;
 
+import javax.swing.*;
+
 //หัวใจหลักของวัตถุในเกม
 //เป็น Base Class (Abstract) สำหรับทุกอย่างที่อยู่ในเกม ไม่ว่าจะเป็นผู้เล่น ศัตรู รูป
 //OnCreate(): ทำงานครั้งเดียวตอนสร้าง

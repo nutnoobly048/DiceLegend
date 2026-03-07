@@ -8,8 +8,11 @@ import graphicsUtilities.SceneUtilities;
 import javax.swing.*;
 import java.util.Arrays;
 import java.util.List;
+<<<<<<< Updated upstream
 import java.util.Scanner;
 import java.util.concurrent.ConcurrentLinkedQueue;
+=======
+>>>>>>> Stashed changes
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.function.Consumer;
 //เครื่องยนต์หลัก (Game Loop)
@@ -20,23 +23,25 @@ import java.util.function.Consumer;
 public class RunService {
 
     private static MainGame mainGameFrame;
+    private static UserInput userInput;
 
     private static RunService instance;
     private static boolean isRunning = false;
+<<<<<<< Updated upstream
 
 
     public static final ConcurrentLinkedQueue<String> intentQueue = new ConcurrentLinkedQueue<>();
     public static final ConcurrentLinkedQueue<String> resultQueue = new ConcurrentLinkedQueue<>();
 
+=======
+    
+>>>>>>> Stashed changes
     private final List<ProcessByRunService> registeredObject = new CopyOnWriteArrayList<>();
     private final List<Consumer<Double>> functionalListeners = new CopyOnWriteArrayList<>();
 
     private long lastTime = System.nanoTime();
     private double deltaTime;
     private double rawDeltaTime;
-    private int maxRequestPerFrame = 100;
-    private int currentRequest = 0;
-
 
     private RunService() {}
 
@@ -67,7 +72,10 @@ public class RunService {
 
     public void start() {
 
+
         mainGameFrame.addKeyListener(new UserInput());
+
+
 
         ImagePreload.preloadAllImage();
 
@@ -117,14 +125,14 @@ public class RunService {
                     process.OnLateUpdate();
                 }
 
+
+
                 //สั่งให้ EDT Thread repaint ในทุกๆ Frame
                 SwingUtilities.invokeLater(() -> {
                     mainGameFrame.repaint();
                 });
 
                 UserInput.updateAndSync();
-
-                currentRequest = 0;
 
 
                 try {Thread.sleep(16);} catch (InterruptedException e) {
@@ -135,6 +143,7 @@ public class RunService {
         }, "GameThread").start();
     }
 
+<<<<<<< Updated upstream
     private void processIntentQueue() {
         while (!intentQueue.isEmpty()) {
             String packet = intentQueue.poll();
@@ -175,6 +184,8 @@ public class RunService {
         }
     }
 
+=======
+>>>>>>> Stashed changes
     private void calculateDeltaTime() {
         long currentTime = System.nanoTime();
         rawDeltaTime = (currentTime - lastTime) / 1_000_000.0;

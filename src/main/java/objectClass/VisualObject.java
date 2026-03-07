@@ -92,4 +92,10 @@ public class VisualObject extends GameObject implements Drawable {
     public boolean isVisible() {
         return isVisible;
     }
+
+    public Image getImg() {
+
+        return img;
+
+    }
 }

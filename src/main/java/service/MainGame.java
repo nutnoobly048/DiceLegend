@@ -1,11 +1,13 @@
 package service;
 
+<<<<<<< Updated upstream
 import Gameplay.GameState;
 import Gameplay.SceneList;
+=======
+>>>>>>> Stashed changes
 import graphicsUtilities.Scene;
 import graphicsUtilities.*;
 import misc.Player;
-import objectClass.VisualObject;
 
 import javax.swing.*;
 import java.awt.*;
@@ -38,8 +40,12 @@ public class MainGame extends JFrame {
         mockPlayer();
         startRunService();
         startContainerPanel();
+<<<<<<< Updated upstream
 
         SceneUtilities.changeSceneTo(SceneList.mainMenu);
+=======
+        startDefaultScene();
+>>>>>>> Stashed changes
 
 //        if (gd.isFullScreenSupported()) {
 //            this.setUndecorated(true);
@@ -56,12 +62,11 @@ public class MainGame extends JFrame {
     }
 
     public void startContainerPanel() {
-        //เป็นฐานรองวาด
         this.setSize(800,800);
         this.container = new JPanel();
-        this.container.setLayout(new FlowLayout(FlowLayout.CENTER, 0, 0));
         this.add(container);
     }
+<<<<<<< Updated upstream
 
 
     public void mockPlayer() {
@@ -73,6 +78,17 @@ public class MainGame extends JFrame {
         currentGame = new GameState(true);
         RunService.intentQueue.add("INTENT:" + Player.getLocalPlayerId() + ":JOIN_GAME:" + "LICOWELLSPRING");
         RunService.intentQueue.add("INTENT:" + "TESTER" + ":JOIN_GAME:" + ".getLocalPlayerId()");
+=======
+    public void startDefaultScene() {
+        Scene gameScene1 = new Scene();
+        Player player = new Player("licoCake144");
+        player.setVisible(true);
+
+        gameScene1.spawnObjectAt(player, 300,300);
+
+        SceneUtilities.changeSceneTo(SceneUtilities.scene2);
+
+>>>>>>> Stashed changes
     }
     public Scene getCurrentScene() {
         return (Scene) this.container.getComponent(0);

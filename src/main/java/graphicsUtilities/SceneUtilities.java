@@ -11,19 +11,32 @@ public class SceneUtilities {
     private static Scene currentGameScene;
 
 
+    public static Scene scene2 = new Scene();
+
+    public static Scene scene3 = new Scene();
+
+
+
     public static MainGame getCurrentGameFrame() {
         return mainGameFrame;
     }
+
     public static void setCurrentGameFrame(MainGame currentGameFrame) {
         SceneUtilities.mainGameFrame = currentGameFrame;
         System.out.println("Scene Manager Initialized");
+
+        scene2.spawnObjectAt(new Player("licoCake144"), 500,500);
+        scene3.spawnObjectAt(new Player("licoCake144"), 800,300);
     }
+    public static void changeSceneTo(SceneList sceneData) {
+        System.out.println("Switching to Scene: " + sceneData.name());
 
-
+        Scene newSceneInstance = sceneData.create();
+        changeSceneTo(newSceneInstance);
+    }
 
     public static void changeSceneTo(Scene newScene) {
         if (currentGameScene != null) {
-            currentGameScene.onSceneExited();
             exitScene();
             mainGameFrame.getContainer().removeAll();
         }
@@ -33,9 +46,8 @@ public class SceneUtilities {
         mainGameFrame.getContainer().add(newScene);
 
         startScene();
-        refreshScene();
 
-        currentGameScene.onSceneEntered();
+        refreshScene();
     }
 
     private static void refreshScene() {
@@ -43,6 +55,7 @@ public class SceneUtilities {
         mainGameFrame.getContainer().revalidate();
         mainGameFrame.getContainer().repaint();
         currentGameScene.requestFocusInWindow();
+
     }
 
     private static void exitScene() {
@@ -55,9 +68,10 @@ public class SceneUtilities {
 
         RunService runService = RunService.GetService();
 
-        for (GameObject obj : currentGameScene.getAllSceneObject().values()) {
+        for (GameObject obj : currentGameScene.getAllSceneObject()) {
             runService.removeProcess(obj);
         }
+//        System.out.println("Successfully Removed");
     }
 
     private static void startScene() {
@@ -69,7 +83,7 @@ public class SceneUtilities {
         }
         RunService runService = RunService.GetService();
 
-        for (GameObject obj : currentGameScene.getAllSceneObject().values()) {
+        for (GameObject obj : currentGameScene.getAllSceneObject()) {
             runService.addProcess(obj);
         }
     }
