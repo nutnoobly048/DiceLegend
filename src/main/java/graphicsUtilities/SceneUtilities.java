@@ -1,5 +1,6 @@
 package graphicsUtilities;
 
+import Gameplay.SceneList;
 import misc.Player;
 import objectClass.GameObject;
 import objectClass.VisualObject;
@@ -11,14 +12,21 @@ public class SceneUtilities {
     private static Scene currentGameScene;
 
 
+    public static Scene scene2 = new Scene();
+
+    public static Scene scene3 = new Scene();
+
+
+
     public static MainGame getCurrentGameFrame() {
         return mainGameFrame;
     }
+
     public static void setCurrentGameFrame(MainGame currentGameFrame) {
         SceneUtilities.mainGameFrame = currentGameFrame;
         System.out.println("Scene Manager Initialized");
-    }
 
+    }
 
 
     public static void changeSceneTo(Scene newScene) {
@@ -33,8 +41,8 @@ public class SceneUtilities {
         mainGameFrame.getContainer().add(newScene);
 
         startScene();
-        refreshScene();
 
+        refreshScene();
         currentGameScene.onSceneEntered();
     }
 
@@ -43,6 +51,7 @@ public class SceneUtilities {
         mainGameFrame.getContainer().revalidate();
         mainGameFrame.getContainer().repaint();
         currentGameScene.requestFocusInWindow();
+
     }
 
     private static void exitScene() {

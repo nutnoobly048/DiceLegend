@@ -1,11 +1,14 @@
 package service;
 
+import Gameplay.GameState;
 import ServiceInterface.ProcessByRunService;
 import graphicsUtilities.ImagePreload;
 import graphicsUtilities.SceneUtilities;
 
 import javax.swing.*;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Scanner;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.function.Consumer;
@@ -17,11 +20,14 @@ import java.util.function.Consumer;
 public class RunService {
 
     private static MainGame mainGameFrame;
+    private static UserInput userInput;
 
     private static RunService instance;
     private static boolean isRunning = false;
 
-    public static final ConcurrentLinkedQueue<String> networkRequestQueue = new ConcurrentLinkedQueue<>();
+
+    public static final ConcurrentLinkedQueue<String> intentQueue = new ConcurrentLinkedQueue<>();
+    public static final ConcurrentLinkedQueue<String> resultQueue = new ConcurrentLinkedQueue<>();
 
     private final List<ProcessByRunService> registeredObject = new CopyOnWriteArrayList<>();
     private final List<Consumer<Double>> functionalListeners = new CopyOnWriteArrayList<>();
@@ -29,9 +35,6 @@ public class RunService {
     private long lastTime = System.nanoTime();
     private double deltaTime;
     private double rawDeltaTime;
-    private int maxRequestPerFrame = 100;
-    private int currentRequest = 0;
-
 
     private RunService() {}
 
@@ -62,6 +65,7 @@ public class RunService {
 
     public void start() {
 
+
         mainGameFrame.addKeyListener(new UserInput());
 
         ImagePreload.preloadAllImage();
@@ -70,11 +74,36 @@ public class RunService {
 
         if (isRunning) return;
         isRunning = true;
+        new Thread(() -> {
+            Scanner scanner = new Scanner(System.in);
+            System.out.println("=== Console Debugger Started ===");
+            System.out.println("Type commands using your format (e.g., INTENT:Player1:MOVE:100:200)");
+            System.out.println("Type 'exit' to stop the debugger.");
+
+            while (true) {
+                if (scanner.hasNextLine()) {
+                    String input = scanner.nextLine();
+
+                    if (input.equalsIgnoreCase("exit")) {
+                        System.out.println("Stopping console debugger...");
+                        break;
+                    }
+
+                    RunService.intentQueue.add(input);
+                    System.out.println("[DEBUG] Injected into intentQueue: " + input);
+                }
+            }
+
+            scanner.close();
+        }, "ConsoleDebugThread").start();
+
 
         new Thread(() -> {
             while (isRunning) {
                 calculateDeltaTime();
 
+                processResultQueue();
+                processIntentQueue();
                 for (ProcessByRunService process : registeredObject) {
                     process.OnUpdate(deltaTime);
                 }
@@ -87,14 +116,14 @@ public class RunService {
                     process.OnLateUpdate();
                 }
 
+
+
                 //สั่งให้ EDT Thread repaint ในทุกๆ Frame
                 SwingUtilities.invokeLater(() -> {
                     mainGameFrame.repaint();
                 });
 
                 UserInput.updateAndSync();
-
-                currentRequest = 0;
 
 
                 try {Thread.sleep(16);} catch (InterruptedException e) {
@@ -105,7 +134,44 @@ public class RunService {
         }, "GameThread").start();
     }
 
-    private void processNetworkRequest() {
+    private void processIntentQueue() {
+        while (!intentQueue.isEmpty()) {
+            String packet = intentQueue.poll();
+            if (packet == null) continue;
+
+            String[] parts = packet.split(":");
+
+            if (parts.length >= 3 && parts[0].equals("INTENT")) {
+                String senderID = parts[1];
+                String mainAction = parts[2];
+
+                String[] parameters = Arrays.copyOfRange(parts, 3, parts.length);
+
+                CommandHandler.handleIntent(senderID, mainAction, parameters);
+            } else {
+                System.err.println("Invalid INTENT packet: " + packet);
+            }
+        }
+    }
+
+    private void processResultQueue() {
+        while (!resultQueue.isEmpty()) {
+            String packet = resultQueue.poll();
+            if (packet == null) continue;
+
+            String[] parts = packet.split("\\s*:\\s*");
+
+            if (parts.length >= 3 && parts[0].equals("RESULT")) {
+                String targetID = parts[1];
+                String mainAction = parts[2];
+
+                String[] parameters = Arrays.copyOfRange(parts, 3, parts.length);
+
+                CommandHandler.handleResult(targetID, mainAction, parameters);
+            } else {
+                System.err.println("Invalid RESULT packet: " + packet);
+            }
+        }
     }
 
     private void calculateDeltaTime() {

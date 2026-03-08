@@ -1,14 +1,19 @@
 package Gameplay;
 
 import graphicsUtilities.Scene;
+import graphicsUtilities.SceneUtilities;
 import misc.Player;
 import misc.PawnCharacter;
+
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 
 public class GameState {
 
     //STATIC KEYWORD
-    public static String selectedMapId;
+    public static GameState currentGame;
+    public static String selectedMapId = "Garden";
     private static int maxPlayerAllowed;
 
     public boolean isHost;
@@ -17,7 +22,8 @@ public class GameState {
 
 
 
-    public final HashMap<String, Player> allPlayers = new HashMap<>();
+
+    public final HashMap<String, Player> allPlayers = new LinkedHashMap<>();
     public final HashMap<String, PawnCharacter> allPawnCharacters = new HashMap<>();
 
     public enum GamePhase {
@@ -35,21 +41,20 @@ public class GameState {
     public boolean hasRolledDiceThisTurn = false;
     public boolean isAnimatingMovement = false;
 
-    public Scene gameMap = null;
 
-    public GameState(boolean isHost, String selectedMapID) {
+    public GameState(boolean isHost) {
         this.isHost = isHost;
+        currentGame = this;
     }
 
-    public void handleEvent(TriggerEvent event, Object payload) {
-        if (!isHost) return;
+    public void handleEvent(TriggerEvent event, String[] payload) {
 
         switch (currentPhase) {
             case WAIT_FOR_PLAYERS -> handleWaitForPlayers(event, payload);
             case TURN_START -> handleTurnStart(event, payload);
             case WAIT_FOR_ROLL -> handleWaitForRoll(event, payload);
             case EXECUTE_MOVEMENT -> {}
-            case WAIT_FOR_READY -> {}
+            case WAIT_FOR_READY -> handleWaitForReady(event, payload);
             case CHECK_TILE -> {}
             case WAIT_FOR_TARGET -> {}
             case EXECUTE_ACTION -> {}
@@ -59,29 +64,43 @@ public class GameState {
             default -> System.out.println("Unhandled phase: " + currentPhase);
         }
     }
+    public void handleEvent(TriggerEvent event) {
+        handleEvent(event, null);
+    }
 
-    private void handleWaitForPlayers(TriggerEvent event, Object payload) {
-        if (event == TriggerEvent.PLAYER_JOINED && payload instanceof String id) {
-            if (!allPlayers.containsKey(id)) {
-                Player newPlayer = new Player(id);
-                allPlayers.put(id, newPlayer);
-                allPawnCharacters.put(id, new PawnCharacter(newPlayer.getNetworkID(), "blank", 0, 0));
-                System.out.println("Player joined: " + id);
-            } else {
-                System.err.println("PLAYER WITH THIS ID EXISTED");
+
+
+
+    private void handleWaitForPlayers(TriggerEvent event, String[] params) {
+        switch (event) {
+            case PLAYER_JOINED -> onPlayerJoined(params);
+            case PLAYER_LEFT   -> onPlayerLeft(params);
+            case GAME_START -> {
+                SceneUtilities.changeSceneTo(SceneList.buildMysteriousJungle());
+                Player.setAllPlayerUnreadyToContinue();
+                changeStateTo(GamePhase.WAIT_FOR_READY);
             }
         }
-        else if (event == TriggerEvent.PLAYER_LEFT && payload instanceof String id) {
-            if (allPlayers.remove(id) != null) {
-                allPawnCharacters.remove(id);
-                System.out.println("Player left: " + id);
-            } else {
-                System.err.println("PLAYER WITH THIS ID NEVER EXISTED");
+    }
+
+
+    //wait for ready
+    public void handleWaitForReady(TriggerEvent event, String[] params) {
+        switch (event) {
+            case PLAYER_READY -> {
+                String id = params[0];
+                GameState.currentGame.allPlayers.get(id).setReadyToContinue(true);
+
+                System.out.println(id + " is ready to continue");
+
+                if (Player.isAllPlayerReadyToContinue()) {
+                    changeStateTo(GamePhase.TURN_START);
+                    Player.setAllPlayerUnreadyToContinue();
+                }
             }
         }
-        else if (event == TriggerEvent.GAME_START) {
-            changeStateTo(GamePhase.TURN_START);
-        }
+
+
     }
 
     private void handleTurnStart(TriggerEvent event, Object payload) {
@@ -90,9 +109,7 @@ public class GameState {
     private void handleWaitForRoll(TriggerEvent event, Object payload) {
     }
 
-    public void handleEvent(TriggerEvent event) {
-        handleEvent(event, null);
-    }
+
 
     public void changeStateTo(GamePhase newPhase) {
         onStateExited(currentPhase);
@@ -106,5 +123,29 @@ public class GameState {
 
     private void onStateExited(GamePhase phase) {
         System.out.println("Exiting State: " + phase);
+    }
+
+    private void onPlayerJoined(String[] params) {
+        if (params == null || params.length < 2) return;
+
+        String id = params[0];
+        String name = params[1];
+
+        allPlayers.putIfAbsent(id, new Player(id, name));
+        allPawnCharacters.putIfAbsent(id, new PawnCharacter(id, "blank.png", 0, 0));
+
+        System.out.println("SESSION JOINED: " + id);
+        System.out.println("PLAYER JOINED: " + name);
+    }
+
+    private void onPlayerLeft(String[] params) {
+        if (params == null || params.length < 1) return;
+
+        String id = params[0];
+        allPlayers.remove(id);
+        allPawnCharacters.remove(id);
+
+        System.out.println("SESSION LEFT: " + id);
+        System.out.println("PLAYER LEFT: " + id);
     }
 }
