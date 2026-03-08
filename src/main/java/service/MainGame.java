@@ -17,8 +17,6 @@ public class MainGame extends JFrame {
     private JPanel container;
     private static Scene currentScene;
 
-    private static GameState currentGame;
-
     //Entry Main
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
@@ -36,9 +34,11 @@ public class MainGame extends JFrame {
         GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
 
 
-        mockPlayer();
+
         startRunService();
+        mockPlayer();
         startContainerPanel();
+
 
         SceneUtilities.changeSceneTo(SceneList.mainMenu);
 
@@ -64,14 +64,9 @@ public class MainGame extends JFrame {
 
 
     public void mockPlayer() {
-        String myLocalId = UUID.randomUUID().toString();
-        Player.setLocalPlayerId(myLocalId);
-
 
         //MOCK
-        currentGame = new GameState(true);
-        RunService.intentQueue.add("INTENT:" + Player.getLocalPlayerId() + ":JOIN_GAME:" + "LICOWELLSPRING");
-        RunService.intentQueue.add("INTENT:" + "TESTER" + ":JOIN_GAME:" + ".getLocalPlayerId()");
+//        new GameState(true, "GAME1");
     }
 
     public Scene getCurrentScene() {
@@ -82,11 +77,4 @@ public class MainGame extends JFrame {
         return this.container;
     }
 
-    public static GameState getCurrentGame() {
-        return currentGame;
-    }
-
-    public static void setCurrentGame(GameState currentGame) {
-        MainGame.currentGame = currentGame;
-    }
 }

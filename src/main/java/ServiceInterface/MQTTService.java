@@ -5,6 +5,7 @@ import java.util.UUID;
 import com.hivemq.client.mqtt.MqttClient;
 import com.hivemq.client.mqtt.mqtt5.*;
 import com.hivemq.client.mqtt.datatypes.MqttQos;
+import misc.Player;
 
 public class MQTTService {
 
@@ -15,6 +16,8 @@ public class MQTTService {
     public MQTTService() {
 
         clientId = UUID.randomUUID().toString();
+
+        Player.setLocalPlayerId(clientId);
 
         client = MqttClient.builder()
                 .useMqttVersion5()

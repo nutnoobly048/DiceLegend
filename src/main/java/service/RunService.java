@@ -1,6 +1,7 @@
 package service;
 
 import Gameplay.GameState;
+import ServiceInterface.MQTTService;
 import ServiceInterface.ProcessByRunService;
 import graphicsUtilities.ImagePreload;
 import graphicsUtilities.SceneUtilities;
@@ -25,6 +26,9 @@ public class RunService {
     private static RunService instance;
     private static boolean isRunning = false;
 
+
+    //INITIALIZE NETWORK
+    public static final MQTTService mqtt = new MQTTService();
 
     public static final ConcurrentLinkedQueue<String> intentQueue = new ConcurrentLinkedQueue<>();
     public static final ConcurrentLinkedQueue<String> resultQueue = new ConcurrentLinkedQueue<>();
@@ -65,7 +69,6 @@ public class RunService {
 
     public void start() {
 
-
         mainGameFrame.addKeyListener(new UserInput());
 
         ImagePreload.preloadAllImage();
@@ -74,6 +77,7 @@ public class RunService {
 
         if (isRunning) return;
         isRunning = true;
+        //AI: Thread Debugger
         new Thread(() -> {
             Scanner scanner = new Scanner(System.in);
             System.out.println("=== Console Debugger Started ===");
@@ -89,8 +93,12 @@ public class RunService {
                         break;
                     }
 
-                    RunService.intentQueue.add(input);
-                    System.out.println("[DEBUG] Injected into intentQueue: " + input);
+                    if (input.equalsIgnoreCase("start")) {
+                        new GameState(true, "Lico");
+                    }
+                    if (GameState.currentGame != null) {
+                        CommandHandler.intent(input);
+                    }
                 }
             }
 
@@ -139,14 +147,13 @@ public class RunService {
             String packet = intentQueue.poll();
             if (packet == null) continue;
 
-            String[] parts = packet.split(":");
+            String[] parts = packet.split("\\s*:\\s*");
 
             if (parts.length >= 3 && parts[0].equals("INTENT")) {
                 String senderID = parts[1];
                 String mainAction = parts[2];
 
                 String[] parameters = Arrays.copyOfRange(parts, 3, parts.length);
-
                 CommandHandler.handleIntent(senderID, mainAction, parameters);
             } else {
                 System.err.println("Invalid INTENT packet: " + packet);
@@ -166,6 +173,7 @@ public class RunService {
                 String mainAction = parts[2];
 
                 String[] parameters = Arrays.copyOfRange(parts, 3, parts.length);
+
 
                 CommandHandler.handleResult(targetID, mainAction, parameters);
             } else {

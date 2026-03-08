@@ -56,7 +56,6 @@ public class UserInput implements KeyListener{
     }
 
 
-    // Listen to KeyPress As a key code
     @Override
     public void keyPressed(KeyEvent e) {
         keyCode = e.getKeyCode();
@@ -69,7 +68,6 @@ public class UserInput implements KeyListener{
         }
     }
 
-    // Listen to Key Release As a key code
     @Override
     public void keyReleased(KeyEvent e) {
 

@@ -4,6 +4,8 @@ import graphicsUtilities.Scene;
 import graphicsUtilities.SceneUtilities;
 import misc.Player;
 import misc.PawnCharacter;
+import service.CommandHandler;
+import service.RunService;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -13,12 +15,13 @@ public class GameState {
 
     //STATIC KEYWORD
     public static GameState currentGame;
-    public static String selectedMapId = "Garden";
+    public static String selectedMapId = "Garden"; //example
     private static int maxPlayerAllowed;
 
     public boolean isHost;
     public String localPlayerNetworkId = "";
     public String currentPlayerTurnId = "";
+    public String lobbyName;
 
 
 
@@ -42,11 +45,37 @@ public class GameState {
     public boolean isAnimatingMovement = false;
 
 
-    public GameState(boolean isHost) {
+    public GameState(boolean isHost, String lobbyName) {
         this.isHost = isHost;
+        this.lobbyName = lobbyName;
+        String baseTopic = "DiceLegend/" + lobbyName;
+
+        new Thread(() -> {
+            try {
+                //ถ้าเป็น Host ให้ connect ในฐานะ  Host
+                if (isHost) {
+                    RunService.mqtt.connectWithWill(baseTopic, "HOST_DISCONNECTED");
+
+                    //เมื่อมีข้อความเข้ามาที่ห้อง intent ให้ส่งไปที่ RunService.intentQueue
+                    RunService.mqtt.subscribe(baseTopic + "/Intents", (topic, message) -> {
+                        RunService.intentQueue.add(message);
+                    });
+                    //connect ตัวเอง                        //Id                                       //exampleName
+                    CommandHandler.intent("INTENT:"  + Player.getLocalPlayerId() + ":JOIN_GAME:" + "LICOTHEWHAT");
+                } else {
+                    RunService.mqtt.connect();
+                }
+                //เมื่อมีข้อความเข้ามาที่ห้อง result ให้ส่งไปที่ RunService.resultQueue
+                RunService.mqtt.subscribe(baseTopic + "/Results", (topic, message) -> { RunService.resultQueue.add(message);});
+
+                System.out.println("Network Ready for " + (isHost ? "Host" : "Client"));
+            } catch (Exception e) {
+                System.err.println("Connection Failed: " + e.getMessage());
+            }
+        }).start();
+
         currentGame = this;
     }
-
     public void handleEvent(TriggerEvent event, String[] payload) {
 
         switch (currentPhase) {
@@ -67,9 +96,6 @@ public class GameState {
     public void handleEvent(TriggerEvent event) {
         handleEvent(event, null);
     }
-
-
-
 
     private void handleWaitForPlayers(TriggerEvent event, String[] params) {
         switch (event) {
@@ -147,5 +173,13 @@ public class GameState {
 
         System.out.println("SESSION LEFT: " + id);
         System.out.println("PLAYER LEFT: " + id);
+    }
+
+    public String getLobbyName() {
+        return lobbyName;
+    }
+
+    public void setLobbyName(String lobbyName) {
+        this.lobbyName = lobbyName;
     }
 }

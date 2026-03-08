@@ -3,6 +3,8 @@ package service;
 import Gameplay.GameState;
 import misc.Player;
 
+import static service.RunService.mqtt;
+
 public class CommandHandler {
 
     //ONLY HOST CAN USE THIS METHOD
@@ -27,28 +29,28 @@ public class CommandHandler {
 
         switch (action) {
             case "JOIN_GAME" -> {
-                broadcast("PLAYER_JOINED", senderID, params[0]);
+                broadcastResult("PLAYER_JOINED", senderID, params[0]);
 
-                GameState.currentGame.allPlayers.forEach((id, p) -> sendTo(senderID, "PLAYER_JOINED", id, p.getName()));
+                GameState.currentGame.allPlayers.forEach((id, p) -> sendResultTo(senderID, "PLAYER_JOINED", id, p.getName()));
             }
-            case "LEAVE_GAME" -> broadcast("PLAYER_LEFT", senderID);
+            case "LEAVE_GAME" -> broadcastResult("PLAYER_LEFT", senderID);
 
             case "START_GAME" -> {
                 if (isFromHost) {
-                    broadcast("GAME_STARTED");
+                    broadcastResult("GAME_STARTED");
                 } else {
                     System.err.println("Access Denied: " + senderID + " tried to start game.");
                 }
             }
             case "CONTINUE" -> {
                 if (GameState.currentGame.allPlayers.get(senderID) != null) {
-                    broadcast("CONTINUE", senderID);
+                    broadcastResult("CONTINUE", senderID);
                 }
             }
+            case "TESTPRINT" -> System.out.println("PRINT");
         }
 
     }
-
 
     //BOTH CLIENTS AND HOST CAN USE THIS METHOD
     public static void handleResult(String targetID, String action, String[] params) {
@@ -61,14 +63,26 @@ public class CommandHandler {
             case "PLAYER_LEFT"   -> GameState.currentGame.handleEvent(GameState.TriggerEvent.PLAYER_LEFT, params);
             case "GAME_STARTED"  -> GameState.currentGame.handleEvent(GameState.TriggerEvent.GAME_START, null);
             case "CONTINUE" -> GameState.currentGame.handleEvent(GameState.TriggerEvent.PLAYER_READY, params);
+
         }
     }
 
-    private static void broadcast(String act, String... p) {
-        RunService.resultQueue.add("RESULT:ALLCLIENTS:" + act + (p.length > 0 ? ":" + String.join(":", p) : ""));
+
+    //INTENT
+    public static void intent(String input) {
+        String topic = "DiceLegend/" + GameState.currentGame.getLobbyName() + "/Intents";
+        mqtt.publish(topic, input);
+        System.out.println("[DEBUG] Sent intent to " + topic + ": " + input);
     }
 
-    private static void sendTo(String target, String act, String... p) {
-        RunService.resultQueue.add("RESULT:" + target + ":" + act + (p.length > 0 ? ":" + String.join(":", p) : ""));
+    //RESULT
+    private static void broadcastResult(String act, String... p) {
+        String packet = "RESULT:ALLCLIENTS:" + act + (p.length > 0 ? ":" + String.join(":", p) : "");
+        mqtt.publish("DiceLegend/" + GameState.currentGame.getLobbyName() + "/Results", packet);
+    }
+
+    private static void sendResultTo(String target, String act, String... p) {
+        String packet = "RESULT:" + target + ":" + act + (p.length > 0 ? ":" + String.join(":", p) : "");
+        mqtt.publish("DiceLegend/" + GameState.currentGame.getLobbyName() + "/Results", packet);
     }
 }
