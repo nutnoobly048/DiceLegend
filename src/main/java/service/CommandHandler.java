@@ -71,8 +71,15 @@ public class CommandHandler {
     //INTENT
     public static void intent(String input) {
         String topic = "DiceLegend/" + GameState.currentGame.getLobbyName() + "/Intents";
+        String[] packetList = input.split(":");
+
+        if (packetList.length >= 2 && packetList[1].equals("SELF")) {
+            packetList[1] = Player.getLocalPlayerId();
+        }
+
+        input = String.join(":", packetList);
         mqtt.publish(topic, input);
-        System.out.println("[DEBUG] Sent intent to " + topic + ": " + input);
+        System.out.println("[DEBUG] Sent intent with topics "+ ": " + input);
     }
 
     //RESULT

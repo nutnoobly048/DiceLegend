@@ -1,13 +1,11 @@
 package Gameplay;
 
-import graphicsUtilities.Scene;
 import graphicsUtilities.SceneUtilities;
 import misc.Player;
 import misc.PawnCharacter;
 import service.CommandHandler;
 import service.RunService;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 
@@ -40,6 +38,7 @@ public class GameState {
     }
 
     public GamePhase currentPhase = GamePhase.WAIT_FOR_PLAYERS;
+    public GamePhase previousPhase = GamePhase.WAIT_FOR_PLAYERS;
 
     public boolean hasRolledDiceThisTurn = false;
     public boolean isAnimatingMovement = false;
@@ -52,21 +51,18 @@ public class GameState {
 
         new Thread(() -> {
             try {
-                //ถ้าเป็น Host ให้ connect ในฐานะ  Host
                 if (isHost) {
                     RunService.mqtt.connectWithWill(baseTopic, "HOST_DISCONNECTED");
-
-                    //เมื่อมีข้อความเข้ามาที่ห้อง intent ให้ส่งไปที่ RunService.intentQueue
                     RunService.mqtt.subscribe(baseTopic + "/Intents", (topic, message) -> {
                         RunService.intentQueue.add(message);
                     });
-                    //connect ตัวเอง                        //Id                                       //exampleName
-                    CommandHandler.intent("INTENT:"  + Player.getLocalPlayerId() + ":JOIN_GAME:" + "LICOTHEWHAT");
                 } else {
                     RunService.mqtt.connect();
                 }
-                //เมื่อมีข้อความเข้ามาที่ห้อง result ให้ส่งไปที่ RunService.resultQueue
-                RunService.mqtt.subscribe(baseTopic + "/Results", (topic, message) -> { RunService.resultQueue.add(message);});
+                RunService.mqtt.subscribe(baseTopic + "/Results", (topic, message) -> {
+                    RunService.resultQueue.add(message);
+                });
+                CommandHandler.intent("INTENT:" + Player.getLocalPlayerId() + ":JOIN_GAME:" + "PlayerName");
 
                 System.out.println("Network Ready for " + (isHost ? "Host" : "Client"));
             } catch (Exception e) {
@@ -76,6 +72,7 @@ public class GameState {
 
         currentGame = this;
     }
+
     public void handleEvent(TriggerEvent event, String[] payload) {
 
         switch (currentPhase) {
@@ -120,7 +117,9 @@ public class GameState {
                 System.out.println(id + " is ready to continue");
 
                 if (Player.isAllPlayerReadyToContinue()) {
-                    changeStateTo(GamePhase.TURN_START);
+                    switch (previousPhase) {
+                        case GamePhase.WAIT_FOR_PLAYERS -> changeStateTo(GamePhase.TURN_START);
+                    }
                     Player.setAllPlayerUnreadyToContinue();
                 }
             }
@@ -140,6 +139,11 @@ public class GameState {
     public void changeStateTo(GamePhase newPhase) {
         onStateExited(currentPhase);
         currentPhase = newPhase;
+
+        if (newPhase != GamePhase.WAIT_FOR_READY) {
+            previousPhase = newPhase;
+        }
+
         onStateEnter(currentPhase);
     }
 
@@ -156,6 +160,7 @@ public class GameState {
 
         String id = params[0];
         String name = params[1];
+
 
         allPlayers.putIfAbsent(id, new Player(id, name));
         allPawnCharacters.putIfAbsent(id, new PawnCharacter(id, "blank.png", 0, 0));

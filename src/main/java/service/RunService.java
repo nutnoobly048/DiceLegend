@@ -94,7 +94,7 @@ public class RunService {
                     }
 
                     if (input.equalsIgnoreCase("start")) {
-                        new GameState(true, "Lico");
+                        new GameState(false, "Lico");
                     }
                     if (GameState.currentGame != null) {
                         CommandHandler.intent(input);
