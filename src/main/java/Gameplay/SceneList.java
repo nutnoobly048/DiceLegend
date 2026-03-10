@@ -1,11 +1,11 @@
 package Gameplay;
 
-import ServiceInterface.Drawable;
 import animation.Tween;
 import animation.TweenProperty;
 import graphicsUtilities.Scene;
+import graphicsUtilities.SceneUtilities;
+import objectClass.GameButton;
 import objectClass.GameObject;
-import objectClass.VisualObject;
 import objectClass.AnimatedSprite;
 import java.awt.*;
 
@@ -14,33 +14,43 @@ public class SceneList {
     //Scene ที่มี keyword final คือ Scene ที่มีเพียงแค่ scene เดียวเท่านั้นตลอดการทำงาน
     //นอกนั้นจะ ด่าน จะถูก reset ทุกครั้งที่สร้าง
     public static final Scene mainMenu = new Scene() {
-        //สร้าง Object
-        VisualObject vis = new VisualObject("board","prototypeBoard.png", 0, 540, -500,-500);
-        AnimatedSprite test_guide = new AnimatedSprite("guide_test", "shriken_pink.png", 100, 100, 7, 16);
-        //ทำงานทันที (วางของ setup background etc....)
+        GameObject transition_left = new GameObject("transit_left", "Transition.png", 0,0);
+        GameObject transition_right = new GameObject("transit_right", "Transition.png", 0,0);
+        GameObject transition_down = new GameObject("transit_down", "Transition.png", 0,0);
+        GameObject transition_up = new GameObject("transit_up", "Transition.png", 0,0);
+
+        GameButton startButton = new GameButton("licoCake144", "licoCake144.png","licoCake144.png");
+
         {
+            spawnObjectAt(transition_left);
+            spawnObjectAt(transition_right);
+            spawnObjectAt(transition_down);
+            spawnObjectAt(transition_up);
 
-            //set background ไม่ก็ set background เป็นรูป
-            setBackground(new Color(6,7,16));
-            // วาง Object
-            spawnObjectAt(vis, vis.x, vis.y);
-            spawnObjectAt(test_guide, test_guide.x, test_guide.y);
+            startButton.setBounds(300,300, 500,500);
+            add(startButton);
 
+            startButton.setOnButtonClicked(() -> {
+                new Tween(transition_left, TweenProperty.X, -1920, -960, 1).start();
+                new Tween(transition_right, TweenProperty.X, 1920, 960, 1).start();
+                new Tween(transition_up, TweenProperty.Y, -1080, -540, 1).start();
+                new Tween(transition_down, TweenProperty.Y, 1080, 540, 1).OnComplete(() -> {SceneUtilities.changeSceneTo(SceneList.joinMenu);});
 
-            //ทำงานเมื่อ Scene ถูกโหลด
+            });
+
             setOnSceneEnter(() -> {
-                        Tween tween = new Tween(vis, TweenProperty.X, -960, 960, 2);
-                        tween.start();
-                    }
-
-            );
+                new Tween(transition_left, TweenProperty.X, -960, -1920, 1).start();
+                new Tween(transition_right, TweenProperty.X, 960, 1920, 1).start();
+                new Tween(transition_up, TweenProperty.Y, -540, -1080, 1).start();
+                new Tween(transition_down, TweenProperty.Y, 540, 1080, 1).start();
+            });
         }
     };
 
     public static final Scene joinMenu = new Scene() {
         String savedGameRoom = "";
         {
-
+            setOnSceneEnter(() -> {SceneUtilities.changeSceneTo(SceneList.mainMenu);});
         }
 
     };

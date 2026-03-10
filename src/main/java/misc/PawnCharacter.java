@@ -1,35 +1,45 @@
 package misc;
 
-import objectClass.VisualObject;
-
+import objectClass.GameObject;
 import java.util.HashMap;
 
-public class PawnCharacter extends VisualObject {
+public class PawnCharacter extends GameObject {
 
     private int currentCharacterIndex = 0;
 
-    public static HashMap<String, PawnCharacter> allCharacter = new HashMap<>();
+    public static HashMap<String, PawnCharacter> allCharacters = new HashMap<>();
 
-    public PawnCharacter(String characterID, String imgFileName, int x, int y){
+    public PawnCharacter(String characterID, String imgFileName, int x, int y) {
         super(characterID, imgFileName, x, y);
 
-        allCharacter.put(this.networkId, this);
+        allCharacters.put(this.getNetworkId(), this);
     }
 
-    public PawnCharacter(String characterID, String imgFileName){
-        super(characterID, imgFileName, 0, 0);
-
-        allCharacter.put(this.networkId, this);
+    public PawnCharacter(String characterID, String imgFileName) {
+        this(characterID, imgFileName, 0, 0);
     }
 
-    public static void moveAllCharacterToIndex() {
-
-
+    public static void moveAllCharactersToIndex() {
+        for (PawnCharacter pc : allCharacters.values()) {
+            pc.moveThisCharacterToIndex();
+        }
     }
-    public static void moveThisCharacterToIndex() {
+
+    public void moveThisCharacterToIndex() {
+
+        System.out.println("Moving character " + this.getNetworkId() + " to index " + currentCharacterIndex);
     }
 
-    public static HashMap<String, PawnCharacter> getAllCharacter() {
-        return allCharacter;
+
+    public int getCurrentCharacterIndex() {
+        return currentCharacterIndex;
+    }
+
+    public void setCurrentCharacterIndex(int index) {
+        this.currentCharacterIndex = index;
+    }
+
+    public static HashMap<String, PawnCharacter> getAllCharacters() {
+        return allCharacters;
     }
 }

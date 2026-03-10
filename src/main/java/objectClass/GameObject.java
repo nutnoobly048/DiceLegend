@@ -14,57 +14,88 @@ import javax.swing.*;
 //OnRemoved(): ใช้สำหรับเคลียร์ Memory หรือหยุดการทำงานเมื่อวัตถุถูกลบ
 
 //ปัญหา: GameObject ยังคงรันแม้ว่าจะไม่ได้อยู่ Scene ตัวเองก็ตาม
-public abstract class GameObject implements ProcessByRunService { //เป็น base class, เอาไป extends ทำคลาสอื่น
-
-    public int x;//Object Position
+public class GameObject implements ProcessByRunService {
+    public int x;
     public int y;
+    public int z; //depth -- ใช้ในการเรียงว่าอะไรวาดก่อน/หลัง
     public boolean isActive = true;
+    public boolean isVisible = true;
 
     public String networkId = "";
-
     protected Scene currentScene;
+    protected AnimatedSprite sprite;
+
+    public GameObject(String networkId, AnimatedSprite sprite, int x, int y) {
+        this.networkId = networkId;
+        this.sprite = sprite;
+        this.x = x;
+        this.y = y;
+    }
+
     public GameObject() {
-        this.networkId = "obj";
-    }
-    public GameObject(String networkID) {
-        this.networkId = networkID;
+        this("obj", (AnimatedSprite) null, 0, 0);
     }
 
-    @Override //เมื่อ object ถูกสร้างให้ทำอะไร
-    public void OnCreate() {
-
+    public GameObject(String networkId) {
+        this(networkId, (AnimatedSprite) null, 0, 0);
     }
 
-    @Override //object นี้จะทำอะไรในทุกๆ frame
+    public GameObject(String networkId, String imgFileName, int x, int y) {
+        this(networkId,new AnimatedSprite(imgFileName, 0, 0, 1, 1), x, y );
+    }
+
+    public GameObject(String networkId, String imgFileName, int frameCount, double fps) {
+        this(networkId, new AnimatedSprite(imgFileName, 0, 0, frameCount, fps), 0, 0);
+    }
+
+    public GameObject(String networkId, AnimatedSprite sprite) {
+        this(networkId, sprite, 0, 0);
+    }
+
+    @Override
     public void OnUpdate(double deltaTime) {
         if (!isActive || currentScene != SceneUtilities.getCurrentGameScene()) return;
+
+        if (sprite != null) {
+            sprite.posX = this.x;
+            sprite.posY = this.y;
+            sprite.OnUpdate(deltaTime);
+        }
     }
 
-    @Override //object นี้จะทำอะไรหลังจากที่ OnUpdate() ทำงานเสร็จแล้ว
-    public void OnLateUpdate() {
-        if (!isActive || currentScene != SceneUtilities.getCurrentGameScene()) return;
+
+    public void setVisible(boolean visible) {
+        this.isVisible = visible;
     }
 
-    @Override //ถ้าทุกลบ ให้ทำอะไร
+    public boolean isVisible() {
+        return isVisible && isActive;
+    }
+
+    public boolean hasSprite() {
+        return this.sprite != null;
+    }
+
+    public AnimatedSprite getSprite() {
+        return this.sprite;
+    }
+
+    public String getNetworkId() {
+        return networkId;
+    }
+
+    public void setCurrentGameScene(Scene gameScene) {
+        this.currentScene = gameScene;
+    }
+
+    @Override
     public void OnRemoved() {
         RunService.GetService().removeProcess(this);
     }
 
+    @Override
+    public void OnCreate() {}
 
-
-    public void SetCurrentGameScene(Scene gameScene) {
-        this.currentScene = gameScene;
-    }
-
-    public Scene GetCurrentGameScene() {
-        return this.currentScene;
-    }
-
-    public boolean isActive() {
-        return isActive;
-    }
-
-    public void setActive(boolean active) {
-        isActive = active;
-    }
+    @Override
+    public void OnLateUpdate() {}
 }

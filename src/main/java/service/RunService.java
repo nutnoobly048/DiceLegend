@@ -68,9 +68,6 @@ public class RunService {
     }
 
     public void start() {
-
-        mainGameFrame.addKeyListener(new UserInput());
-
         ImagePreload.preloadAllImage();
 
         SceneUtilities.setCurrentGameFrame(mainGameFrame);

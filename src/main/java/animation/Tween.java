@@ -37,8 +37,9 @@ public class Tween implements ProcessByRunService {
         RunService.GetService().addProcess(this);
     }
 
-    public void OnComplete(Runnable callback) {
+    public Tween OnComplete (Runnable callback) {
         this.onComplete = callback;
+        return this;
     }
 
     private void applyValue(double value) {

@@ -162,7 +162,9 @@ public class GameState {
         String name = params[1];
 
 
+        //Keep the character and Player model
         allPlayers.putIfAbsent(id, new Player(id, name));
+
         allPawnCharacters.putIfAbsent(id, new PawnCharacter(id, "blank.png", 0, 0));
 
         System.out.println("SESSION JOINED: " + id);

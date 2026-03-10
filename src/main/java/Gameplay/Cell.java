@@ -1,6 +1,7 @@
 package Gameplay;
 
 import ServiceInterface.CellAttribute;
+import objectClass.Board;
 
 import java.util.ArrayList;
 import java.util.EnumSet;
@@ -8,6 +9,7 @@ import java.util.EnumSet;
 
 
 public class Cell {
+
 
     public Cell(int index) {
         this(index,0,0, -1);
@@ -25,14 +27,7 @@ public class Cell {
         this.yPos = yPos;
         this.destinationIndex = destinationIndex;
 
-        if (index == 0) {
 
-            attributes.add(CellAttribute.START_TILE);
-
-        }
-        if (index == 99) {
-            attributes.add(CellAttribute.WIN_TILE);
-        }
     }
 
     public int[] getPosition() {

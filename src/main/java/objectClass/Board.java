@@ -17,24 +17,29 @@ public class Board {
 
             cells[i] = new Cell(i);
 
+            if (i == 0) {
+                cells[i].attributes.add(CellAttribute.START_TILE);
+            }
+            if (i == cells.length) {
+                cells[i].attributes.add(CellAttribute.WIN_TILE);
+            }
         }
     }
 
     public void addAttribute(int index, CellAttribute attribute) {
-
         cells[index].attributes.add(attribute);
-
     }
-
     public int[] getPositionFromIndex(int index) {
-
         return cells[index].getPosition();
-
     }
 
     public EnumSet<CellAttribute> getAttributeFromIndex(int index) {
 
         return cells[index].getAttributes();
+    }
+
+    public int getBoardSize() {
+        return cells.length;
     }
 
 }

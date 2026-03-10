@@ -1,9 +1,6 @@
 package graphicsUtilities;
 
-import Gameplay.SceneList;
-import misc.Player;
 import objectClass.GameObject;
-import objectClass.VisualObject;
 import service.MainGame;
 import service.RunService;
 
