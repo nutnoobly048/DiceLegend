@@ -1,35 +1,30 @@
 package misc;
 
-import objectClass.VisualObject;
+import objectClass.GameObject;
 
-import java.util.HashMap;
 
-public class PawnCharacter extends VisualObject {
+public class PawnCharacter extends GameObject {
 
-    private int currentCharacterIndex = 0;
+    private int currentTileIndex = 0;
 
-    public static HashMap<String, PawnCharacter> allCharacter = new HashMap<>();
-
-    public PawnCharacter(String characterID, String imgFileName, int x, int y){
-        super(characterID, imgFileName, x, y);
-
-        allCharacter.put(this.networkId, this);
+    public PawnCharacter(String playerID, String imgFileName, int x, int y) {
+        super(playerID, imgFileName, x, y);
     }
 
-    public PawnCharacter(String characterID, String imgFileName){
-        super(characterID, imgFileName, 0, 0);
-
-        allCharacter.put(this.networkId, this);
+    public PawnCharacter(String playerID, String imgFileName) {
+        this(playerID, imgFileName, 0, 0);
     }
 
-    public static void moveAllCharacterToIndex() {
-
-
-    }
-    public static void moveThisCharacterToIndex() {
+    public void moveToTileIndex(int index) {
+        this.currentTileIndex = index;
+        System.out.println("Moving pawn [" + this.getNetworkId() + "] to tile " + index);
     }
 
-    public static HashMap<String, PawnCharacter> getAllCharacter() {
-        return allCharacter;
+    public int getCurrentTileIndex() {
+        return currentTileIndex;
+    }
+
+    public void setCurrentTileIndex(int index) {
+        this.currentTileIndex = index;
     }
 }

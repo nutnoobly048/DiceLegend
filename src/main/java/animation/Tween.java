@@ -37,8 +37,9 @@ public class Tween implements ProcessByRunService {
         RunService.GetService().addProcess(this);
     }
 
-    public void OnComplete(Runnable callback) {
+    public Tween OnComplete (Runnable callback) {
         this.onComplete = callback;
+        return this;
     }
 
     private void applyValue(double value) {
@@ -52,8 +53,6 @@ public class Tween implements ProcessByRunService {
         }
     }
 
-    @Override
-    public void OnCreate() {}
 
     @Override
     public void OnUpdate(double deltatime) {
@@ -71,10 +70,4 @@ public class Tween implements ProcessByRunService {
             RunService.GetService().removeProcess(this);
         }
     }
-
-    @Override
-    public void OnLateUpdate() {}
-
-    @Override
-    public void OnRemoved() {}
 }

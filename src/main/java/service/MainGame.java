@@ -9,9 +9,9 @@ import misc.Player;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.UUID;
 
 public class MainGame extends JFrame {
+
 
     private static RunService runService;
     private JPanel container;
@@ -19,6 +19,7 @@ public class MainGame extends JFrame {
 
     //Entry Main
     public static void main(String[] args) {
+        System.setProperty("sun.java2d.uiScale", "1.0");
         SwingUtilities.invokeLater(() -> {
             MainGame mainGame = new MainGame();
             mainGame.setVisible(true);
@@ -26,28 +27,23 @@ public class MainGame extends JFrame {
     }
 
     public MainGame() {
-        // Essential window settings
         setTitle("Dice Legend");
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        addKeyListener(new UserInput());
         //thanks, AI, for Fullscreen
         GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
 
-
-
         startRunService();
-        mockPlayer();
         startContainerPanel();
 
 
         SceneUtilities.changeSceneTo(SceneList.mainMenu);
 
-//        if (gd.isFullScreenSupported()) {
-//            this.setUndecorated(true);
-//            gd.setFullScreenWindow(this);
-//        }
-
-
+        if (gd.isFullScreenSupported()) {
+            this.setUndecorated(true);
+            gd.setFullScreenWindow(this);
+        }
     }
 
     public void startRunService() {
@@ -62,12 +58,6 @@ public class MainGame extends JFrame {
         this.add(container);
     }
 
-
-    public void mockPlayer() {
-
-        //MOCK
-//        new GameState(true, "GAME1");
-    }
 
     public Scene getCurrentScene() {
         return (Scene) this.container.getComponent(0);

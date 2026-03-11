@@ -1,7 +1,5 @@
 package graphicsUtilities;
 
-import ServiceInterface.Drawable;
-import objectClass.ClickableObject;
 import objectClass.GameObject;
 import service.RunService;
 
@@ -25,6 +23,7 @@ public class Scene extends JPanel {
 
     public Scene() {
         this.setPreferredSize(new Dimension(1920, 1080));
+        this.setLayout(null);
     }
 
 
@@ -53,8 +52,8 @@ public class Scene extends JPanel {
         }
 
         for (GameObject obj : currentSceneObject.values()) {
-            if (obj instanceof Drawable) {
-                ((Drawable) obj).draw(g2d);
+            if (obj.hasSprite() && obj.isVisible()) {
+                obj.getSprite().draw(g2d);
             }
         }
     }
@@ -74,14 +73,24 @@ public class Scene extends JPanel {
         g.x = x;
         g.y = y;
 
-        g.SetCurrentGameScene(this);
+        g.setCurrentGameScene(this);
 
         currentSceneObject.put(g.networkId, g);
 
         if (SceneUtilities.getCurrentGameScene() == this) {
             RunService.GetService().addProcess(g);
         }
+    }
+    public void spawnObjectAt(GameObject g) {
+        g.setCurrentGameScene(this);
+        currentSceneObject.put(g.networkId, g);
 
+        if (SceneUtilities.getCurrentGameScene() == this) {
+            RunService.GetService().addProcess(g);
+        }
+    }
+    public GameObject getObjectByID(String networkId) {
+        return this.currentSceneObject.get(networkId);
     }
 
     public HashMap<String, GameObject> getAllSceneObject() {

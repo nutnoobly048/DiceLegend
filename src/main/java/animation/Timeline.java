@@ -71,11 +71,6 @@ public class Timeline implements ProcessByRunService {
             item.start = false;
         }
     }
-
-
-    @Override
-    public void OnCreate() {}
-
     @Override
     public void OnUpdate(double deltatime) {
         if (!isPlaying) {return;}
@@ -94,11 +89,6 @@ public class Timeline implements ProcessByRunService {
         }
     }
 
-    @Override
-    public void OnLateUpdate() {}
-
-    @Override
-    public void OnRemoved() {}
 
 }
 

@@ -1,12 +1,20 @@
 package objectClass;
 
 import ServiceInterface.Drawable;
+import ServiceInterface.ProcessByRunService;
 import graphicsUtilities.ImagePreload;
 import graphicsUtilities.SceneUtilities;
 
 import java.awt.*;
 
-public class AnimatedSprite extends GameObject implements Drawable {
+public class AnimatedSprite implements Drawable {
+
+
+    public int posX;
+    public int posY;
+    public int offsetX;
+    public int offsetY;
+    public int drawOrder;
 
     private Image spriteSheet;
     private int frameCount;       // จำนวนเฟรมทั้งหมดในรูป
@@ -25,10 +33,9 @@ public class AnimatedSprite extends GameObject implements Drawable {
     private boolean isPlaying = true;
 
     // Constructor 1
-    public AnimatedSprite(String networkId, String imgFileName, int x, int y, int frameCount, double fps) {
-        super(networkId);
-        this.x = x;
-        this.y = y;
+    public AnimatedSprite(String imgFileName, int x, int y, int frameCount, double fps) {
+        this.posX = x;
+        this.posY = y;
         this.frameCount = frameCount;
 
         // ดึงรูปจาก ImagePreload
@@ -45,8 +52,8 @@ public class AnimatedSprite extends GameObject implements Drawable {
     }
 
     // Constructor 2 มี True, False ข้างหลัง
-    public AnimatedSprite(String networkId, String imgFileName, int x, int y, int frameCount, double fps, boolean playloop, boolean playrollback) {
-        this(networkId, imgFileName, x, y, frameCount, fps); // เรียกใช้ Constructor 1
+    public AnimatedSprite(String imgFileName, int x, int y, int frameCount, double fps, boolean playloop, boolean playrollback) {
+        this(imgFileName, x, y, frameCount, fps); // เรียกใช้ Constructor 1
         this.playLooped = playloop;
         this.playRollback = playrollback;
     }
@@ -55,17 +62,20 @@ public class AnimatedSprite extends GameObject implements Drawable {
         if (fps <= 0) {
             fps = 1;
         }
-
-
         this.timePerFrame = 1.0 / fps;
     }
 
-    @Override
-    public void OnUpdate(double deltaTime) {
-        super.OnUpdate(deltaTime);
+    public AnimatedSprite(String imgFileName, int x, int y, int offX, int offY, int frameCount, double fps, boolean playloop, boolean playrollback, boolean isPlaying) {
+        this(imgFileName, x, y, frameCount, fps, playloop, playrollback);
+        this.offsetX = offX;
+        this.offsetY = offY;
+        this.isPlaying = isPlaying;
+    }
 
+
+    public void OnUpdate(double deltaTime) {
         // ถ้า Object ปิดการใช้งานอยู่, ไม่ได้อยู่ในฉากปัจจุบัน หรือกดหยุดเล่นไว้ ก็ไม่ต้องคำนวณ
-        if (!isActive || currentScene != SceneUtilities.getCurrentGameScene() || !isPlaying) {
+        if (!isPlaying) {
             return;
         }
 
@@ -111,19 +121,17 @@ public class AnimatedSprite extends GameObject implements Drawable {
 
     @Override
     public void draw(Graphics2D g2d) {
-        if (spriteSheet != null && isActive) {
-            // sx, sy คือพิกัดบนรูปต้นฉบับ (Source) ที่เราจะตัดมา
+
+        if (spriteSheet != null) {
             int sx1 = currentFrame * frameWidth;
             int sy1 = 0;
             int sx2 = sx1 + frameWidth;
             int sy2 = frameHeight;
 
-            // dx, dy คือพิกัดบนหน้าจอ (Destination) ที่เราจะเอาไปแปะ
-            int dx1 = this.x;
-            int dy1 = this.y;
+            int dx1 = this.posX + offsetX;
+            int dy1 = this.posY + offsetY;
             int dx2 = dx1 + frameWidth;
             int dy2 = dy1 + frameHeight;
-
             // คำสั่งวาดภาพโดยตัดเฉพาะส่วนที่ต้องการ (ประสิทธิภาพสูงมาก)
             g2d.drawImage(spriteSheet, dx1, dy1, dx2, dy2, sx1, sy1, sx2, sy2, null);
         }
@@ -139,5 +147,13 @@ public class AnimatedSprite extends GameObject implements Drawable {
         animationTimer = 0;
         playDirection = 1;
         isPlaying = true;
+    }
+
+    public int getFrameWidth() {
+        return frameWidth;
+    }
+
+    public int getFrameHeight() {
+        return frameHeight;
     }
 }

@@ -51,7 +51,6 @@ public class RunService {
 
 
     public void addProcess(ProcessByRunService process) {
-        process.OnCreate();
         registeredObject.add(process);
     }
 
@@ -68,9 +67,6 @@ public class RunService {
     }
 
     public void start() {
-
-        mainGameFrame.addKeyListener(new UserInput());
-
         ImagePreload.preloadAllImage();
 
         SceneUtilities.setCurrentGameFrame(mainGameFrame);
@@ -97,7 +93,7 @@ public class RunService {
                         new GameState(false, "Lico");
                     }
                     if (GameState.currentGame != null) {
-                        CommandHandler.intent(input);
+                        CommandHandler.sentIntent(input);
                     }
                 }
             }
@@ -118,10 +114,6 @@ public class RunService {
 
                 for (Consumer<Double> method : functionalListeners) {
                     method.accept(deltaTime);
-                }
-
-                for (ProcessByRunService process : registeredObject) {
-                    process.OnLateUpdate();
                 }
 
 
