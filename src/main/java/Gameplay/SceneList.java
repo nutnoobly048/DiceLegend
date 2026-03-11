@@ -20,7 +20,7 @@ public class SceneList {
     public static final Scene joinMenu = new Scene() {
         String savedGameRoom = "";
         {
-            setOnSceneEnter(() -> {SceneUtilities.changeSceneTo(SceneList.mainMenu);});
+
         }
 
     };

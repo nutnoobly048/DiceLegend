@@ -2,6 +2,7 @@ package Gameplay;
 
 import animation.Tween;
 import animation.TweenProperty;
+import graphicsUtilities.ImagePreload;
 import graphicsUtilities.Scene;
 import graphicsUtilities.SceneUtilities;
 import objectClass.GameObject;
@@ -16,11 +17,15 @@ public class MainMenuScene extends Scene {
     private GameObject transition_up    = new GameObject("transit_up",    "Transition.png", 0, 0);
     private GameObject transition_down  = new GameObject("transit_down",  "Transition.png", 0, 0);
     private GameButton startButton      = new GameButton("Start", "licoCake144.png", "licoCake144.png");
+    private GameButton createaButton    = new GameButton("CREATE", "button.png", "buttonOnHover.png");
+    private GameButton joinButton       = new GameButton("JOIN", "button.png", "buttonOnHover.png");
+    private GameButton exitButton       = new GameButton("EXIT", "button.png", "buttonOnHover.png");
 
     public MainMenuScene() {
         setupObjects();
         setupButtons();
         setupTransitions();
+        setBackground(ImagePreload.get("battle.png"));
     }
 
 
@@ -29,14 +34,36 @@ public class MainMenuScene extends Scene {
         spawnObjectAt(transition_right);
         spawnObjectAt(transition_up);
         spawnObjectAt(transition_down);
-        startButton.setBounds(300, 300, 500, 500);
-        add(startButton);
+//        startButton.setBounds(300, 300, 500, 500);
+//        add(startButton);
+
+        createaButton.setBounds(200, 500, 500, 80);
+        add(createaButton);
+
+        joinButton.setBounds(200, 650, 500, 80);
+        add(joinButton);
+
+        exitButton.setBounds(200, 800, 500, 80);
+        add(exitButton);
+
     }
 
     private void setupButtons() {
         startButton.setOnButtonClicked(() -> {
             new GameState(true, "Lico");
             playExitTransition(() -> SceneUtilities.changeSceneTo(SceneList.joinMenu));
+        });
+
+        createaButton.setOnButtonClicked(() -> {
+
+        });
+
+        joinButton.setOnButtonClicked(() -> {
+            
+        });
+
+        exitButton.setOnButtonClicked(() -> {
+            System.exit(0);
         });
     }
 

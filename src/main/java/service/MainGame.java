@@ -17,6 +17,7 @@ public class MainGame extends JFrame {
     private JPanel container;
     private static Scene currentScene;
 
+
     //Entry Main
     public static void main(String[] args) {
         System.setProperty("sun.java2d.uiScale", "1.0");
@@ -40,10 +41,10 @@ public class MainGame extends JFrame {
 
         SceneUtilities.changeSceneTo(SceneList.mainMenu);
 
-//        if (gd.isFullScreenSupported()) {
-//            this.setUndecorated(true);
-//            gd.setFullScreenWindow(this);
-//        }
+        if (gd.isFullScreenSupported()) {
+            this.setUndecorated(true);
+            gd.setFullScreenWindow(this);
+        }
     }
 
     public void startRunService() {
