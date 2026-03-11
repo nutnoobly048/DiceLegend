@@ -1,44 +1,68 @@
 package graphicsUtilities;
-//PROBLEM/IMPROVEMENT NEEDED : ตอนนี้ ImagePreloader จะอ่านไฟล์รูปที่อยู่ใน Image เท่านั้น จะไม่อ่านสิ่งที่อยู่ใน Subfolder
-//ทำ Method preload ให้เป็นแบบ Recursive เพื่อเช็คทุกไฟล์
+
 import javax.imageio.ImageIO;
 import java.awt.Image;
 import java.io.File;
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.HashMap;
 
 public class ImagePreload {
+    private static URL resourceURL;
     private static final HashMap<String, Image> preloadedAsset = new HashMap<>();
 
-    public static void preloadAllImage() {
+    public static void preloadAllImage() { preloadAllImage(null); }
+    
+    public static void preloadAllImage(URI folderURL) {
         //URL ชี้ไปที่ Image Folder
-        URL resource = ImagePreload.class.getClassLoader().getResource(".");
-
-        if (resource == null) {
-            System.err.println("Error: 'Image' Folder not found");
-            return;
+        if (resourceURL == null) {
+            resourceURL = ImagePreload.class.getClassLoader().getResource(".");
         }
 
-        //Folder โดยอ้างอิงจากพิกัดของ URL
-        File folder = new File(resource.getPath());
-
-        //list ของไฟล์ใน Folder
-        File[] listOfFiles = folder.listFiles();
-
-        if (listOfFiles != null) {
-            for (File file : listOfFiles) {
-                if (file.isFile() && isImage(file.getName())) {
-                    try {
-                        Image img = ImageIO.read(file);
-                        preloadedAsset.put(file.getName(), img);
-                        System.out.println(file.getName());
-                    } catch (IOException ex) {
-                        ex.printStackTrace();
+        if (resourceURL == null) { System.out.println("Cannot find Image Path"); }
+        
+        if (folderURL == null) {
+            try {
+                File folder = new File(resourceURL.toURI());
+                File[] listFiles_Folders = folder.listFiles();
+                for (File element: listFiles_Folders) {
+                    // ถ้าเป็นไฟล์ -> นำไปใส่ Hashmap
+                    if (element.isFile() || isImage(element.getName())) {
+                        preloadedAsset.put(element.getName(), ImageIO.read(element));
+                        System.out.println("loaded image: " + element.getName());
                     }
+                    // ถ้าเป็น folder -> recursive 
+                    else if (element.isDirectory()) {
+                        System.out.println("digging into folder: " + element.getName());
+                        preloadAllImage(element.toURI());
+                    }
+                }
+            } catch (URISyntaxException | IOException e) {
+                System.err.println(e);
+            }
+        } else if (folderURL != null) {
+            File folder = new File(folderURL);
+            File[] listFiles_Folders = folder.listFiles();
+            for (File element: listFiles_Folders) {
+                // ถ้าเป็นไฟล์ -> นำไปใส่ Hashmap
+                if (element.isFile() && isImage(element.getName())) {
+                    try {
+                        preloadedAsset.put(element.getName(), ImageIO.read(element));
+                    } catch (IOException e) {
+                        System.err.println(e);
+                    }
+                    System.out.println("loaded image: " + element.getName());
+                }
+                // ถ้าเป็น folder -> recursive 
+                else if (element.isDirectory()) {
+                    System.out.println("digging into folder: " + element.getName());
+                    preloadAllImage(element.toURI());
                 }
             }
         }
+        
     }
 
     private static boolean isImage(String name) {
