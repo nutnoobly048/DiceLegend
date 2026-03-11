@@ -4,6 +4,7 @@ public class Player {
 
     private String networkID;
     private String name;
+    private String localSpriteName; //A sprite they choose on their machine
 
     private boolean isReadyToPlay;
     private boolean isReadyToContinue;
@@ -11,7 +12,7 @@ public class Player {
 
     private int remainingSkipTurns = 0;
 
-    public static Player localPlayer;
+    public static Player localPlayer;// the one and only player on their machine
 
     public Player(String id, String name) {
         this.networkID = id;
@@ -28,7 +29,7 @@ public class Player {
 
     public static void setLocalPlayerId(String myLocalId) {
         if (localPlayer == null) {
-            localPlayer = new Player(myLocalId, "TESTIFICATE");
+            localPlayer = new Player(myLocalId, "SELF");
         } else {
             localPlayer.networkID = myLocalId;
         }
@@ -62,4 +63,12 @@ public class Player {
     public String getNetworkID() { return networkID; }
     public String getName() { return name; }
     public void setName(String name) { this.name = name; }
+
+    public String getSpriteName() {
+        return localSpriteName;
+    }
+
+    public void changeSpriteName(String localSpriteName) {
+        this.localSpriteName = localSpriteName;
+    }
 }

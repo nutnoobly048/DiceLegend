@@ -23,7 +23,8 @@ public class GameState {
     // All players and their pawns, keyed by networkID.
     // These are the single source of truth — do not maintain separate lists elsewhere.
     public final HashMap<String, Player> allPlayers = new LinkedHashMap<>();
-    public final HashMap<String, PawnCharacter> allPawnCharacters = new HashMap<>();
+    public final HashMap<String, PawnCharacter> spawnedCharacter = new HashMap<>();
+
 
     // --- Game Phase (Finite State Machine) ---
 
@@ -41,7 +42,7 @@ public class GameState {
     }
 
     public enum TriggerEvent {
-        PLAYER_JOINED, PLAYER_LEFT, GAME_START, PLAYER_READY, DICE_ROLL_EVENT
+        PLAYER_JOINED, PLAYER_LEFT,PLAYER_SPRITE_CHANGE, GAME_START, PLAYER_READY, DICE_ROLL_EVENT
     }
 
     public GamePhase currentPhase = GamePhase.WAIT_FOR_PLAYERS;
@@ -71,7 +72,6 @@ public class GameState {
                 }
                 RunService.mqtt.subscribe(baseTopic + "/Results", (topic, msg) -> RunService.resultQueue.add(msg));
 
-                // Announce this player to the host
                 CommandHandler.sentIntent("INTENT:" + Player.getLocalPlayerId() + ":JOIN_GAME:PlayerName");
 
                 System.out.println("Network Ready for " + (isHost ? "Host" : "Client"));
@@ -111,6 +111,9 @@ public class GameState {
                 setAllPlayersUnreadyToContinue();
                 changeStateTo(GamePhase.WAIT_FOR_READY);
             }
+            case PLAYER_SPRITE_CHANGE -> {
+                allPlayers.get(params[0]).changeSpriteName(params[1]);
+            }
         }
     }
 
@@ -129,6 +132,7 @@ public class GameState {
     }
 
     private void handleTurnStart(TriggerEvent event, String[] params) {
+
     }
 
     private void handleWaitForRoll(TriggerEvent event, String[] params) {
@@ -142,7 +146,6 @@ public class GameState {
         String name = params[1];
 
         allPlayers.putIfAbsent(id, new Player(id, name));
-        allPawnCharacters.putIfAbsent(id, new PawnCharacter(id, "blank.png", 0, 0));
 
         System.out.println("PLAYER JOINED: " + name + " [" + id + "]");
     }
@@ -152,7 +155,6 @@ public class GameState {
 
         String id = params[0];
         allPlayers.remove(id);
-        allPawnCharacters.remove(id);
 
         System.out.println("PLAYER LEFT: " + id);
     }

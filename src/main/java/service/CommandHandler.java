@@ -19,7 +19,7 @@ import static service.RunService.mqtt;
 
 public class CommandHandler {
 
-    //ONLY HOST CAN USE THIS METHOD
+    //ONLY HOST CAN USE THIS METHOD   format: [id]:action:params[0]:params[1]:.....:params[N]
     public static void handleIntent(String senderID, String action, String[] params) {
         if (GameState.currentGame == null || !GameState.currentGame.isHost) return;
 
@@ -59,7 +59,12 @@ public class CommandHandler {
                     broadcastResult("CONTINUE", senderID);
                 }
             }
-            case "TESTPRINT" -> System.out.println("PRINT");
+
+            case "CHANGE_SPRITE" -> {
+                broadcastResult("PLAYER_SPRITE_CHANGED", senderID,params[0]);
+            }
+
+            default -> System.out.println("PRINT MESSAGE");
         }
 
     }
@@ -75,12 +80,12 @@ public class CommandHandler {
             case "PLAYER_LEFT"   -> GameState.currentGame.handleEvent(GameState.TriggerEvent.PLAYER_LEFT, params);
             case "GAME_STARTED"  -> GameState.currentGame.handleEvent(GameState.TriggerEvent.GAME_START, null);
             case "CONTINUE" -> GameState.currentGame.handleEvent(GameState.TriggerEvent.PLAYER_READY, params);
-
+            case "PLAYER_SPRITE_CHANGED" -> GameState.currentGame.handleEvent(GameState.TriggerEvent.PLAYER_SPRITE_CHANGE, params);
         }
     }
 
 
-    //INTENT
+    //INTENT                 INTENT:[ID]:action:params[0]:params[1]:.....:params[N] format
     public static void sentIntent(String input) {
         String topic = "DiceLegend/" + GameState.currentGame.getLobbyName() + "/Intents";
         String[] packetList = input.split(":");

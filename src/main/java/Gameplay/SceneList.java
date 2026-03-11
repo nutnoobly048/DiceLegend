@@ -4,6 +4,8 @@ import animation.Tween;
 import animation.TweenProperty;
 import graphicsUtilities.Scene;
 import graphicsUtilities.SceneUtilities;
+import misc.PawnCharacter;
+import misc.Player;
 import objectClass.GameButton;
 import objectClass.GameObject;
 import objectClass.AnimatedSprite;
@@ -26,7 +28,12 @@ public class SceneList {
     public static Scene buildMysteriousJungle() {
         return new Scene() {
             {
-
+                setOnSceneEnter(() -> {
+                    for (Player player : GameState.currentGame.allPlayers.values()) {
+                        PawnCharacter character = new PawnCharacter(player.getNetworkID(), "blank.png");
+                        spawnObjectAt(character, 300, 400);
+                    }
+                });
             }
         };
     }
