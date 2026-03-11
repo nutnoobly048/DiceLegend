@@ -1,15 +1,9 @@
 package Gameplay;
 
-import animation.Tween;
-import animation.TweenProperty;
 import graphicsUtilities.Scene;
-import graphicsUtilities.SceneUtilities;
 import misc.PawnCharacter;
 import misc.Player;
-import objectClass.GameButton;
-import objectClass.GameObject;
-import objectClass.AnimatedSprite;
-import java.awt.*;
+import scene.MainMenuScene;
 
 public class SceneList {
 
