@@ -1,5 +1,7 @@
-package Gameplay;
+package scene;
 
+import Gameplay.GameState;
+import Gameplay.SceneList;
 import animation.Tween;
 import animation.TweenProperty;
 import graphicsUtilities.ImagePreload;
@@ -55,7 +57,7 @@ public class MainMenuScene extends Scene {
         });
 
         createaButton.setOnButtonClicked(() -> {
-
+            playExitTransition(() -> SceneUtilities.changeSceneTo(new LobbyScene()));
         });
 
         joinButton.setOnButtonClicked(() -> {
