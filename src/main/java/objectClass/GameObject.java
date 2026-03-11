@@ -63,6 +63,10 @@ public class GameObject implements ProcessByRunService {
         }
     }
 
+    public void moveTo(int x, int y) {
+        this.x = x;
+        this.y = y;
+    }
 
     public void setVisible(boolean visible) {
         this.isVisible = visible;
@@ -88,14 +92,4 @@ public class GameObject implements ProcessByRunService {
         this.currentScene = gameScene;
     }
 
-    @Override
-    public void OnRemoved() {
-        RunService.GetService().removeProcess(this);
-    }
-
-    @Override
-    public void OnCreate() {}
-
-    @Override
-    public void OnLateUpdate() {}
 }

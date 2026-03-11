@@ -53,8 +53,6 @@ public class Tween implements ProcessByRunService {
         }
     }
 
-    @Override
-    public void OnCreate() {}
 
     @Override
     public void OnUpdate(double deltatime) {
@@ -72,10 +70,4 @@ public class Tween implements ProcessByRunService {
             RunService.GetService().removeProcess(this);
         }
     }
-
-    @Override
-    public void OnLateUpdate() {}
-
-    @Override
-    public void OnRemoved() {}
 }

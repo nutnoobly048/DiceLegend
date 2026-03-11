@@ -89,6 +89,9 @@ public class Scene extends JPanel {
             RunService.GetService().addProcess(g);
         }
     }
+    public GameObject getObjectByID(String networkId) {
+        return this.currentSceneObject.get(networkId);
+    }
 
     public HashMap<String, GameObject> getAllSceneObject() {
         return this.currentSceneObject;

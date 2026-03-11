@@ -8,13 +8,6 @@ public class SceneUtilities {
     private static MainGame mainGameFrame;
     private static Scene currentGameScene;
 
-
-    public static Scene scene2 = new Scene();
-
-    public static Scene scene3 = new Scene();
-
-
-
     public static MainGame getCurrentGameFrame() {
         return mainGameFrame;
     }

@@ -27,7 +27,6 @@ public class MainGame extends JFrame {
     }
 
     public MainGame() {
-        // Essential window settings
         setTitle("Dice Legend");
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

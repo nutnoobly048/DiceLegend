@@ -4,6 +4,18 @@ import Gameplay.GameState;
 import misc.Player;
 
 import static service.RunService.mqtt;
+/*
+ * วิธีการทำงานของ Network:
+ *
+ * Client ทำอะไรสักอย่าง → sendIntent("INTENT:playerID:ACTION:params")
+ *      ↓ (host only รับ Intent)
+ * handleIntent() ตัดสินใจว่าต้องทำอะไร
+ *      ↓
+ * broadcastResult() or sendResultTo() เพื่อส่งผลลัพธ์
+ *      ↓ (ถึงทุกคนรวมถึง  Host)
+ * handleResult() routes to GameState.handleEvent()
+ *      ↓
+ * GameState อัพเดต */
 
 public class CommandHandler {
 
@@ -69,7 +81,7 @@ public class CommandHandler {
 
 
     //INTENT
-    public static void intent(String input) {
+    public static void sentIntent(String input) {
         String topic = "DiceLegend/" + GameState.currentGame.getLobbyName() + "/Intents";
         String[] packetList = input.split(":");
 
