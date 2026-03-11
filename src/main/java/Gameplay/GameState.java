@@ -1,6 +1,7 @@
 package Gameplay;
 
 import Gameplay.SceneList;
+import graphicsUtilities.Scene;
 import graphicsUtilities.SceneUtilities;
 import misc.Player;
 import misc.PawnCharacter;
@@ -107,7 +108,12 @@ public class GameState {
             case PLAYER_JOINED -> onPlayerJoined(params);
             case PLAYER_LEFT   -> onPlayerLeft(params);
             case GAME_START -> {
-                SceneUtilities.changeSceneTo(SceneList.buildMysteriousJungle());
+                switch (selectedMapId) {
+                    case "mysteriousJungle" -> SceneUtilities.changeSceneTo(SceneList.buildMysteriousJungle());
+                    case "goldenSeason" -> SceneUtilities.changeSceneTo(SceneList.buildGoldenSeason());
+                    case "cryoGarden" -> SceneUtilities.changeSceneTo(SceneList.buildCryoGarden());
+                }
+
                 setAllPlayersUnreadyToContinue();
                 changeStateTo(GamePhase.WAIT_FOR_READY);
             }

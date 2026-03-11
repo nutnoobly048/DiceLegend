@@ -10,6 +10,7 @@ import graphicsUtilities.SceneUtilities;
 import objectClass.GameObject;
 import objectClass.GameButton;
 
+import javax.swing.*;
 import java.awt.*;
 
 public class MainMenuScene extends Scene {
@@ -18,10 +19,10 @@ public class MainMenuScene extends Scene {
     private GameObject transition_right = new GameObject("transit_right", "Transition.png", 0, 0);
     private GameObject transition_up    = new GameObject("transit_up",    "Transition.png", 0, 0);
     private GameObject transition_down  = new GameObject("transit_down",  "Transition.png", 0, 0);
-    private GameButton startButton      = new GameButton("Start", "licoCake144.png", "licoCake144.png");
     private GameButton createaButton    = new GameButton("CREATE", "button.png", "buttonOnHover.png");
     private GameButton joinButton       = new GameButton("JOIN", "button.png", "buttonOnHover.png");
     private GameButton exitButton       = new GameButton("EXIT", "button.png", "buttonOnHover.png");
+    private JTextField textField        = new JTextField();
 
     public MainMenuScene() {
         setupObjects();
@@ -36,8 +37,7 @@ public class MainMenuScene extends Scene {
         spawnObjectAt(transition_right);
         spawnObjectAt(transition_up);
         spawnObjectAt(transition_down);
-//        startButton.setBounds(300, 300, 500, 500);
-//        add(startButton);
+
 
         createaButton.setBounds(200, 500, 500, 80);
         add(createaButton);
@@ -45,23 +45,30 @@ public class MainMenuScene extends Scene {
         joinButton.setBounds(200, 650, 500, 80);
         add(joinButton);
 
+        textField.setBounds(750,650, 500,80);
+        textField.setOpaque(true); // Make it clear
+        textField.setFont(new Font("Arial", Font.BOLD, 18));
+        textField.setForeground(Color.WHITE);
+        textField.setBackground(new Color(20,25,51));
+        textField.setCaretColor(Color.WHITE);
+        textField.setBorder(BorderFactory.createMatteBorder(2, 2, 2, 2, new Color(13,12,25)));
+        textField.setHorizontalAlignment(JTextField.CENTER);
+        add(textField);
+
         exitButton.setBounds(200, 800, 500, 80);
         add(exitButton);
 
     }
 
     private void setupButtons() {
-        startButton.setOnButtonClicked(() -> {
-            new GameState(true, "Lico");
-            playExitTransition(() -> SceneUtilities.changeSceneTo(SceneList.joinMenu));
-        });
-
         createaButton.setOnButtonClicked(() -> {
+            new GameState(true, textField.getText());
             playExitTransition(() -> SceneUtilities.changeSceneTo(new LobbyScene()));
         });
 
         joinButton.setOnButtonClicked(() -> {
-            
+            new GameState(false, textField.getText());
+            playExitTransition(() -> SceneUtilities.changeSceneTo(new LobbyScene()));
         });
 
         exitButton.setOnButtonClicked(() -> {
