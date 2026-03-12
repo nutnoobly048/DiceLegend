@@ -4,7 +4,7 @@ public class Player {
 
     private String networkID;
     private String name;
-    private String localSpriteName = "licoCake144.png"; //A sprite they choose on their machine
+    private String localSpriteName = "IMG_0428.png"; //A sprite they choose on their machine
 
     private boolean isReadyToPlay;
     private boolean isReadyToContinue;
@@ -70,5 +70,13 @@ public class Player {
 
     public void changeSpriteName(String localSpriteName) {
         this.localSpriteName = localSpriteName;
+    }
+
+    public static void setLocalPlayerName(String name) {
+        localPlayer.name = name;
+    }
+
+    public static String getLocalPlayerName() {
+        return localPlayer.name;
     }
 }

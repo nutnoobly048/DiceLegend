@@ -3,7 +3,6 @@ package scene;
 import Gameplay.GameState;
 import animation.Tween;
 import animation.TweenProperty;
-import graphicsUtilities.ImagePreload;
 import graphicsUtilities.Scene;
 import misc.PawnCharacter;
 import misc.Player;
@@ -28,8 +27,8 @@ public class MysteriousJungleScene extends Scene {
 
     private static final int PAWN_SPRITE_W  = 64;
     private static final int PAWN_SPRITE_H  = 96;
-    private static final int PAWN_OFFSET_X  = -(PAWN_SPRITE_W  / 2); // -32  (center horizontally)
-    private static final int PAWN_OFFSET_Y  = -PAWN_SPRITE_H;        // -96  (anchor to bottom)
+    private static final int PAWN_OFFSET_X  = -(PAWN_SPRITE_W  / 2);
+    private static final int PAWN_OFFSET_Y  = -PAWN_SPRITE_H;
 
 
     private static final int START_TILE_X = 500;

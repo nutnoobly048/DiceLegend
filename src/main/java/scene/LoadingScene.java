@@ -55,7 +55,9 @@ public class LoadingScene extends Scene {
                     System.out.println("Connected");
                     System.out.println("Network Ready for " + (isHost ? "Host" : "Client"));
                     RunService.mqtt.subscribe(baseTopic + "/Results", (topic, msg) -> RunService.resultQueue.add(msg));
-                    CommandHandler.sentIntent("INTENT:" + Player.getLocalPlayerId() + ":JOIN_GAME:JeenIsReal");
+
+                    CommandHandler.sentIntent("INTENT:" + Player.getLocalPlayerId() + ":JOIN_GAME:" + Player.getLocalPlayerName());
+
                     SceneUtilities.changeSceneTo(new LobbyScene());
                 } else {
                     RunService.mqtt.disconnect();
