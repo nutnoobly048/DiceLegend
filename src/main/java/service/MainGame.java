@@ -15,7 +15,7 @@ public class MainGame extends JFrame {
 
     private static RunService runService;
     private JPanel container;
-    private static Scene currentScene;
+    private static Scene currentScene = null;
 
 
     //Entry Main
@@ -41,10 +41,10 @@ public class MainGame extends JFrame {
 
         SceneUtilities.changeSceneTo(SceneList.mainMenu);
 
-//        if (gd.isFullScreenSupported()) {
-//            this.setUndecorated(true);
-//            gd.setFullScreenWindow(this);
-//        }
+        if (gd.isFullScreenSupported()) {
+            this.setUndecorated(true);
+            gd.setFullScreenWindow(this);
+        }
     }
 
     public void startRunService() {

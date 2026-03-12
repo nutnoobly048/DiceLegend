@@ -30,6 +30,7 @@ public class MainMenuScene extends Scene {
     private GameButton exitButton       = new GameButton("EXIT", "button.png", "buttonOnHover.png");
     private JTextField textField        = new JTextField();
 
+    private double duration = 0.4;
 
     public MainMenuScene() {
         setupObjects();
@@ -37,7 +38,6 @@ public class MainMenuScene extends Scene {
         setupTransitions();
         setBackground(ImagePreload.get("battle.png"));
     }
-
 
     private void setupObjects() {
         spawnObjectAt(transition_left);
@@ -71,13 +71,11 @@ public class MainMenuScene extends Scene {
 
     private void setupButtons() {
         createaButton.setOnButtonClicked(() -> {
-            new GameState(true, textField.getText());
-            playExitTransition(() -> SceneUtilities.changeSceneTo(new LobbyScene()));
+            playExitTransition(() -> SceneUtilities.changeSceneTo(new LoadingScene(true, textField.getText())));
         });
 
         joinButton.setOnButtonClicked(() -> {
-            new GameState(false, textField.getText());
-            playExitTransition(() -> SceneUtilities.changeSceneTo(new LobbyScene()));
+            playExitTransition(() -> SceneUtilities.changeSceneTo(new LoadingScene(false, textField.getText())));
         });
 
         exitButton.setOnButtonClicked(() -> {
@@ -91,17 +89,17 @@ public class MainMenuScene extends Scene {
 
 
     private void playEnterTransition() {
-        new Tween(transition_left,  TweenProperty.X, -960, -1920, 1).start();
-        new Tween(transition_right, TweenProperty.X,  960,  1920, 1).start();
-        new Tween(transition_up,    TweenProperty.Y, -540, -1080, 1).start();
-        new Tween(transition_down,  TweenProperty.Y,  540,  1080, 1).start();
+        new Tween(transition_left,  TweenProperty.X, -960, -1920, duration).start();
+        new Tween(transition_right, TweenProperty.X,  960,  1920, duration).start();
+        new Tween(transition_up,    TweenProperty.Y, -540, -1080, duration).start();
+        new Tween(transition_down,  TweenProperty.Y,  540,  1080, duration).start();
     }
 
     private void playExitTransition(Runnable onDone) {
-        new Tween(transition_left,  TweenProperty.X, -1920, -960, 1).start();
-        new Tween(transition_right, TweenProperty.X,  1920,  960, 1).start();
-        new Tween(transition_up,    TweenProperty.Y, -1080, -540, 1).start();
-        new Tween(transition_down,  TweenProperty.Y,  1080,  540, 1).OnComplete(onDone).start();
+        new Tween(transition_left,  TweenProperty.X, -1920, -960, duration).start();
+        new Tween(transition_right, TweenProperty.X,  1920,  960, duration).start();
+        new Tween(transition_up,    TweenProperty.Y, -1080, -540, duration).start();
+        new Tween(transition_down,  TweenProperty.Y,  1080,  540, duration).OnComplete(onDone).start();
     }
 
     private void spawnParticles(int count) {

@@ -1,5 +1,6 @@
 package graphicsUtilities;
 
+import Gameplay.SceneList;
 import objectClass.GameObject;
 import service.MainGame;
 import service.RunService;
@@ -18,20 +19,34 @@ public class SceneUtilities {
 
     }
 
+    public static void changeSceneTo(String sceneName) {
+        switch (sceneName) {
+            case "mysteriousJungle" -> changeSceneTo(SceneList.buildMysteriousJungle);
+        }
+    }
 
     public static void changeSceneTo(Scene newScene) {
         if (currentGameScene != null) {
-            currentGameScene.onSceneExited();
+            currentGameScene.requestExit(() -> {
+                performSwitch(newScene);
+            });
+        } else {
+            performSwitch(newScene);
+        }
+    }
+
+    private static void performSwitch(Scene newScene) {
+        if (currentGameScene  != null) {
             exitScene();
             mainGameFrame.getContainer().removeAll();
         }
-        newScene.setFocusable(false);
 
+
+        newScene.setFocusable(false);
         currentGameScene = newScene;
         mainGameFrame.getContainer().add(newScene);
 
         startScene();
-
         refreshScene();
         currentGameScene.onSceneEntered();
     }

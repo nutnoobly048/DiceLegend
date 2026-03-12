@@ -1,6 +1,8 @@
 package service;
 
 import Gameplay.GameState;
+import Gameplay.SceneList;
+import graphicsUtilities.SceneUtilities;
 import misc.Player;
 
 import static service.RunService.mqtt;
@@ -59,9 +61,13 @@ public class CommandHandler {
                     broadcastResult("CONTINUE", senderID);
                 }
             }
-
             case "CHANGE_SPRITE" -> {
                 broadcastResult("PLAYER_SPRITE_CHANGED", senderID,params[0]);
+            }
+            case "CHANGESCENETO" -> {
+                if (isFromHost) {
+                    broadcastResult("CHANGESCENETO", params);
+                }
             }
 
             default -> System.out.println("PRINT MESSAGE");
@@ -72,7 +78,6 @@ public class CommandHandler {
     //BOTH CLIENTS AND HOST CAN USE THIS METHOD
     public static void handleResult(String targetID, String action, String[] params) {
         if (GameState.currentGame == null) return;
-
         if (!targetID.equals("ALLCLIENTS") && !targetID.equals(Player.getLocalPlayerId())) return;
 
         switch (action) {
@@ -81,6 +86,8 @@ public class CommandHandler {
             case "GAME_STARTED"  -> GameState.currentGame.handleEvent(GameState.TriggerEvent.GAME_START, null);
             case "CONTINUE" -> GameState.currentGame.handleEvent(GameState.TriggerEvent.PLAYER_READY, params);
             case "PLAYER_SPRITE_CHANGED" -> GameState.currentGame.handleEvent(GameState.TriggerEvent.PLAYER_SPRITE_CHANGE, params);
+
+            case "CHANGESCENETO" -> SceneUtilities.changeSceneTo(params[0]);
         }
     }
 
@@ -100,12 +107,12 @@ public class CommandHandler {
     }
 
     //RESULT
-    private static void broadcastResult(String act, String... p) {
+    public static void broadcastResult(String act, String... p) {
         String packet = "RESULT:ALLCLIENTS:" + act + (p.length > 0 ? ":" + String.join(":", p) : "");
         mqtt.publish("DiceLegend/" + GameState.currentGame.getLobbyName() + "/Results", packet);
     }
 
-    private static void sendResultTo(String target, String act, String... p) {
+    public static void sendResultTo(String target, String act, String... p) {
         String packet = "RESULT:" + target + ":" + act + (p.length > 0 ? ":" + String.join(":", p) : "");
         mqtt.publish("DiceLegend/" + GameState.currentGame.getLobbyName() + "/Results", packet);
     }

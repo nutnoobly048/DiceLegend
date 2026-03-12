@@ -5,6 +5,7 @@ import service.RunService;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 //พื้นที่แสดงผล (Stage)
@@ -16,6 +17,7 @@ public class Scene extends JPanel {
 
     // Default background
     private Image background = ImagePreload.get("blank.png");
+    private ArrayList<GameObject>            drawList     = new ArrayList<>();
     private HashMap<String, GameObject> currentSceneObject = new HashMap<>();
 
     private Runnable onEnterMethod = () -> {};
@@ -30,6 +32,7 @@ public class Scene extends JPanel {
     public void setOnSceneExited(Runnable onExitedMethod) {
         this.onExitedMethod = onExitedMethod;
     }
+
     public void setOnSceneEnter(Runnable onEnterMethod) {
         this.onEnterMethod = onEnterMethod;
     }
@@ -42,6 +45,14 @@ public class Scene extends JPanel {
         onExitedMethod.run();
     }
 
+    public void requestExit(Runnable onExitComplete) {
+        if (onExitedMethod != null) {
+            onExitedMethod.run();
+        }
+
+        onExitComplete.run();
+    }
+
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
@@ -51,7 +62,7 @@ public class Scene extends JPanel {
             g2d.drawImage(background, 0, 0, getWidth(), getHeight(), null);
         }
 
-        for (GameObject obj : currentSceneObject.values()) {
+        for (GameObject obj : drawList) {
             if (obj.hasSprite() && obj.isVisible()) {
                 obj.getSprite().draw(g2d);
             }
@@ -72,17 +83,25 @@ public class Scene extends JPanel {
     public void spawnObjectAt(GameObject g, int x, int y) {
         g.x = x;
         g.y = y;
-
-        g.setCurrentGameScene(this);
-
-        currentSceneObject.put(g.networkId, g);
-
-        if (SceneUtilities.getCurrentGameScene() == this) {
-            RunService.GetService().addProcess(g);
-        }
+        registerObject(g);
     }
+
     public void spawnObjectAt(GameObject g) {
+        registerObject(g);
+    }
+
+    private void registerObject(GameObject g) {
         g.setCurrentGameScene(this);
+
+        int insertAt = drawList.size();
+        for (int i = 0; i < drawList.size(); i++) {
+            if (g.z < drawList.get(i).z) {
+                insertAt = i;
+                break;
+            }
+        }
+        drawList.add(insertAt, g);
+
         currentSceneObject.put(g.networkId, g);
 
         if (SceneUtilities.getCurrentGameScene() == this) {
