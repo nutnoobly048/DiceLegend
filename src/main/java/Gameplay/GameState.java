@@ -117,7 +117,7 @@ public class GameState {
 
                 RunService.mqtt.subscribe(baseTopic + "/Results", (topic, msg) -> RunService.resultQueue.add(msg));
 
-                CommandHandler.sentIntent("INTENT:" + Player.getLocalPlayerId() + ":JOIN_GAME:PlayerName");
+                CommandHandler.sentIntent("INTENT:" + Player.getLocalPlayerId() + ":JOIN_GAME:PM");
 
                 System.out.println("Network Ready for " + (isHost ? "Host" : "Client"));
             } catch (Exception e) {
