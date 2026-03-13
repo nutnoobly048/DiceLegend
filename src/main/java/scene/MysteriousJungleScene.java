@@ -7,6 +7,7 @@ import graphicsUtilities.Scene;
 import misc.PawnCharacter;
 import misc.Player;
 import objectClass.GameObject;
+import service.CommandHandler;
 
 import java.awt.*;
 import java.util.List;
@@ -47,7 +48,9 @@ public class MysteriousJungleScene extends Scene {
         setOnSceneEnter(() -> {
             playEnterTransition();
             spawnAllPawns();
+            CommandHandler.sentIntent("INTENT:SELF:CONTINUE");
         });
+
     }
 
     private void setupObjects() {

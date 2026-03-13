@@ -3,6 +3,7 @@ package service;
 import Gameplay.GameState;
 import Gameplay.SceneList;
 import graphicsUtilities.SceneUtilities;
+import misc.PawnCharacter;
 import misc.Player;
 
 import static service.RunService.mqtt;
@@ -44,7 +45,6 @@ public class CommandHandler {
         switch (action) {
             case "JOIN_GAME" -> {
                 broadcastResult("PLAYER_JOINED", senderID, params[0]);
-
                 GameState.currentGame.allPlayers.forEach((id, p) -> sendResultTo(senderID, "PLAYER_JOINED", id, p.getName()));
             }
             case "LEAVE_GAME" -> broadcastResult("PLAYER_LEFT", senderID);
@@ -69,6 +69,10 @@ public class CommandHandler {
                     broadcastResult("CHANGESCENETO", params);
                 }
             }
+            case "ROLLEVENT" -> {
+                int roll = (int)(Math.random() * 6) + 1;
+                broadcastResult("DICE_ROLLED", senderID, String.valueOf(roll));
+            }
 
             default -> System.out.println("PRINT MESSAGE");
         }
@@ -88,6 +92,17 @@ public class CommandHandler {
             case "PLAYER_SPRITE_CHANGED" -> GameState.currentGame.handleEvent(GameState.TriggerEvent.PLAYER_SPRITE_CHANGE, params);
 
             case "CHANGESCENETO" -> SceneUtilities.changeSceneTo(params[0]);
+            case "DICE_ROLLED" -> GameState.currentGame.handleEvent(GameState.TriggerEvent.DICE_ROLL_EVENT, params);
+            case "MOVETO" -> {
+                String playerId = params[0];
+                int targetIndex = Integer.parseInt(params[1]);
+                PawnCharacter pawn = GameState.currentGame.spawnedCharacter.get(playerId);
+                //อย่าลืมส่ง INTENT:SELF:CONTINUE กลับมาหลังจากเสร็จ เนื่องจากต้องรอให้ทุกคน ขยับ เสร็จก่อน
+                //ในบางครั้ง MOVETO จะถูกส่งมา 2 รอบ (เดินปกติ กับ ย้ายไปยังเป้าหมายของบันได / งู)
+                 //เช็ค Logic ใน GameState บรรทัดที่ 140 - 150
+                pawn.moveToTileIndex(targetIndex); //เป็น mockup เฉยๆ
+
+            }
         }
     }
 

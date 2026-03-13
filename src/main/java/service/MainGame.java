@@ -9,6 +9,8 @@ import misc.Player;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 public class MainGame extends JFrame {
 
@@ -32,6 +34,15 @@ public class MainGame extends JFrame {
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         addKeyListener(new UserInput());
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                if (GameState.currentGame != null) {
+                    RunService.mqtt.clearRetained("DiceLegend/" + GameState.currentGame.getLobbyName() + "/room_state");
+                    RunService.mqtt.disconnect();
+                }
+            }
+        });
         //thanks, AI, for Fullscreen
         GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
 
@@ -40,11 +51,11 @@ public class MainGame extends JFrame {
 
 
         SceneUtilities.changeSceneTo(SceneList.mainMenu);
+//        if (gd.isFullScreenSupported()) {
+//            this.setUndecorated(true);
+//            gd.setFullScreenWindow(this);
+//        }
 
-        if (gd.isFullScreenSupported()) {
-            this.setUndecorated(true);
-            gd.setFullScreenWindow(this);
-        }
     }
 
     public void startRunService() {

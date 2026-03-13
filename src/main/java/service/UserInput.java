@@ -26,7 +26,12 @@ public class UserInput implements KeyListener{
     }
 
     public static void updateAndSync() {
+        if (isKeyJustPressed(KeyEvent.VK_SPACE)) {
+            CommandHandler.sentIntent("INTENT:SELF:ROLLEVENT");
+            System.out.println("ROLL EVENT INTENT SENT");
+        }
         copyKeyMap.putAll(keyMap);
+
     }
     // Listen To KeyTyped
     @Override
@@ -54,7 +59,6 @@ public class UserInput implements KeyListener{
 
         return !current && previous;
     }
-
 
     @Override
     public void keyPressed(KeyEvent e) {
