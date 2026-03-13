@@ -37,33 +37,57 @@ public class LoadingScene extends Scene {
                 new GameState(this.isHost, this.lobbyName);
                 boolean connected = false;
                 if (isHost) {
+
+                    AtomicBoolean roomTaken = new AtomicBoolean(false);
+                    String topics = baseTopic + "/room_state";
+
                     RunService.mqtt.connectWithWill(baseTopic, "HOST_DISCONNECTED");
-                    RunService.mqtt.subscribe(baseTopic + "/Intents", (topic, msg) -> RunService.intentQueue.add(msg));
-                    RunService.mqtt.publishRetained(baseTopic + "/room_state", "ACTIVE");
-                    connected = true;
+
+                    // เช็คห้องว่าถูกใช้ไปหรือยัง
+                    RunService.mqtt.subscribe(topics, (t, msg) -> {
+                        if (msg.equals("ACTIVE")) {
+                            roomTaken.set(true);
+                        }
+                    });
+
+                    Thread.sleep(2000);
+
+                    if (!roomTaken.get()) {
+
+                        RunService.mqtt.subscribe(baseTopic + "/Intents",
+                                (topic, msg) -> RunService.intentQueue.add(msg));
+                        RunService.mqtt.publishRetained(baseTopic + "/room_state", "ACTIVE");
+                        connected = true;
+
+                    }
+
                 } else {
                     RunService.mqtt.connect();
                     AtomicBoolean state = new AtomicBoolean(false);
 
                     String topics = baseTopic + "/room_state";
-                    RunService.mqtt.subscribe(topics, (t, msg) -> { if (msg.equals("ACTIVE")) state.set(true);});
+                    RunService.mqtt.subscribe(topics, (t, msg) -> {
+                        if (msg.equals("ACTIVE"))
+                            state.set(true);
+                    });
 
                     Thread.sleep(3000);
                     connected = state.get();
                 }
-                if ( connected ) {
+                if (connected) {
                     System.out.println("Connected");
                     System.out.println("Network Ready for " + (isHost ? "Host" : "Client"));
                     RunService.mqtt.subscribe(baseTopic + "/Results", (topic, msg) -> RunService.resultQueue.add(msg));
 
-                    CommandHandler.sentIntent("INTENT:" + Player.getLocalPlayerId() + ":JOIN_GAME:" + Player.getLocalPlayerName());
+                    CommandHandler.sentIntent(
+                            "INTENT:" + Player.getLocalPlayerId() + ":JOIN_GAME:" + Player.getLocalPlayerName());
 
                     SceneUtilities.changeSceneTo(new LobbyScene());
                 } else {
                     RunService.mqtt.disconnect();
                     System.out.println("Disconnect");
                     SceneUtilities.changeSceneTo(SceneList.mainMenu);
-                    GameState.currentGame = null; //สร้างไม่สำเร็จ ให้ reset current game
+                    GameState.currentGame = null; // สร้างไม่สำเร็จ ให้ reset current game
                 }
 
             } catch (Exception e) {
