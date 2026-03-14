@@ -149,7 +149,9 @@ public class GameState {
             CommandHandler.broadcastResult("MOVETO", playerId, String.valueOf(finalDestination));
         }
 
-        pawn.setCurrentTileIndex(finalDestination);
+        // pawn.setCurrentTileIndex(finalDestination); 
+        // -> คอมเมนต์ไว้ก่อนเพราะมันทำให้ animation ไม่ทำงาน 
+        // (แต่ pawn อัพเดต index ตัวเองแล้ว ดังนั้นไม่จำเป็นต้องใช้โค้ดนี้)
 
         setAllPlayersUnreadyToContinue();
         changeStateTo(GamePhase.EXECUTE_MOVEMENT);
@@ -168,7 +170,7 @@ public class GameState {
     }
 
     private void handleCheckTile(TriggerEvent event, String[] params) {
-
+        advanceToNextPlayer();
 
     }
 

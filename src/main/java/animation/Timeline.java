@@ -29,7 +29,7 @@ public class Timeline implements ProcessByRunService {
     public void add(Tween tween, double delay) {
         TimelineItem item = new TimelineItem(tween, delay);
         tweenList.add(item);
-        double tweenEnd = delay;
+        double tweenEnd = delay + tween.getDuration();
         totalDuration = Math.max(totalDuration, tweenEnd);
     }
 
