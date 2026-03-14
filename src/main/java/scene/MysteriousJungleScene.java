@@ -36,7 +36,7 @@ public class MysteriousJungleScene extends Scene {
     private static final int START_TILE_X = 500;
     private static final int START_TILE_Y = 1000;
 
-    private static final int[][] SLOT_OFFSETS = {
+    public static final int[][] SLOT_OFFSETS = {
             { -20, -20 },
             {  20, -20 },
             { -20,  10 },
