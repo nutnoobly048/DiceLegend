@@ -42,6 +42,10 @@ public class Tween implements ProcessByRunService {
         return this;
     }
 
+    public double getDuration() {
+        return this.duration;
+    }
+
     private void applyValue(double value) {
         switch (property) {
             case X:

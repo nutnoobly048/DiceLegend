@@ -6,6 +6,7 @@ import animation.TweenProperty;
 import graphicsUtilities.Scene;
 import misc.PawnCharacter;
 import misc.Player;
+import objectClass.GameButton;
 import objectClass.GameObject;
 import service.CommandHandler;
 
@@ -63,6 +64,14 @@ public class MysteriousJungleScene extends Scene {
         spawnObjectAt(transition_right);
         spawnObjectAt(transition_up);
         spawnObjectAt(transition_down);
+
+        // test button
+        GameButton rollBtn = new GameButton("roll", "button.png", "buttonOnHover.png");
+        rollBtn.setBounds(50, 50, 150, 60); // x, y, width, height
+        rollBtn.setOnButtonClicked(() -> {
+            CommandHandler.sentIntent("INTENT:SELF:ROLLEVENT");
+        });
+        add(rollBtn);
     }
 
     private void spawnAllPawns() {
