@@ -6,6 +6,7 @@ import animation.TweenProperty;
 import graphicsUtilities.Scene;
 import misc.PawnCharacter;
 import misc.Player;
+import objectClass.AnimatedSprite;
 import objectClass.GameButton;
 import objectClass.GameObject;
 import service.CommandHandler;
@@ -36,12 +37,6 @@ public class MysteriousJungleScene extends Scene {
     private static final int START_TILE_X = 500;
     private static final int START_TILE_Y = 1000;
 
-    public static final int[][] SLOT_OFFSETS = {
-            { -20, -20 },
-            {  20, -20 },
-            { -20,  10 },
-            {  20,  10 },
-    };
 
     public MysteriousJungleScene() {
         setBackground(Color.BLACK);
@@ -65,9 +60,8 @@ public class MysteriousJungleScene extends Scene {
         spawnObjectAt(transition_up);
         spawnObjectAt(transition_down);
 
-        // test button
         GameButton rollBtn = new GameButton("roll", "button.png", "buttonOnHover.png");
-        rollBtn.setBounds(50, 50, 150, 60); // x, y, width, height
+        rollBtn.setBounds(50, 50, 150, 60);
         rollBtn.setOnButtonClicked(() -> {
             CommandHandler.sentIntent("INTENT:SELF:ROLLEVENT");
         });
@@ -79,12 +73,13 @@ public class MysteriousJungleScene extends Scene {
 
         for (int slotIndex = 0; slotIndex < players.size(); slotIndex++) {
             Player player  = players.get(slotIndex);
-            int[]  slot    = SLOT_OFFSETS[slotIndex];
+            int[]  slot    = PawnCharacter.SLOT_OFFSETS[slotIndex];
 
             int spawnX = START_TILE_X + slot[0];
             int spawnY = START_TILE_Y + slot[1];
 
-            PawnCharacter pawn = new PawnCharacter(player.getNetworkID(), player.getSpriteName(), spawnX, spawnY);
+//            PawnCharacter pawn = new PawnCharacter(player.getNetworkID(), player.getSpriteName(), spawnX, spawnY); รูปแบบไม่ Animated
+            PawnCharacter pawn = new PawnCharacter(player.getNetworkID(), new AnimatedSprite(player.getSpriteName(), 0,0, 2, 2), spawnX,spawnY);
             pawn.getSprite().offsetX = PAWN_OFFSET_X;
             pawn.getSprite().offsetY = PAWN_OFFSET_Y;
             pawn.z = slotIndex;

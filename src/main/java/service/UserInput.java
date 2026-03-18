@@ -12,13 +12,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 
+//             << MARK FOR DEPRECATION >>
 public class UserInput implements KeyListener{
 
     private static HashMap<Integer, Boolean> keyMap = new HashMap<Integer, Boolean>();
     private static HashMap<Integer, Boolean> copyKeyMap = new HashMap<Integer, Boolean>();
     private static int keyCode;
-
-
 
 
     public UserInput(){
@@ -28,7 +27,6 @@ public class UserInput implements KeyListener{
     public static void updateAndSync() {
         if (isKeyJustPressed(KeyEvent.VK_SPACE)) {
             CommandHandler.sentIntent("INTENT:SELF:ROLLEVENT");
-            System.out.println("ROLL EVENT INTENT SENT");
         }
         copyKeyMap.putAll(keyMap);
 

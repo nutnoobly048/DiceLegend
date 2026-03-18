@@ -1,6 +1,7 @@
 package Gameplay;
 
 
+import ServiceInterface.CellAttribute;
 import misc.Player;
 import misc.PawnCharacter;
 import objectClass.Board;
@@ -44,6 +45,7 @@ public class GameState {
     }
 
     public enum TriggerEvent {
+        ON_PHASE_ENTER, //ใช้แค่ตอนเปลี่ยน State
         PLAYER_JOINED, PLAYER_LEFT, PLAYER_SPRITE_CHANGE, GAME_START, PLAYER_READY, DICE_ROLL_EVENT
     }
 
@@ -149,9 +151,6 @@ public class GameState {
             CommandHandler.broadcastResult("MOVETO", playerId, String.valueOf(finalDestination));
         }
 
-        // pawn.setCurrentTileIndex(finalDestination); 
-        // -> คอมเมนต์ไว้ก่อนเพราะมันทำให้ animation ไม่ทำงาน 
-        // (แต่ pawn อัพเดต index ตัวเองแล้ว ดังนั้นไม่จำเป็นต้องใช้โค้ดนี้)
 
         setAllPlayersUnreadyToContinue();
         changeStateTo(GamePhase.EXECUTE_MOVEMENT);
@@ -170,8 +169,19 @@ public class GameState {
     }
 
     private void handleCheckTile(TriggerEvent event, String[] params) {
-        advanceToNextPlayer();
+        PawnCharacter currentPawn = GameState.currentGame.spawnedCharacter.get(currentPlayerTurnId);
+        int currentIndex = currentPawn.getCurrentTileIndex();
 
+        switch (gameBoard.getAttributeFromIndex(currentIndex)) {
+            case CellAttribute.WIN_TILE -> {}
+            case CellAttribute.EVENT_TILE -> {}
+            case CellAttribute.ITEM_TILE -> {}
+            case CellAttribute.WATER_TILE -> {}
+            case CellAttribute.ABYSS_TILE -> {}
+            default -> System.out.println("No Speicial Tile");
+        }
+
+        advanceToNextPlayer();
     }
 
     private void onPlayerJoined(String[] params) {
@@ -233,6 +243,7 @@ public class GameState {
         }
         currentPhase = newPhase;
         System.out.println("Phase -> " + newPhase);
+        handleEvent(TriggerEvent.ON_PHASE_ENTER);
     }
 
     public String getPlayerIdByTurnIndex(int index) {
@@ -256,6 +267,7 @@ public class GameState {
 
         setAllPlayersUnreadyToContinue();
         CommandHandler.broadcastResult("UIEVENT", "WAITFOR", playerId);
+
         changeStateTo(GamePhase.WAIT_FOR_ROLL);
     }
 

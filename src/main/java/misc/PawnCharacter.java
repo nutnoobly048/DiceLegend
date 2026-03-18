@@ -6,12 +6,20 @@ import Gameplay.GameState;
 import animation.Timeline;
 import animation.Tween;
 import animation.TweenProperty;
+import objectClass.AnimatedSprite;
 import objectClass.GameObject;
 import service.CommandHandler;
 
 public class PawnCharacter extends GameObject {
 
     private int currentTileIndex = 0;
+
+    public static final int[][] SLOT_OFFSETS = {
+            { -20, -20 },
+            {  20, -20 },
+            { -20,  10 },
+            {  20,  10 },
+    };
 
     public PawnCharacter(String playerID, String imgFileName, int x, int y) {
         super(playerID, imgFileName, x, y);
@@ -20,9 +28,12 @@ public class PawnCharacter extends GameObject {
     public PawnCharacter(String playerID, String imgFileName) {
         this(playerID, imgFileName, 0, 0);
     }
-
+    public PawnCharacter(String networkId, AnimatedSprite sprite, int x, int y) {
+        super(networkId, sprite, x, y);
+    }
     private Queue<Integer> moveQueue = new LinkedList<>();
     private boolean isAnimating = false;
+
 
     public void moveToTileIndex(int targetIndex) {
         moveQueue.add(targetIndex);
@@ -48,7 +59,7 @@ public class PawnCharacter extends GameObject {
                 }
             }
         }
-        return Math.min(count, scene.MysteriousJungleScene.SLOT_OFFSETS.length - 1);
+        return Math.min(count, SLOT_OFFSETS.length - 1);
     }
 
     private void processNextMove() {
@@ -86,7 +97,7 @@ public class PawnCharacter extends GameObject {
 
         for (int i = this.getCurrentTileIndex() + 1; i <= targetIndex; i++) {
             int slot = getSlotOffsetIndex(i);
-            int[] offset = scene.MysteriousJungleScene.SLOT_OFFSETS[slot];
+            int[] offset = SLOT_OFFSETS[slot];
             
             int toX = GameState.currentGame.gameBoard.getPositionFromIndex(i)[0] + offset[0];
             int toY = GameState.currentGame.gameBoard.getPositionFromIndex(i)[1] + offset[1];
@@ -118,7 +129,7 @@ public class PawnCharacter extends GameObject {
 
         Timeline jumpTL = new Timeline();
         int slot = getSlotOffsetIndex(targetIndex);
-        int[] offset = scene.MysteriousJungleScene.SLOT_OFFSETS[slot];
+        int[] offset = SLOT_OFFSETS[slot];
 
         int toX = GameState.currentGame.gameBoard.getPositionFromIndex(targetIndex)[0] + offset[0];
         int toY = GameState.currentGame.gameBoard.getPositionFromIndex(targetIndex)[1] + offset[1];
