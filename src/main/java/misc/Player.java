@@ -29,7 +29,7 @@ public class Player {
 
     public static void setLocalPlayerId(String myLocalId) {
         if (localPlayer == null) {
-            localPlayer = new Player(myLocalId, "SELF");
+            localPlayer = new Player(myLocalId, "Guy");
         } else {
             localPlayer.networkID = myLocalId;
         }
