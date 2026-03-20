@@ -13,11 +13,12 @@ public abstract class Item {
         this.itemName = itemName;
     }
 
-    public boolean requiresTarget() {
-        return true;
+    public final void execute(Player user, Player target, GameState state) {
+        doImmediateAction(user, target, state);
+        broadcastResult(user, target, state);
     }
-    public abstract void applyEffect(Player user, Player target, GameState state);
 
+    public abstract void doImmediateAction(Player user, Player target, GameState state);
     public abstract void broadcastResult(Player user, Player target, GameState state);
 
     public abstract String getCardUIName();

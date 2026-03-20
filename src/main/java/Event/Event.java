@@ -12,6 +12,8 @@ public abstract class Event {
         this.eventName = eventName;
     }
 
+
+    //GAMESTATE มีหน้าที่เรียกใช้
     public final void execute(GameState game) {
         doVisual(game);
         doImmediateAction(game);
