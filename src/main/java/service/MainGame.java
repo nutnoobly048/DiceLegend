@@ -2,8 +2,6 @@ package service;
 
 import Gameplay.GameState;
 import Gameplay.SceneList;
-
-import graphicsUtilities.Scene;
 import graphicsUtilities.*;
 import misc.Player;
 
@@ -39,6 +37,7 @@ public class MainGame extends JFrame {
             public void windowClosing(WindowEvent e) {
                 if (GameState.currentGame != null) {
                     RunService.mqtt.clearRetained("DiceLegend/" + GameState.currentGame.getLobbyName() + "/room_state");
+                    RunService.mqtt.clearRetained("DiceLegend/" + GameState.currentGame.getLobbyName() + "/room_amount");
                     RunService.mqtt.disconnect();
                 }
             }

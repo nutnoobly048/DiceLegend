@@ -36,6 +36,7 @@ public class LoadingScene extends Scene {
             try {
                 new GameState(this.isHost, this.lobbyName);
                 boolean connected = false;
+                boolean isRoomFull = false;
                 if (isHost) {
 
                     AtomicBoolean roomTaken = new AtomicBoolean(false);
@@ -57,6 +58,7 @@ public class LoadingScene extends Scene {
                         RunService.mqtt.subscribe(baseTopic + "/Intents",
                                 (topic, msg) -> RunService.intentQueue.add(msg));
                         RunService.mqtt.publishRetained(baseTopic + "/room_state", "ACTIVE");
+                        RunService.mqtt.publishRetained(baseTopic + "/room_amount", "1");
                         connected = true;
 
                     }
@@ -64,20 +66,43 @@ public class LoadingScene extends Scene {
                 } else {
                     RunService.mqtt.connect();
                     AtomicBoolean state = new AtomicBoolean(false);
+                    AtomicBoolean checkAmountRoom = new AtomicBoolean(false);
 
-                    String topics = baseTopic + "/room_state";
-                    RunService.mqtt.subscribe(topics, (t, msg) -> {
+                    String topicRoomState = baseTopic + "/room_state";
+                    RunService.mqtt.subscribe(topicRoomState, (t, msg) -> {
                         if (msg.equals("ACTIVE"))
                             state.set(true);
+                    });
+                    
+                    String topicRoomAmount = baseTopic + "/room_amount";
+                    RunService.mqtt.subscribe(topicRoomAmount, (t, msg) -> {
+                        if (msg.equals("4"))
+                            checkAmountRoom.set(true);
                     });
 
                     Thread.sleep(3000);
                     connected = state.get();
+                    isRoomFull = checkAmountRoom.get();
                 }
-                if (connected) {
+                if (connected && !isRoomFull) {
                     System.out.println("Connected");
                     System.out.println("Network Ready for " + (isHost ? "Host" : "Client"));
                     RunService.mqtt.subscribe(baseTopic + "/Results", (topic, msg) -> RunService.resultQueue.add(msg));
+
+                    if(!isHost){
+                        
+                        String topicRoomAmount = baseTopic + "/room_amount";
+                        AtomicBoolean isAdd = new AtomicBoolean(false);
+                        RunService.mqtt.subscribe(topicRoomAmount, (t, msg) -> {
+                            if (!isAdd.getAndSet(true)){
+
+                                int addAmount = Integer.parseInt(msg) + 1;
+                                RunService.mqtt.publishRetained(topicRoomAmount, String.valueOf(addAmount));
+
+                            }
+                        });
+
+                    }
 
                     CommandHandler.sentIntent(
                             "INTENT:" + Player.getLocalPlayerId() + ":JOIN_GAME:" + Player.getLocalPlayerName());
