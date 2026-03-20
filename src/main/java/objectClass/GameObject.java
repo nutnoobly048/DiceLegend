@@ -8,12 +8,9 @@ import service.RunService;
 import javax.swing.*;
 
 //หัวใจหลักของวัตถุในเกม
-//เป็น Base Class (Abstract) สำหรับทุกอย่างที่อยู่ในเกม ไม่ว่าจะเป็นผู้เล่น ศัตรู รูป
-//OnCreate(): ทำงานครั้งเดียวตอนสร้าง
+//เป็น Base Class สำหรับทุกอย่างที่อยู่ในเกม ไม่ว่าจะเป็นผู้เล่น ศัตรู
 //OnUpdate(deltaTime): ทำงานทุกเฟรม ใช้สำหรับคำนวณ Logic หรือการเคลื่อนที่
-//OnRemoved(): ใช้สำหรับเคลียร์ Memory หรือหยุดการทำงานเมื่อวัตถุถูกลบ
 
-//ปัญหา: GameObject ยังคงรันแม้ว่าจะไม่ได้อยู่ Scene ตัวเองก็ตาม
 public class GameObject implements ProcessByRunService {
     public int x;
     public int y;

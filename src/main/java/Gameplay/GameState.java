@@ -13,6 +13,8 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 
+
+//AKA ห้องเกม (Match)
 public class GameState {
 
     public static GameState currentGame;
@@ -71,8 +73,8 @@ public class GameState {
             case WAIT_FOR_ROLL -> handleWaitForRoll(event, params);
             case EXECUTE_MOVEMENT -> handleExecuteMovement(event, params);
             case CHECK_TILE -> handleCheckTile(event, params);
-            case WAIT_FOR_TARGET -> {}
-            case EXECUTE_ACTION -> {}
+            case WAIT_FOR_TARGET -> {} // รอเป้าหมายจาก currentPlayerTurnID
+            case EXECUTE_ACTION -> {} //เมื่อได้รับให้เรียกใช้ Item.UseItem()
             case TURN_END -> {}
             case GAME_END -> {}
             default -> System.out.println("Unhandled phase: " + currentPhase);
