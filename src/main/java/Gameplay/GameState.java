@@ -1,6 +1,7 @@
 package Gameplay;
 
 
+import Item.Item;
 import ServiceInterface.CellAttribute;
 import misc.Player;
 import misc.PawnCharacter;
@@ -12,6 +13,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
+import Item.BorealisItem;
+import Event.Event;
 
 
 //AKA ห้องเกม (Match)
@@ -48,7 +51,7 @@ public class GameState {
 
     public enum TriggerEvent {
         ON_PHASE_ENTER, //ใช้แค่ตอนเปลี่ยน State
-        PLAYER_JOINED, PLAYER_LEFT, PLAYER_SPRITE_CHANGE, GAME_START, PLAYER_READY, DICE_ROLL_EVENT
+        PLAYER_JOINED, PLAYER_LEFT, PLAYER_SPRITE_CHANGE, GAME_START, PLAYER_READY, DICE_ROLL_EVENT, SET_TARGET
     }
 
     public GamePhase currentPhase = GamePhase.WAIT_FOR_PLAYERS;
@@ -73,13 +76,15 @@ public class GameState {
             case WAIT_FOR_ROLL -> handleWaitForRoll(event, params);
             case EXECUTE_MOVEMENT -> handleExecuteMovement(event, params);
             case CHECK_TILE -> handleCheckTile(event, params);
-            case WAIT_FOR_TARGET -> {} // รอเป้าหมายจาก currentPlayerTurnID
-            case EXECUTE_ACTION -> {} //เมื่อได้รับให้เรียกใช้ Item.UseItem()
+            case WAIT_FOR_TARGET -> handleWaitForTarget(event, params); // รอเป้าหมายจาก currentPlayerTurnID
+            case EXECUTE_ACTION -> handleExecuteAction(event, params); //เมื่อได้รับให้เรียกใช้ Item.UseItem()
             case TURN_END -> {}
             case GAME_END -> {}
             default -> System.out.println("Unhandled phase: " + currentPhase);
         }
     }
+
+
 
     public void handleEvent(TriggerEvent event) {
         handleEvent(event, null);
@@ -92,6 +97,8 @@ public class GameState {
             case GAME_START -> {
                 switch (selectedMapId) {
                     case "mysteriousJungle" -> gameBoard = new Board(Board.coordinatesMysteriousJungle, Board.destinationMysteriousJungle);
+                    case "cryoGard" -> {}
+                    case "goldenSeason" -> {}
                 }
                 setAllPlayersUnreadyToContinue();
                 changeStateTo(GamePhase.WAIT_FOR_READY);
@@ -131,6 +138,7 @@ public class GameState {
     }
 
     private void handleWaitForRoll(TriggerEvent event, String[] params) {
+        if (!isHost) return; //test code
         if (event != TriggerEvent.DICE_ROLL_EVENT) return;
 
         String playerId = params[0];
@@ -154,6 +162,7 @@ public class GameState {
         }
 
 
+
         setAllPlayersUnreadyToContinue();
         changeStateTo(GamePhase.EXECUTE_MOVEMENT);
     }
@@ -171,19 +180,56 @@ public class GameState {
     }
 
     private void handleCheckTile(TriggerEvent event, String[] params) {
+        if (!isHost) return;
+
         PawnCharacter currentPawn = GameState.currentGame.spawnedCharacter.get(currentPlayerTurnId);
         int currentIndex = currentPawn.getCurrentTileIndex();
 
         switch (gameBoard.getAttributeFromIndex(currentIndex)) {
             case CellAttribute.WIN_TILE -> {}
-            case CellAttribute.EVENT_TILE -> {}
-            case CellAttribute.ITEM_TILE -> {}
+            case CellAttribute.EVENT_TILE -> {
+                
+            }
+            case CellAttribute.ITEM_TILE -> {
+                allPlayers.get(currentPlayerTurnId).setOpenForNetworkInput(true);
+                changeStateTo(GamePhase.WAIT_FOR_TARGET);
+            }
             case CellAttribute.WATER_TILE -> {}
             case CellAttribute.ABYSS_TILE -> {}
-            default -> System.out.println("No Speicial Tile");
+            default -> advanceToNextPlayer();
         }
+        //advanceToNextPlayer();
 
-        advanceToNextPlayer();
+    }
+
+    private void handleWaitForTarget(TriggerEvent event, String[] params) {
+        if (event != TriggerEvent.SET_TARGET) {
+            System.out.println("NOT A SET TARGET INTENT");
+            return;
+        }
+        String id = params[0];
+        Player targetPlayer = allPlayers.get(id);
+        Player userPlayer = allPlayers.get(currentPlayerTurnId);
+
+        Item sampleItem = new BorealisItem("BOREALIS", "BOREALIS");
+
+        Item.useItem(sampleItem, userPlayer, targetPlayer, GameState.currentGame );
+
+        changeStateTo(GamePhase.EXECUTE_ACTION);
+
+    }
+
+    private void handleExecuteAction(TriggerEvent event, String[] params) {
+        if (event != TriggerEvent.PLAYER_READY) return;
+
+        String id = params[0];
+        allPlayers.get(id).setReadyToContinue(true);
+
+        if (isAllPlayersReadyToContinue()) {
+            setAllPlayersUnreadyToContinue();
+            advanceToNextPlayer();
+
+        }
     }
 
     private void onPlayerJoined(String[] params) {

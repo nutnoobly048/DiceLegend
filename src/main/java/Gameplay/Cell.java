@@ -15,10 +15,10 @@ public class Cell {
         this(index,0,0, -1);
     }
 
+    public boolean hasFreezePlayer = false;
+
     public Cell(int index, int xPos, int yPos) {
-
         this(index, xPos, yPos, -1);
-
     }
 
     public Cell(int index, int xPos, int yPos, int destinationIndex) {

@@ -22,7 +22,7 @@ import static service.RunService.mqtt;
 
 public class CommandHandler {
 
-    //ONLY HOST CAN USE THIS METHOD   format: [id]:action:params[0]:params[1]:.....:params[N]
+    //ONLY HOST CAN USE THIS METHOD   format: [id]:     action:      params[0]:params[1]:.....:params[N]
     public static void handleIntent(String senderID, String action, String[] params) {
         if (GameState.currentGame == null || !GameState.currentGame.isHost) return;
 
@@ -72,6 +72,10 @@ public class CommandHandler {
             case "ROLLEVENT" -> {
                 int roll = (int)(Math.random() * 6) + 1;
                 broadcastResult("DICE_ROLLED", senderID, String.valueOf(roll));
+            }
+
+            case "SETTARGET" -> {
+                GameState.currentGame.handleEvent(GameState.TriggerEvent.SET_TARGET, params);
             }
 
             default -> System.out.println("PRINT MESSAGE");

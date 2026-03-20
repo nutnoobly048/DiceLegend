@@ -12,6 +12,9 @@ public abstract class Event {
         this.eventName = eventName;
     }
 
+    public static void useEvent(Event event, GameState state){
+        event.execute(state);
+    }
 
     //GAMESTATE มีหน้าที่เรียกใช้
     public final void execute(GameState game) {

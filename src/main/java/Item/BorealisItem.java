@@ -7,6 +7,7 @@ import service.CommandHandler;
 
 public class BorealisItem extends Item{
 
+    int targetIndex;
 
     public BorealisItem(String itemId, String itemName) {
         super(itemId, itemName);
@@ -19,7 +20,9 @@ public class BorealisItem extends Item{
 
         int currentPlayerIndex = player.getCurrentTileIndex();
 
-        targetPlayer.setCurrentTileIndex(currentPlayerIndex);
+        targetIndex = currentPlayerIndex;
+
+
         target.increaseSkipTurns(1);
     }
 
@@ -27,7 +30,7 @@ public class BorealisItem extends Item{
     public void broadcastResult(Player user, Player target, GameState state) {
         PawnCharacter targetPlayer = state.spawnedCharacter.get(target);
 
-        CommandHandler.broadcastResult("MOVETO", targetPlayer.getNetworkId(), Integer.toString(targetPlayer.getCurrentTileIndex()));
+        CommandHandler.broadcastResult("MOVETO", targetPlayer.getNetworkId(), Integer.toString(targetIndex));
     }
 
     @Override
