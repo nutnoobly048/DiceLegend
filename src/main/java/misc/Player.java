@@ -10,6 +10,8 @@ public class Player {
     private boolean isReadyToContinue;
     private boolean openForNetworkInput = true;
 
+    private int extraTurns = 0;
+
     private int remainingSkipTurns = 0;
 
     public static Player localPlayer;// the one and only player on their machine
@@ -79,4 +81,9 @@ public class Player {
     public static String getLocalPlayerName() {
         return localPlayer.name;
     }
+
+    public void increaseExtraTurns(int amount) { this.extraTurns += amount; }
+    public void decreaseExtraTurns(int amount) { this.extraTurns = Math.max(0, this.extraTurns - amount);}
+    public int getExtraTurns() { return this.extraTurns; } // for debug
+    public boolean hasExtraTurns() {return this.extraTurns > 0; }
 }

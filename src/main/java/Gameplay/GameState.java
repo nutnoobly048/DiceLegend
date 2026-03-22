@@ -14,6 +14,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import Item.BorealisItem;
+import Item.DoubleDiceItem;
 import Event.Event;
 import Event.ReverseEvent;
 
@@ -193,8 +194,8 @@ public class GameState {
         switch (gameBoard.getAttributeFromIndex(currentIndex)) {
             case CellAttribute.WIN_TILE -> {}
             case CellAttribute.EVENT_TILE -> {
-                Event sampleEvent = new ReverseEvent("REVERSE", "REVERSE"); //mock
-                Event.useEvent(sampleEvent, GameState.currentGame);
+                //Event sampleEvent = new ReverseEvent("REVERSE", "REVERSE"); //mock
+                //Event.useEvent(sampleEvent, GameState.currentGame);
             }
             case CellAttribute.ITEM_TILE -> {
                 allPlayers.get(currentPlayerTurnId).setOpenForNetworkInput(true);
@@ -217,7 +218,7 @@ public class GameState {
         Player targetPlayer = allPlayers.get(id);
         Player userPlayer = allPlayers.get(currentPlayerTurnId);
 
-        Item sampleItem = new BorealisItem("BOREALIS", "BOREALIS");
+        Item sampleItem = new DoubleDiceItem("DOUBLEDICE", "DOUBLEDICE");
 
         Item.useItem(sampleItem, userPlayer, targetPlayer, GameState.currentGame );
 
@@ -326,6 +327,15 @@ public class GameState {
     }
 
     private void advanceToNextPlayer() {
+        Player currentPlayer = allPlayers.get(currentPlayerTurnId);
+
+        if (currentPlayer != null && currentPlayer.hasExtraTurns()) {
+            currentPlayer.decreaseExtraTurns(1);
+            System.out.println("[EXTRA TURN] " + currentPlayer.getName() + " gets an extra turn! Remaining: " + currentPlayer.getExtraTurns());
+            beginTurnForPlayer(currentPlayerTurnId);
+            return;
+        }
+
         currentPlayerTurnIndex = (currentPlayerTurnIndex + 1) % allPlayers.size();
         currentPlayerTurnId = getPlayerIdByTurnIndex(currentPlayerTurnIndex);
 
