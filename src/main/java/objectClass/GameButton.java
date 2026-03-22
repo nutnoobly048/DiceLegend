@@ -53,6 +53,21 @@ public class GameButton extends JButton {
         });
     }
 
+    public GameButton(String text) {
+        super(text);
+        setText("");
+        this.setContentAreaFilled(false);
+        this.setBorderPainted(false);
+        this.setFocusPainted(false);
+        this.setOpaque(false);
+        this.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        this.addMouseListener(new MouseAdapter() {
+            @Override public void mouseReleased(MouseEvent e) { onButtonClicked.run(); }
+            @Override public void mouseEntered(MouseEvent e)  { onMouseEntered.run(); }
+            @Override public void mouseExited(MouseEvent e)   { onMouseExited.run();  }
+        });
+    }
+
     public void setOnButtonClicked(Runnable onButtonClicked) {
         this.onButtonClicked = onButtonClicked;
     }
