@@ -4,19 +4,22 @@ import Gameplay.GameState;
 
 public abstract class Event {
 
-    public final String eventId;
-    public final String eventName;
+    public int remainingTurn;
 
-    public Event(String eventId, String eventName) {
-        this.eventId = eventId;
-        this.eventName = eventName;
+    public Event(int remainingTurn) {
+        this.remainingTurn = remainingTurn;
     }
 
+    public Event() {
+        this.remainingTurn = 0;
+    }
+
+    //GAMESTATE มีหน้าที่เรียกใช้
     public static void useEvent(Event event, GameState state){
         event.execute(state);
     }
 
-    //GAMESTATE มีหน้าที่เรียกใช้
+
     public final void execute(GameState game) {
         doVisual(game);
         doImmediateAction(game);
@@ -24,6 +27,7 @@ public abstract class Event {
     }
 
     public abstract String getEventVisualName();
+
 
     public abstract void doImmediateAction(GameState game);
 

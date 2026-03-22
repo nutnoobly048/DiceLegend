@@ -77,4 +77,10 @@ public class Board {
         if (cells[index].destinationIndex == -1) return index;
         return cells[index].destinationIndex;
     }
+
+
+    //Mock method
+    public int getNearestIndexWithAttribute(CellAttribute att, int startIndex) {
+        return 0;
+    }
 }

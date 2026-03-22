@@ -6,9 +6,7 @@ import service.CommandHandler;
 
 public class ReverseEvent extends Event {
 
-    public ReverseEvent(String eventId, String eventName) {
-        super(eventId, eventName);
-    }
+    public ReverseEvent() {}
 
     @Override
     public String getEventVisualName() {
@@ -20,6 +18,7 @@ public class ReverseEvent extends Event {
         for (PawnCharacter character: GameState.currentGame.spawnedCharacter.values()){
             int move = 1;
             if (character.getCurrentTileIndex() > (move - 1)) {
+                //ติด Limitation ของการระบบขยับตัวละคร จึงมาขยับที่ตรงนี้
                 CommandHandler.broadcastResult("MOVETO", character.getNetworkId(), Integer.toString(character.getCurrentTileIndex() - move));
             }
         }

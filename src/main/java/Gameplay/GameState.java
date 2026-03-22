@@ -15,6 +15,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import Item.BorealisItem;
 import Event.Event;
+import Event.ReverseEvent;
 
 
 //AKA ห้องเกม (Match)
@@ -31,6 +32,8 @@ public class GameState {
     public int currentPlayerTurnIndex = 0; // tracks index of players
 
     public Board gameBoard;
+
+    public Event currentEvent;
 
     public final HashMap<String, Player> allPlayers = new LinkedHashMap<>();
     public final HashMap<String, PawnCharacter> spawnedCharacter = new HashMap<>();
@@ -185,17 +188,20 @@ public class GameState {
         PawnCharacter currentPawn = GameState.currentGame.spawnedCharacter.get(currentPlayerTurnId);
         int currentIndex = currentPawn.getCurrentTileIndex();
 
+
+        //Tile Type Check
         switch (gameBoard.getAttributeFromIndex(currentIndex)) {
             case CellAttribute.WIN_TILE -> {}
             case CellAttribute.EVENT_TILE -> {
-                
+                Event sampleEvent = new ReverseEvent("REVERSE", "REVERSE"); //mock
+                Event.useEvent(sampleEvent, GameState.currentGame);
             }
             case CellAttribute.ITEM_TILE -> {
                 allPlayers.get(currentPlayerTurnId).setOpenForNetworkInput(true);
                 changeStateTo(GamePhase.WAIT_FOR_TARGET);
             }
             case CellAttribute.WATER_TILE -> {}
-            case CellAttribute.ABYSS_TILE -> {}
+
             default -> advanceToNextPlayer();
         }
         //advanceToNextPlayer();
