@@ -31,9 +31,9 @@ public class MainMenuScene extends Scene {
     private GameObject transition_down  = new GameObject("transit_down",  "Transition.png", 0, 0);
 
 
-    private GameButton createaButton = new GameButton("CREATE");
-    private GameButton joinButton    = new GameButton("JOIN");
-    private GameButton exitButton    = new GameButton("EXIT");
+    private GameButton createaButton = new GameButton("");
+    private GameButton joinButton    = new GameButton("");
+    private GameButton exitButton    = new GameButton("");
     private JTextField textField        = new JTextField();
 
     private int hoveredItem             = -1;
