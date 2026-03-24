@@ -28,6 +28,7 @@ public class MainMenuScene extends Scene {
     private GameButton createaButton    = new GameButton("CREATE", "button.png", "buttonOnHover.png");
     private GameButton joinButton       = new GameButton("JOIN", "button.png", "buttonOnHover.png");
     private GameButton exitButton       = new GameButton("EXIT", "button.png", "buttonOnHover.png");
+    private GameButton debugLobbyButton = new GameButton("DEBUG LOBBY", "button.png", "buttonOnHover.png");
     private JTextField textField        = new JTextField();
 
     private double duration = 0.4;
@@ -67,6 +68,9 @@ public class MainMenuScene extends Scene {
         exitButton.setBounds(200, 800, 500, 80);
         add(exitButton);
 
+        debugLobbyButton.setBounds(750, 500, 500, 80);
+        add(debugLobbyButton);
+
     }
 
     private void setupButtons() {
@@ -80,6 +84,10 @@ public class MainMenuScene extends Scene {
 
         exitButton.setOnButtonClicked(() -> {
             System.exit(0);
+        });
+
+        debugLobbyButton.setOnButtonClicked(() -> {
+            playExitTransition(() -> SceneUtilities.changeSceneTo(new RealLobbyScene()));
         });
     }
 

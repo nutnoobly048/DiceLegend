@@ -65,7 +65,7 @@ public class MainGame extends JFrame {
     }
 
     public void startContainerPanel() {
-        this.setSize(800,800);
+        this.setSize(1920,1080);
         this.container = new JPanel(new FlowLayout(FlowLayout.CENTER,0,0));
         this.add(container);
     }
