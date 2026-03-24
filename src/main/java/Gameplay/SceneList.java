@@ -3,7 +3,10 @@ package Gameplay;
 import graphicsUtilities.Scene;
 import misc.PawnCharacter;
 import misc.Player;
+import scene.LoadingScene;
+import scene.LobbyScene;
 import scene.MainMenuScene;
+import scene.MysteriousJungleScene;
 
 public class SceneList {
 
@@ -11,26 +14,9 @@ public class SceneList {
     //นอกนั้นจะ ด่าน จะถูก reset ทุกครั้งที่สร้าง
     public static final Scene mainMenu = new MainMenuScene();
 
-    public static final Scene joinMenu = new Scene() {
-        String savedGameRoom = "";
-        {
+    public static final Scene lobbyScene = new LobbyScene();
 
-        }
-
-    };
-
-    public static Scene buildMysteriousJungle() {
-        return new Scene() {
-            {
-                setOnSceneEnter(() -> {
-                    for (Player player : GameState.currentGame.allPlayers.values()) {
-                        PawnCharacter character = new PawnCharacter(player.getNetworkID(), "blank.png");
-                        spawnObjectAt(character, 300, 400);
-                    }
-                });
-            }
-        };
-    }
+    public static Scene buildMysteriousJungle = new MysteriousJungleScene();
 
     public static Scene buildCryoGarden() {
         return new Scene() {

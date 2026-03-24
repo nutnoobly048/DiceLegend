@@ -1,0 +1,53 @@
+package Event;
+
+import Gameplay.GameState;
+import misc.Player;
+import service.CommandHandler;
+
+public abstract class Event {
+
+    public int remainingTurn;
+    private int rollValueModifier = 0;
+
+    public Event(int remainingTurn, int rollValueModifier) {
+        this.remainingTurn = remainingTurn;
+        this.rollValueModifier = rollValueModifier;
+    }
+
+    public Event() {
+        this.remainingTurn = 0;
+        this.rollValueModifier = 0;
+    }
+
+    //GAMESTATE มีหน้าที่เรียกใช้
+    public static void useEvent(Event event, GameState state){
+        event.execute(state);
+    }
+
+
+    public final void execute(GameState game) {
+        doVisual(game);
+        onEventEntered(game);
+    }
+
+    public abstract String getEventVisualName();
+
+
+    //ทำงาน Visual Effect เริ่มต้น
+    public abstract void doVisual(GameState game);
+    //ทำงาน Event
+    public abstract void onEventEntered(GameState game);
+    //เมื่อ Event หมด
+    public abstract void onEventLeave(GameState game);
+
+    public int getRollValueModifier() {
+        return rollValueModifier;
+    }
+
+    protected void broadcastContinueForAll(GameState state) {
+        for (Player p : state.allPlayers.values()) {
+            CommandHandler.broadcastResult("CONTINUE", p.getNetworkID());
+            System.out.println(p.getNetworkID() + " SHOUlD CONTINUE");
+        }
+    }
+}

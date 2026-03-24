@@ -4,11 +4,13 @@ public class Player {
 
     private String networkID;
     private String name;
-    private String localSpriteName; //A sprite they choose on their machine
+    private String localSpriteName = "IMG_0498.png"; //A sprite they choose on their machine
 
     private boolean isReadyToPlay;
     private boolean isReadyToContinue;
     private boolean openForNetworkInput = true;
+
+    private int extraTurns = 0;
 
     private int remainingSkipTurns = 0;
 
@@ -29,7 +31,7 @@ public class Player {
 
     public static void setLocalPlayerId(String myLocalId) {
         if (localPlayer == null) {
-            localPlayer = new Player(myLocalId, "SELF");
+            localPlayer = new Player(myLocalId, "JeenTheWhat");
         } else {
             localPlayer.networkID = myLocalId;
         }
@@ -71,4 +73,17 @@ public class Player {
     public void changeSpriteName(String localSpriteName) {
         this.localSpriteName = localSpriteName;
     }
+
+    public static void setLocalPlayerName(String name) {
+        localPlayer.name = name;
+    }
+
+    public static String getLocalPlayerName() {
+        return localPlayer.name;
+    }
+
+    public void increaseExtraTurns(int amount) { this.extraTurns += amount; }
+    public void decreaseExtraTurns(int amount) { this.extraTurns = Math.max(0, this.extraTurns - amount);}
+    public int getExtraTurns() { return this.extraTurns; } // for debug
+    public boolean hasExtraTurns() {return this.extraTurns > 0; }
 }

@@ -1,33 +1,45 @@
 package Gameplay;
 
-import Gameplay.SceneList;
-import graphicsUtilities.Scene;
-import graphicsUtilities.SceneUtilities;
+
+import Item.Item;
+import ServiceInterface.CellAttribute;
 import misc.Player;
 import misc.PawnCharacter;
+import objectClass.Board;
 import service.CommandHandler;
 import service.RunService;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.List;
+import Item.BorealisItem;
+import Item.DoubleDiceItem;
+import Event.Event;
+import Event.ReverseEvent;
 
+
+//AKA ห้องเกม (Match)
 public class GameState {
 
-    // The active game session. Set when a game is created.
     public static GameState currentGame;
-    public static String selectedMapId = "Garden";
+    public String selectedMapId = "mysteriousJungle";
 
     public boolean isHost;
     public String lobbyName;
     public String currentPlayerTurnId = "";
 
-    // All players and their pawns, keyed by networkID.
-    // These are the single source of truth — do not maintain separate lists elsewhere.
+    public int lastRollResult = 0;
+    public int currentPlayerTurnIndex = 0; // tracks index of players
+
+    public Board gameBoard;
+
+    public Event currentEvent;
+    public Item currentItem;
+
     public final HashMap<String, Player> allPlayers = new LinkedHashMap<>();
     public final HashMap<String, PawnCharacter> spawnedCharacter = new HashMap<>();
 
-
-    // --- Game Phase (Finite State Machine) ---
 
     public enum GamePhase {
         WAIT_FOR_PLAYERS,
@@ -43,7 +55,8 @@ public class GameState {
     }
 
     public enum TriggerEvent {
-        PLAYER_JOINED, PLAYER_LEFT,PLAYER_SPRITE_CHANGE, GAME_START, PLAYER_READY, DICE_ROLL_EVENT
+        ON_PHASE_ENTER, //ใช้แค่ตอนเปลี่ยน State
+        PLAYER_JOINED, PLAYER_LEFT, PLAYER_SPRITE_CHANGE, GAME_START, PLAYER_READY, DICE_ROLL_EVENT, SET_TARGET
     }
 
     public GamePhase currentPhase = GamePhase.WAIT_FOR_PLAYERS;
@@ -52,53 +65,32 @@ public class GameState {
     public boolean hasRolledDiceThisTurn = false;
     public boolean isAnimatingMovement = false;
 
-
     public GameState(boolean isHost, String lobbyName) {
         this.isHost = isHost;
         this.lobbyName = lobbyName;
         currentGame = this;
-        connectToNetwork();
+
     }
-
-    private void connectToNetwork() {
-        String baseTopic = "DiceLegend/" + lobbyName;
-
-        new Thread(() -> {
-            try {
-                if (isHost) {
-                    RunService.mqtt.connectWithWill(baseTopic, "HOST_DISCONNECTED");
-                    RunService.mqtt.subscribe(baseTopic + "/Intents", (topic, msg) -> RunService.intentQueue.add(msg));
-                } else {
-                    RunService.mqtt.connect();
-                }
-                RunService.mqtt.subscribe(baseTopic + "/Results", (topic, msg) -> RunService.resultQueue.add(msg));
-
-                CommandHandler.sentIntent("INTENT:" + Player.getLocalPlayerId() + ":JOIN_GAME:PM");
-
-                System.out.println("Network Ready for " + (isHost ? "Host" : "Client"));
-            } catch (Exception e) {
-                System.err.println("Connection Failed: " + e.getMessage());
-            }
-        }, "NetworkThread").start();
-    }
-
 
 
     public void handleEvent(TriggerEvent event, String[] params) {
         switch (currentPhase) {
-            case WAIT_FOR_PLAYERS  -> handleWaitForPlayers(event, params);
-            case WAIT_FOR_READY    -> handleWaitForReady(event, params);
-            case TURN_START        -> handleTurnStart(event, params);
-            case WAIT_FOR_ROLL     -> handleWaitForRoll(event, params);
-            case EXECUTE_MOVEMENT  -> {}
-            case CHECK_TILE        -> {}
-            case WAIT_FOR_TARGET   -> {}
-            case EXECUTE_ACTION    -> {}
-            case TURN_END          -> {}
-            case GAME_END          -> {}
+            case WAIT_FOR_PLAYERS -> handleWaitForPlayers(event, params);
+            case WAIT_FOR_READY -> handleWaitForReady(event, params);
+            case TURN_START -> handleTurnStart(event, params);
+            case WAIT_FOR_ROLL -> handleWaitForRoll(event, params);
+            case EXECUTE_MOVEMENT -> handleExecuteMovement(event, params);
+            case CHECK_TILE -> handleCheckTile(event, params);
+            case WAIT_FOR_TARGET -> handleWaitForTarget(event, params); // รอเป้าหมายจาก currentPlayerTurnID
+            case EXECUTE_ACTION -> handleExecuteAction(event, params); //เมื่อได้รับให้เรียกใช้ Item.UseItem()
+            case TURN_END -> {}
+            case GAME_END -> {}
             default -> System.out.println("Unhandled phase: " + currentPhase);
         }
     }
+
+
+
     public void handleEvent(TriggerEvent event) {
         handleEvent(event, null);
     }
@@ -106,14 +98,18 @@ public class GameState {
     private void handleWaitForPlayers(TriggerEvent event, String[] params) {
         switch (event) {
             case PLAYER_JOINED -> onPlayerJoined(params);
-            case PLAYER_LEFT   -> onPlayerLeft(params);
+            case PLAYER_LEFT -> onPlayerLeft(params);
             case GAME_START -> {
                 switch (selectedMapId) {
-                    case "mysteriousJungle" -> SceneUtilities.changeSceneTo(SceneList.buildMysteriousJungle());
-                    case "goldenSeason" -> SceneUtilities.changeSceneTo(SceneList.buildGoldenSeason());
-                    case "cryoGarden" -> SceneUtilities.changeSceneTo(SceneList.buildCryoGarden());
-                }
+                    case "mysteriousJungle" -> gameBoard = new Board(
+                            Board.coordinatesMysteriousJungle,
+                            Board.destinationMysteriousJungle,
+                            Board.itemTileMysteriousJungle,
+                            Board.eventTileMysteriousJungle);
 
+                    case "cryoGard" -> {}
+                    case "goldenSeason" -> {}
+                }
                 setAllPlayersUnreadyToContinue();
                 changeStateTo(GamePhase.WAIT_FOR_READY);
             }
@@ -124,7 +120,8 @@ public class GameState {
     }
 
     private void handleWaitForReady(TriggerEvent event, String[] params) {
-        if (event != TriggerEvent.PLAYER_READY) return;
+        if (event != TriggerEvent.PLAYER_READY)
+            return;
         String id = params[0];
         allPlayers.get(id).setReadyToContinue(true);
         System.out.println(id + " is ready to continue");
@@ -138,26 +135,151 @@ public class GameState {
     }
 
     private void handleTurnStart(TriggerEvent event, String[] params) {
+        if (!isHost) return;
+        if (event != TriggerEvent.ON_PHASE_ENTER) return;
+        for (PawnCharacter character : spawnedCharacter.values()) {
+            character.setCurrentTileIndex(0);
+        }
 
+        currentPlayerTurnIndex = 0;
+        currentPlayerTurnId = getPlayerIdByTurnIndex(currentPlayerTurnIndex);
+
+        CommandHandler.broadcastResult("UIEVENT", "PLAYERTURN", currentPlayerTurnId);
+        beginTurnForPlayer(currentPlayerTurnId);
     }
 
     private void handleWaitForRoll(TriggerEvent event, String[] params) {
+        if (!isHost) return; //test code
+        if (event != TriggerEvent.DICE_ROLL_EVENT) return;
+
+        String playerId = params[0];
+        int roll = Integer.parseInt(params[1]);
+
+        allPlayers.get(playerId).setOpenForNetworkInput(false);
+
+        lastRollResult = roll;
+        int rollValue = lastRollResult + (currentEvent != null ? currentEvent.getRollValueModifier() : 0);
+
+        hasRolledDiceThisTurn = true;
+
+        PawnCharacter pawn = spawnedCharacter.get(playerId);
+        int currentIndex = pawn.getCurrentTileIndex();
+        int rawDestination = Math.min(currentIndex + rollValue, gameBoard.getBoardSize() - 1);
+        CommandHandler.broadcastResult("MOVETO", playerId, String.valueOf(rawDestination));
+
+        int finalDestination = gameBoard.getDestinationFromIndex(rawDestination);
+
+        //if current cell has destination
+        if (finalDestination != rawDestination) {
+            CommandHandler.broadcastResult("MOVETO", playerId, String.valueOf(finalDestination));
+        }
+
+
+
+        setAllPlayersUnreadyToContinue();
+        changeStateTo(GamePhase.EXECUTE_MOVEMENT);
     }
 
+    private void handleExecuteMovement(TriggerEvent event, String[] params) {
+        if (event != TriggerEvent.PLAYER_READY) return;
+
+        String id = params[0];
+        allPlayers.get(id).setReadyToContinue(true);
+
+        if (isAllPlayersReadyToContinue()) {
+            setAllPlayersUnreadyToContinue();
+            changeStateTo(GamePhase.CHECK_TILE);
+        }
+    }
+
+    private void handleCheckTile(TriggerEvent event, String[] params) {
+        if (!isHost) return;
+
+        PawnCharacter currentPawn = GameState.currentGame.spawnedCharacter.get(currentPlayerTurnId);
+        int currentIndex = currentPawn.getCurrentTileIndex();
+
+
+        //Tile Type Check
+        switch (gameBoard.getAttributeFromIndex(currentIndex)) {
+            case CellAttribute.WIN_TILE -> {}
+            case CellAttribute.EVENT_TILE -> {
+                Event sampleEvent = new ReverseEvent(); //mock
+                Event.useEvent(sampleEvent, GameState.currentGame);
+                currentEvent = sampleEvent;
+
+                setAllPlayersUnreadyToContinue();
+                changeStateTo(GamePhase.EXECUTE_ACTION);
+            }
+            case ITEM_TILE -> {
+
+                Item selectedItem = new DoubleDiceItem();
+                if (selectedItem.isRequireTarget()) {
+                    allPlayers.get(currentPlayerTurnId).setOpenForNetworkInput(true);
+                    currentItem = selectedItem;
+                    changeStateTo(GamePhase.WAIT_FOR_TARGET);
+                } else {
+                    Player user = allPlayers.get(currentPlayerTurnId);
+
+                    Item.useItem(selectedItem, user, user, this);
+
+                    setAllPlayersUnreadyToContinue();
+                    changeStateTo(GamePhase.EXECUTE_ACTION);
+                }
+            }
+            case CellAttribute.WATER_TILE -> {}
+
+            default -> advanceToNextPlayer();
+        }
+        //advanceToNextPlayer();
+
+    }
+
+    private void handleWaitForTarget(TriggerEvent event, String[] params) {
+        if (!isHost) return;
+        if (event != TriggerEvent.SET_TARGET) return;
+
+        String id = params[0];
+        Player targetPlayer = allPlayers.get(id);
+        Player userPlayer   = allPlayers.get(currentPlayerTurnId);
+
+        Item.useItem(currentItem, userPlayer, targetPlayer, this);
+        currentItem = null;
+
+        setAllPlayersUnreadyToContinue();
+        changeStateTo(GamePhase.EXECUTE_ACTION);
+    }
+
+    private void handleExecuteAction(TriggerEvent event, String[] params) {
+        if (event != TriggerEvent.PLAYER_READY) return;
+
+        String id = params[0];
+        allPlayers.get(id).setReadyToContinue(true);
+
+        if (isAllPlayersReadyToContinue()) {
+            setAllPlayersUnreadyToContinue();
+            advanceToNextPlayer();
+
+        }
+    }
 
     private void onPlayerJoined(String[] params) {
-        if (params == null || params.length < 2) return;
+        if (params == null || params.length < 2)
+            return;
 
-        String id   = params[0];
+        String id = params[0];
         String name = params[1];
 
         allPlayers.putIfAbsent(id, new Player(id, name));
 
         System.out.println("PLAYER JOINED: " + name + " [" + id + "]");
+        for (Player player : GameState.currentGame.allPlayers.values()) {
+            System.out.println(player.getName());
+        }
     }
 
     private void onPlayerLeft(String[] params) {
-        if (params == null || params.length < 1) return;
+        if (params == null || params.length < 1)
+            return;
 
         String id = params[0];
         allPlayers.remove(id);
@@ -165,11 +287,10 @@ public class GameState {
         System.out.println("PLAYER LEFT: " + id);
     }
 
-
-
     public boolean isAllPlayersReadyToContinue() {
         for (Player p : allPlayers.values()) {
-            if (!p.isReadyToContinue()) return false;
+            if (!p.isReadyToContinue())
+                return false;
         }
         return true;
     }
@@ -182,7 +303,8 @@ public class GameState {
 
     public boolean isAllPlayersReadyToPlay() {
         for (Player p : allPlayers.values()) {
-            if (!p.isReadyToPlay()) return false;
+            if (!p.isReadyToPlay())
+                return false;
         }
         return true;
     }
@@ -193,16 +315,72 @@ public class GameState {
         }
     }
 
-
     public void changeStateTo(GamePhase newPhase) {
         if (newPhase != GamePhase.WAIT_FOR_READY) {
             previousPhase = currentPhase;
         }
         currentPhase = newPhase;
+
         System.out.println("Phase -> " + newPhase);
+        handleEvent(TriggerEvent.ON_PHASE_ENTER);
     }
 
+    public String getPlayerIdByTurnIndex(int index) {
+        List<String> keys = new ArrayList<>(allPlayers.keySet());
+        return keys.get(index % keys.size());
+    }
 
-    public String getLobbyName() { return lobbyName; }
-    public void setLobbyName(String lobbyName) { this.lobbyName = lobbyName; }
+    private void beginTurnForPlayer(String playerId) {
+        Player player = allPlayers.get(playerId);
+
+        if (player.isSkipped()) {
+            player.decreaseSkipTurns(1);
+            advanceToNextPlayer();
+            return;
+        }
+
+        for (Player p : allPlayers.values()) {
+            p.setOpenForNetworkInput(false);
+        }
+        player.setOpenForNetworkInput(true);
+
+        setAllPlayersUnreadyToContinue();
+        CommandHandler.broadcastResult("UIEVENT", "WAITFOR", playerId);
+
+        changeStateTo(GamePhase.WAIT_FOR_ROLL);
+    }
+
+    private void advanceToNextPlayer() {
+        Player currentPlayer = allPlayers.get(currentPlayerTurnId);
+
+        if (currentEvent != null) {
+            if (currentEvent.remainingTurn <= 0) {
+                currentEvent.onEventLeave(this);
+                currentEvent = null;
+            } else {
+                currentEvent.remainingTurn--;
+            }
+        }
+
+        if (currentPlayer != null && currentPlayer.hasExtraTurns()) {
+            System.out.println(currentPlayer.hasExtraTurns());
+            currentPlayer.decreaseExtraTurns(1);
+            System.out.println("[EXTRA TURN] " + currentPlayer.getName() + " gets an extra turn! Remaining: " + currentPlayer.getExtraTurns());
+
+            beginTurnForPlayer(currentPlayerTurnId);
+            return;
+        }
+
+        currentPlayerTurnIndex = (currentPlayerTurnIndex + 1) % allPlayers.size();
+        currentPlayerTurnId = getPlayerIdByTurnIndex(currentPlayerTurnIndex);
+
+        beginTurnForPlayer(currentPlayerTurnId);
+    }
+    public String getLobbyName() {
+        return lobbyName;
+    }
+
+    public void setLobbyName(String lobbyName) {
+        this.lobbyName = lobbyName;
+    }
 }

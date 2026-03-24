@@ -26,7 +26,6 @@ public class MQTTService {
                 .serverPort(1883)
                 .buildAsync();
     }
-
     // ส่วนของการเชื่อมต่อกับ MQTT Broker ของ Player
     public void connect() {
         client.connect().join();
@@ -89,6 +88,9 @@ public class MQTTService {
                 .qos(MqttQos.AT_LEAST_ONCE)
                 .send()
                 .join();
+    }
+    public boolean isConnected() {
+        return client.getState().isConnected();
     }
 
     /*

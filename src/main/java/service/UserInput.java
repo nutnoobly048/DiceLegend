@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 
+//             << MARK FOR DEPRECATION >>
 public class UserInput implements KeyListener{
 
     private static HashMap<Integer, Boolean> keyMap = new HashMap<Integer, Boolean>();
@@ -19,14 +20,16 @@ public class UserInput implements KeyListener{
     private static int keyCode;
 
 
-
-
     public UserInput(){
         System.out.println("User Input Initialized");
     }
 
     public static void updateAndSync() {
+        if (isKeyJustPressed(KeyEvent.VK_SPACE)) {
+            CommandHandler.sentIntent("INTENT:SELF:ROLLEVENT");
+        }
         copyKeyMap.putAll(keyMap);
+
     }
     // Listen To KeyTyped
     @Override
@@ -54,7 +57,6 @@ public class UserInput implements KeyListener{
 
         return !current && previous;
     }
-
 
     @Override
     public void keyPressed(KeyEvent e) {

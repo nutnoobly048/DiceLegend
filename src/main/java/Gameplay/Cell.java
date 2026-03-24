@@ -15,10 +15,10 @@ public class Cell {
         this(index,0,0, -1);
     }
 
+    public boolean hasFreezePlayer = false;
+
     public Cell(int index, int xPos, int yPos) {
-
         this(index, xPos, yPos, -1);
-
     }
 
     public Cell(int index, int xPos, int yPos, int destinationIndex) {
@@ -36,7 +36,7 @@ public class Cell {
 
     }
 
-    public EnumSet<CellAttribute> getAttributes() {
+    public CellAttribute getAttributes() {
 
         return this.attributes;
 
@@ -46,7 +46,7 @@ public class Cell {
     public int xPos;
     public int yPos;
 
-    public EnumSet<CellAttribute> attributes = EnumSet.noneOf(CellAttribute.class);
+    public CellAttribute attributes = CellAttribute.NORMAL_TILE;
 
     public int destinationIndex;
 
