@@ -9,7 +9,7 @@ public class SwapItem extends Item {
     private int userNewIndex;
     private int targetNewIndex;
 
-    public SwapItem(String itemId, String itemName) { super(itemId, itemName); }
+    public SwapItem() { super(true); }
 
     @Override
     public void doImmediateAction(Player user, Player target, GameState state) {
@@ -22,14 +22,14 @@ public class SwapItem extends Item {
         userNewIndex = targetIndex;
         targetNewIndex = currIndex;
 
-        targetPlayer.setCurrentTileIndex(targetNewIndex);
-        player.setCurrentTileIndex(userNewIndex);
+//        targetPlayer.setCurrentTileIndex(targetNewIndex);
+//        player.setCurrentTileIndex(userNewIndex);
     }
 
     @Override
     public void broadcastResult(Player user, Player target, GameState state) {
-        PawnCharacter userPawn = state.spawnedCharacter.get(user);
-        PawnCharacter targetPawn = state.spawnedCharacter.get(target);
+        PawnCharacter userPawn = state.spawnedCharacter.get(user.getNetworkID());
+        PawnCharacter targetPawn = state.spawnedCharacter.get(target.getNetworkID());
 
         CommandHandler.broadcastResult("MOVETO", userPawn.getNetworkId(), String.valueOf(userNewIndex));
         CommandHandler.broadcastResult("MOVETO", targetPawn.getNetworkId(), String.valueOf(targetNewIndex));

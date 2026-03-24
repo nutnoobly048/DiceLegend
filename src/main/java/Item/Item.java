@@ -2,15 +2,19 @@ package Item;
 
 import Gameplay.GameState;
 import misc.Player;
+import service.CommandHandler;
 
 public abstract class Item {
 
-    public final String itemId;
-    public final String itemName;
 
-    public Item(String itemId, String itemName) {
-        this.itemId = itemId;
-        this.itemName = itemName;
+    private boolean requireTarget;
+
+    public Item(boolean requireTarget) {
+        this.requireTarget = requireTarget;
+    }
+
+    public boolean isRequireTarget() {
+        return requireTarget;
     }
 
     public static void useItem(Item item, Player user, Player target, GameState state) {
@@ -30,4 +34,13 @@ public abstract class Item {
     public abstract void broadcastResult(Player user, Player target, GameState state);
 
     public abstract String getCardUIName();
+
+
+    //ให้เรียกใช้ทุกครั้งใน broadcastResult ถ้า Item นั้นไม่มีการขยับตัวละครในตอนนั้น
+    protected void broadcastContinueForAll(GameState state) {
+        for (Player p : state.allPlayers.values()) {
+            CommandHandler.broadcastResult("CONTINUE", p.getNetworkID());
+            System.out.println(p.getNetworkID() + " SHOUlD CONTINUE");
+        }
+    }
 }

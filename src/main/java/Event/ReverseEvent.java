@@ -13,24 +13,25 @@ public class ReverseEvent extends Event {
         return "Reverse";
     }
 
-    @Override
-    public void doImmediateAction(GameState game) {
-        for (PawnCharacter character: GameState.currentGame.spawnedCharacter.values()){
-            int move = 1;
-            if (character.getCurrentTileIndex() > (move - 1)) {
-                //ติด Limitation ของการระบบขยับตัวละคร จึงมาขยับที่ตรงนี้
-                CommandHandler.broadcastResult("MOVETO", character.getNetworkId(), Integer.toString(character.getCurrentTileIndex() - move));
-            }
-        }
-    }
-
-    @Override
-    public void broadcastResult(GameState game) {
-
-    }
 
     @Override
     public void doVisual(GameState game) {
+
+    }
+
+    @Override
+    public void onEventEntered(GameState game) {
+        for (PawnCharacter character: game.spawnedCharacter.values()){
+            int move = 1;
+            int newIndex = Math.max(0, character.getCurrentTileIndex() - move);
+            CommandHandler.broadcastResult("MOVETO", character.getNetworkId(), Integer.toString(newIndex));
+        }
+    }
+
+
+
+    @Override
+    public void onEventLeave(GameState game) {
 
     }
 }

@@ -35,6 +35,7 @@ public class GameState {
     public Board gameBoard;
 
     public Event currentEvent;
+    public Item currentItem;
 
     public final HashMap<String, Player> allPlayers = new LinkedHashMap<>();
     public final HashMap<String, PawnCharacter> spawnedCharacter = new HashMap<>();
@@ -100,7 +101,12 @@ public class GameState {
             case PLAYER_LEFT -> onPlayerLeft(params);
             case GAME_START -> {
                 switch (selectedMapId) {
-                    case "mysteriousJungle" -> gameBoard = new Board(Board.coordinatesMysteriousJungle, Board.destinationMysteriousJungle);
+                    case "mysteriousJungle" -> gameBoard = new Board(
+                            Board.coordinatesMysteriousJungle,
+                            Board.destinationMysteriousJungle,
+                            Board.itemTileMysteriousJungle,
+                            Board.eventTileMysteriousJungle);
+
                     case "cryoGard" -> {}
                     case "goldenSeason" -> {}
                 }
@@ -130,6 +136,7 @@ public class GameState {
 
     private void handleTurnStart(TriggerEvent event, String[] params) {
         if (!isHost) return;
+        if (event != TriggerEvent.ON_PHASE_ENTER) return;
         for (PawnCharacter character : spawnedCharacter.values()) {
             character.setCurrentTileIndex(0);
         }
@@ -151,11 +158,13 @@ public class GameState {
         allPlayers.get(playerId).setOpenForNetworkInput(false);
 
         lastRollResult = roll;
+        int rollValue = lastRollResult + (currentEvent != null ? currentEvent.getRollValueModifier() : 0);
+
         hasRolledDiceThisTurn = true;
 
         PawnCharacter pawn = spawnedCharacter.get(playerId);
         int currentIndex = pawn.getCurrentTileIndex();
-        int rawDestination = Math.min(currentIndex + roll, gameBoard.getBoardSize() - 1);
+        int rawDestination = Math.min(currentIndex + rollValue, gameBoard.getBoardSize() - 1);
         CommandHandler.broadcastResult("MOVETO", playerId, String.valueOf(rawDestination));
 
         int finalDestination = gameBoard.getDestinationFromIndex(rawDestination);
@@ -194,12 +203,27 @@ public class GameState {
         switch (gameBoard.getAttributeFromIndex(currentIndex)) {
             case CellAttribute.WIN_TILE -> {}
             case CellAttribute.EVENT_TILE -> {
-                //Event sampleEvent = new ReverseEvent("REVERSE", "REVERSE"); //mock
-                //Event.useEvent(sampleEvent, GameState.currentGame);
+                Event sampleEvent = new ReverseEvent(); //mock
+                Event.useEvent(sampleEvent, GameState.currentGame);
+                currentEvent = sampleEvent;
+
+                setAllPlayersUnreadyToContinue();
+                changeStateTo(GamePhase.EXECUTE_ACTION);
             }
-            case CellAttribute.ITEM_TILE -> {
-                allPlayers.get(currentPlayerTurnId).setOpenForNetworkInput(true);
-                changeStateTo(GamePhase.WAIT_FOR_TARGET);
+            case ITEM_TILE -> {
+                Item selectedItem = new DoubleDiceItem();
+                if (selectedItem.isRequireTarget()) {
+                    allPlayers.get(currentPlayerTurnId).setOpenForNetworkInput(true);
+                    currentItem = selectedItem;
+                    changeStateTo(GamePhase.WAIT_FOR_TARGET);
+                } else {
+                    Player user = allPlayers.get(currentPlayerTurnId);
+
+                    Item.useItem(selectedItem, user, user, this);
+
+                    setAllPlayersUnreadyToContinue();
+                    changeStateTo(GamePhase.EXECUTE_ACTION);
+                }
             }
             case CellAttribute.WATER_TILE -> {}
 
@@ -210,20 +234,18 @@ public class GameState {
     }
 
     private void handleWaitForTarget(TriggerEvent event, String[] params) {
-        if (event != TriggerEvent.SET_TARGET) {
-            System.out.println("NOT A SET TARGET INTENT");
-            return;
-        }
+        if (!isHost) return;
+        if (event != TriggerEvent.SET_TARGET) return;
+
         String id = params[0];
         Player targetPlayer = allPlayers.get(id);
-        Player userPlayer = allPlayers.get(currentPlayerTurnId);
+        Player userPlayer   = allPlayers.get(currentPlayerTurnId);
 
-        Item sampleItem = new DoubleDiceItem("DOUBLEDICE", "DOUBLEDICE");
+        Item.useItem(currentItem, userPlayer, targetPlayer, this);
+        currentItem = null;
 
-        Item.useItem(sampleItem, userPlayer, targetPlayer, GameState.currentGame );
-
+        setAllPlayersUnreadyToContinue();
         changeStateTo(GamePhase.EXECUTE_ACTION);
-
     }
 
     private void handleExecuteAction(TriggerEvent event, String[] params) {
@@ -297,6 +319,7 @@ public class GameState {
             previousPhase = currentPhase;
         }
         currentPhase = newPhase;
+
         System.out.println("Phase -> " + newPhase);
         handleEvent(TriggerEvent.ON_PHASE_ENTER);
     }
@@ -329,6 +352,15 @@ public class GameState {
     private void advanceToNextPlayer() {
         Player currentPlayer = allPlayers.get(currentPlayerTurnId);
 
+        if (currentEvent != null) {
+            if (currentEvent.remainingTurn <= 0) {
+                currentEvent.onEventLeave(this);
+                currentEvent = null;
+            } else {
+                currentEvent.remainingTurn--;
+            }
+        }
+
         if (currentPlayer != null && currentPlayer.hasExtraTurns()) {
             currentPlayer.decreaseExtraTurns(1);
             System.out.println("[EXTRA TURN] " + currentPlayer.getName() + " gets an extra turn! Remaining: " + currentPlayer.getExtraTurns());
@@ -341,7 +373,6 @@ public class GameState {
 
         beginTurnForPlayer(currentPlayerTurnId);
     }
-
     public String getLobbyName() {
         return lobbyName;
     }

@@ -6,8 +6,8 @@ import misc.Player;
 
 public class SpineItem extends Item{
 
-    public SpineItem(String itemId, String itemName) {
-        super(itemId, itemName);
+    public SpineItem() {
+        super(true);
     }
 
     @Override

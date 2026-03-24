@@ -21,11 +21,17 @@ public class Board {
             {1454, 90},  {1354, 90},  {1254, 90},  {1154, 90},  {1054, 90},  {954, 90},  {854, 90},  {754, 90},  {654, 90},  {554, 90}
     };
 
-    public static int[][] destinationMysteriousJungle = {{1,3}};
+    //Board number - 1 = Array Index Number
+    //{3, 58} => เมื่อเหยียบ 4 จะพาไป 59
+    public static int[][] destinationMysteriousJungle = {{1,55}, {2,56}, {3, 58}, {4,34}, {5,12}, {6,87}, {7, 80}};
+    public static int[] itemTileMysteriousJungle = {55, 56, 58, 34,12,87,80}; //mock data
+    public static int[] eventTileMysteriousJungle = {23}; //mock data
+
+
 
     private Cell[] cells;
 
-    public Board(int[][] coordinateSource, int[][] destinations) {
+    public Board(int[][] coordinateSource, int[][] destinations, int[] itemTiles, int[] eventTiles) {
         int totalCells = coordinateSource.length;
         this.cells = new Cell[totalCells];
 
@@ -40,6 +46,13 @@ public class Board {
             } else if (i == totalCells - 1) {
                 cells[i].attributes = CellAttribute.WIN_TILE;
             }
+            else if (contains(itemTiles, i)) {
+                cells[i].attributes = CellAttribute.ITEM_TILE;
+            } else if (contains(eventTiles, i)) {
+                cells[i].attributes = CellAttribute.EVENT_TILE;
+            }
+
+
         }
 
         for (int[] portal : destinations) {
@@ -61,6 +74,13 @@ public class Board {
         cells[index].attributes = attribute;
     }
 
+    private static boolean contains(int[] arr, int value) {
+        for (int v : arr) {
+            if (v == value) return true;
+        }
+        return false;
+    }
+
     public int[] getPositionFromIndex(int index) {
         return cells[index].getPosition();
     }
@@ -77,6 +97,7 @@ public class Board {
         if (cells[index].destinationIndex == -1) return index;
         return cells[index].destinationIndex;
     }
+
 
 
     //Mock method

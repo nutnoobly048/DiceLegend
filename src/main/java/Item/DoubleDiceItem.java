@@ -6,7 +6,7 @@ import service.CommandHandler;
 
 public class DoubleDiceItem extends Item {
 
-    public DoubleDiceItem(String itemId, String itemName) { super(itemId, itemName); }
+    public DoubleDiceItem() { super(false); }
 
     @Override
     public void doImmediateAction(Player user, Player target, GameState state) {
@@ -15,7 +15,7 @@ public class DoubleDiceItem extends Item {
 
     @Override
     public void broadcastResult(Player user, Player target, GameState state) {
-        //CommandHandler.broadcastResult("EXTRATURN", user.getNetworkID(), ""));
+        broadcastContinueForAll(state);
     }
 
     @Override
