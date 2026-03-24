@@ -106,9 +106,11 @@ public class CommandHandler {
                  //เช็ค Logic ใน GameState บรรทัดที่ 140 - 150
                 pawn.moveToTileIndex(targetIndex); //เป็น mockup เฉยๆ
             }
+
+
             //ตอน BroadcastResult ==> BroadcastResult("UIEVENT", "WAITFOR", "player2")
             //ตอนรับ UIEVENT:params[0]:params[1]:....:params[n] เช่น UIEVENT:WAITFOR:player2
-
+            //ไปดูวิธีการใช้ broadcastResult
             case "UIEVENT" -> {
 
             }
@@ -131,16 +133,17 @@ public class CommandHandler {
     }
 
     //RESULT
-    //Fun Fact : นี่คือ varargs method (Variable Arguments Method) เป็น method ที่รับ argument ได้เรื่อยๆ โดยจะแปลงข้อมูลที่รับเข้ามาเรื่อยเป็น array เช่น
+    //Fun Fact : นี่คือ varargs method (Variable Arguments Method) เป็น method ที่รับ argument ได้เรื่อยๆ โดยจะแปลงข้อมูลที่รับเข้ามาเรื่อยๆเป็น array เช่น
     //broadcastResult("CONTINUE");                      act = "CONTINUE"    p = []
     //broadcastResult("CONTINUE", "player1");           act = "CONTINUE"    p = ["player1"]
     //broadcastResult("MOVETO", "player1", "5");        act = "MOVETO"      p = ["player1", "5"]
     //broadcastResult("N", "W", "O", "R", "D");         act = "N"           p = ["W", "O", "R", "D"]
+    //broadcastResult ใช้ตอนให้ทุกคน update
     public static void broadcastResult(String act, String... p) {
         String packet = "RESULT:ALLCLIENTS:" + act + (p.length > 0 ? ":" + String.join(":", p) : "");
         mqtt.publish("DiceLegend/" + GameState.currentGame.getLobbyName() + "/Results", packet);
     }
-
+    //sendResultTo ใช้ตอนให้คนใดคนหนึ่ง update เท่านั้น
     public static void sendResultTo(String target, String act, String... p) {
         String packet = "RESULT:" + target + ":" + act + (p.length > 0 ? ":" + String.join(":", p) : "");
         mqtt.publish("DiceLegend/" + GameState.currentGame.getLobbyName() + "/Results", packet);
