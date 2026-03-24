@@ -211,6 +211,7 @@ public class GameState {
                 changeStateTo(GamePhase.EXECUTE_ACTION);
             }
             case ITEM_TILE -> {
+
                 Item selectedItem = new DoubleDiceItem();
                 if (selectedItem.isRequireTarget()) {
                     allPlayers.get(currentPlayerTurnId).setOpenForNetworkInput(true);
@@ -362,8 +363,10 @@ public class GameState {
         }
 
         if (currentPlayer != null && currentPlayer.hasExtraTurns()) {
+            System.out.println(currentPlayer.hasExtraTurns());
             currentPlayer.decreaseExtraTurns(1);
             System.out.println("[EXTRA TURN] " + currentPlayer.getName() + " gets an extra turn! Remaining: " + currentPlayer.getExtraTurns());
+
             beginTurnForPlayer(currentPlayerTurnId);
             return;
         }
