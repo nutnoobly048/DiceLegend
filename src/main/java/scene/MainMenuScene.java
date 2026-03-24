@@ -109,14 +109,14 @@ public class MainMenuScene extends Scene {
     private void setupButtons() {
         createaButton.setOnButtonClicked(() -> {
             new GameState(true, textField.getText());
-            playExitTransition(() -> SceneUtilities.changeSceneTo(new LobbyScene()));
+            playExitTransition(() -> SceneUtilities.changeSceneTo(new LoadingScene(true, textField.getText())));
         });
 
         joinButton.setOnButtonClicked(() -> {
             Joindialog dialog = new Joindialog(SwingUtilities.getWindowAncestor(MainMenuScene.this));
             dialog.setOnJoin(code -> {
                 new GameState(false, textField.getText());
-                playExitTransition(() -> SceneUtilities.changeSceneTo(new LobbyScene()));
+                playExitTransition(() -> SceneUtilities.changeSceneTo(new LoadingScene(false, textField.getText())));
             });
             dialog.setVisible(true);
         });
