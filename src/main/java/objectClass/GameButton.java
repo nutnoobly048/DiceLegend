@@ -53,6 +53,10 @@ public class GameButton extends JButton {
         });
     }
 
+    public GameButton(String text) {
+        this(text, "blank.png", "blank.png");
+    }
+
     public void setOnButtonClicked(Runnable onButtonClicked) {
         this.onButtonClicked = onButtonClicked;
     }

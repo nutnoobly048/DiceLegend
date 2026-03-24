@@ -58,7 +58,6 @@ public class LobbyScene extends Scene {
         });
 
         startButton.setOnButtonClicked(() -> {
-            CommandHandler.sentIntent("INTENT:SELF:CHANGESCENETO:" + GameState.currentGame.selectedMapId);
             CommandHandler.sentIntent("INTENT:SELF:START_GAME");
         });
     }

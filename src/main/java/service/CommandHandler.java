@@ -112,7 +112,7 @@ public class CommandHandler {
             //ตอนรับ UIEVENT:params[0]:params[1]:....:params[n] เช่น UIEVENT:WAITFOR:player2
             //ไปดูวิธีการใช้ broadcastResult
             case "UIEVENT" -> {
-
+                UIEvent.HandleUIEvent(params);
             }
         }
     }

@@ -7,13 +7,10 @@ import misc.Player;
 import misc.PawnCharacter;
 import objectClass.Board;
 import service.CommandHandler;
-import service.RunService;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
-import Item.BorealisItem;
 import Item.DoubleDiceItem;
 import Event.Event;
 import Event.ReverseEvent;
@@ -62,8 +59,6 @@ public class GameState {
     public GamePhase currentPhase = GamePhase.WAIT_FOR_PLAYERS;
     public GamePhase previousPhase = GamePhase.WAIT_FOR_PLAYERS;
 
-    public boolean hasRolledDiceThisTurn = false;
-    public boolean isAnimatingMovement = false;
 
     public GameState(boolean isHost, String lobbyName) {
         this.isHost = isHost;
@@ -100,6 +95,7 @@ public class GameState {
             case PLAYER_JOINED -> onPlayerJoined(params);
             case PLAYER_LEFT -> onPlayerLeft(params);
             case GAME_START -> {
+                CommandHandler.sentIntent("INTENT:SELF:CHANGESCENETO:" + GameState.currentGame.selectedMapId);
                 switch (selectedMapId) {
                     case "mysteriousJungle" -> gameBoard = new Board(
                             Board.coordinatesMysteriousJungle,
@@ -160,7 +156,6 @@ public class GameState {
         lastRollResult = roll;
         int rollValue = lastRollResult + (currentEvent != null ? currentEvent.getRollValueModifier() : 0);
 
-        hasRolledDiceThisTurn = true;
 
         PawnCharacter pawn = spawnedCharacter.get(playerId);
         int currentIndex = pawn.getCurrentTileIndex();
@@ -201,18 +196,19 @@ public class GameState {
 
         //Tile Type Check
         switch (gameBoard.getAttributeFromIndex(currentIndex)) {
-            case CellAttribute.WIN_TILE -> {}
-            case CellAttribute.EVENT_TILE -> {
-                Event sampleEvent = new ReverseEvent(); //mock
-                Event.useEvent(sampleEvent, GameState.currentGame);
-                currentEvent = sampleEvent;
+            case WIN_TILE -> {}
+            case EVENT_TILE -> {
+                Event selectedEvent = new ReverseEvent(); //แทนที่ด้วย randomEvent() ในภายหลัง
+                Event.useEvent(selectedEvent, GameState.currentGame);
+
+                currentEvent = selectedEvent;
 
                 setAllPlayersUnreadyToContinue();
                 changeStateTo(GamePhase.EXECUTE_ACTION);
             }
             case ITEM_TILE -> {
+                Item selectedItem = new DoubleDiceItem(); //แทนที่ด้วย randomItem() ในภายหลัง
 
-                Item selectedItem = new DoubleDiceItem();
                 if (selectedItem.isRequireTarget()) {
                     allPlayers.get(currentPlayerTurnId).setOpenForNetworkInput(true);
                     currentItem = selectedItem;
@@ -221,13 +217,11 @@ public class GameState {
                     Player user = allPlayers.get(currentPlayerTurnId);
 
                     Item.useItem(selectedItem, user, user, this);
-
                     setAllPlayersUnreadyToContinue();
                     changeStateTo(GamePhase.EXECUTE_ACTION);
                 }
             }
-            case CellAttribute.WATER_TILE -> {}
-
+            case WATER_TILE -> {}
             default -> advanceToNextPlayer();
         }
         //advanceToNextPlayer();

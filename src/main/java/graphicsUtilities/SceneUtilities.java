@@ -22,6 +22,8 @@ public class SceneUtilities {
     public static void changeSceneTo(String sceneName) {
         switch (sceneName) {
             case "mysteriousJungle" -> changeSceneTo(SceneList.buildMysteriousJungle);
+            case "cryoGard" -> {}
+            case "goldenSeason" -> {}
         }
     }
 

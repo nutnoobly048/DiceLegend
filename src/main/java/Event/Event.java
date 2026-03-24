@@ -44,10 +44,12 @@ public abstract class Event {
         return rollValueModifier;
     }
 
+
+    //ให้เรียกใช้ทุกครั้งใน broadcastResult ถ้า Event นั้นไม่มีการขยับตัวละคร
     protected void broadcastContinueForAll(GameState state) {
         for (Player p : state.allPlayers.values()) {
             CommandHandler.broadcastResult("CONTINUE", p.getNetworkID());
-            System.out.println(p.getNetworkID() + " SHOUlD CONTINUE");
+            System.out.println(p.getNetworkID() + " SHOUlD CONTINUE SINCE THIS IS NOT MOVING EVENT");
         }
     }
 }
