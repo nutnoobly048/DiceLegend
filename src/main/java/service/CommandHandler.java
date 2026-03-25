@@ -116,6 +116,7 @@ public class CommandHandler {
                 RunService.mqtt.disconnect();
                 GameState.currentGame = null;
                 LobbyState.destroy();
+            }
         }
     }
 
