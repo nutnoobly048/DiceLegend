@@ -1,6 +1,7 @@
 package service;
 
 import Gameplay.GameState;
+import Gameplay.LobbyState;
 import Gameplay.SceneList;
 
 import graphicsUtilities.Scene;
@@ -41,6 +42,7 @@ public class MainGame extends JFrame {
                 if (RunService.mqtt.isConnected()) {
                     if (GameState.currentGame != null) {
                         RunService.mqtt.clearRetained("DiceLegend/" + GameState.currentGame.getLobbyName() + "/room_state");
+                        RunService.mqtt.clearRetained("DiceLegend/" + LobbyState.current.lobbyName + "/room_state");
                         RunService.mqtt.disconnect();
                     }
                 }

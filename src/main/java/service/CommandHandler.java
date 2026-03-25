@@ -1,6 +1,7 @@
 package service;
 
 import Gameplay.GameState;
+import Gameplay.LobbyState;
 import Gameplay.SceneList;
 import graphicsUtilities.SceneUtilities;
 import misc.PawnCharacter;
@@ -120,7 +121,7 @@ public class CommandHandler {
 
     //INTENT                 INTENT:[ID]:action:params[0]:params[1]:.....:params[N] format
     public static void sentIntent(String input) {
-        String topic = "DiceLegend/" + GameState.currentGame.getLobbyName() + "/Intents";
+        String topic = "DiceLegend/" + LobbyState.current.lobbyName + "/Intents";
         String[] packetList = input.split(":");
 
         if (packetList.length >= 2 && packetList[1].equals("SELF")) {
@@ -141,11 +142,11 @@ public class CommandHandler {
     //broadcastResult ใช้ตอนให้ทุกคน update
     public static void broadcastResult(String act, String... p) {
         String packet = "RESULT:ALLCLIENTS:" + act + (p.length > 0 ? ":" + String.join(":", p) : "");
-        mqtt.publish("DiceLegend/" + GameState.currentGame.getLobbyName() + "/Results", packet);
+        mqtt.publish("DiceLegend/" + LobbyState.current.lobbyName + "/Results", packet);
     }
     //sendResultTo ใช้ตอนให้คนใดคนหนึ่ง update เท่านั้น
     public static void sendResultTo(String target, String act, String... p) {
         String packet = "RESULT:" + target + ":" + act + (p.length > 0 ? ":" + String.join(":", p) : "");
-        mqtt.publish("DiceLegend/" + GameState.currentGame.getLobbyName() + "/Results", packet);
+        mqtt.publish("DiceLegend/" + LobbyState.current.lobbyName+ "/Results", packet);
     }
 }

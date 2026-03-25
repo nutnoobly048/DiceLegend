@@ -89,6 +89,7 @@ public class LoadingScene extends Scene {
                 if (connected && !isRoomFull) {
                     System.out.println("Connected");
                     System.out.println("Network Ready for " + (isHost ? "Host" : "Client"));
+
                     RunService.mqtt.subscribe(baseTopic + "/Results", (topic, msg) -> RunService.resultQueue.add(msg));
 
                     if(!isHost){
@@ -114,7 +115,7 @@ public class LoadingScene extends Scene {
                     RunService.mqtt.disconnect();
                     System.out.println("Disconnect");
                     SceneUtilities.changeSceneTo(SceneList.mainMenu);
-                    GameState.currentGame = null; // สร้างไม่สำเร็จ ให้ reset current game
+                    LobbyState.current = null; // สร้างไม่สำเร็จ ให้ reset current game
                 }
 
             } catch (Exception e) {
