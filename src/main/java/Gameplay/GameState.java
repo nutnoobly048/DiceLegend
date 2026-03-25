@@ -239,6 +239,7 @@ public class GameState {
 
             case EVENT_TILE -> {
                 Event selectedEvent = RandomEvents.resultRandomEvent(selectedMapId); //แทนที่ด้วย randomEvent() ในภายหลัง
+                
                 Event.useEvent(selectedEvent, GameState.currentGame);
 
                 currentEvent = selectedEvent;
