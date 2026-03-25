@@ -7,16 +7,13 @@ import service.CommandHandler;
 public abstract class Event {
 
     public int remainingTurn;
-    private int rollValueModifier = 0;
 
     public Event(int remainingTurn, int rollValueModifier) {
         this.remainingTurn = remainingTurn;
-        this.rollValueModifier = rollValueModifier;
     }
 
     public Event() {
         this.remainingTurn = 0;
-        this.rollValueModifier = 0;
     }
 
     //GAMESTATE มีหน้าที่เรียกใช้
@@ -40,10 +37,11 @@ public abstract class Event {
     //เมื่อ Event หมด
     public abstract void onEventLeave(GameState game);
 
-    public int getRollValueModifier() {
-        return rollValueModifier;
-    }
+    public abstract void onEventTriggered(GameState game);
 
+    public int modifyRollValue(int rollValue) {
+        return rollValue;
+    }
 
     //ให้เรียกใช้ทุกครั้งใน broadcastResult ถ้า Event นั้นไม่มีการขยับตัวละคร
     protected void broadcastContinueForAll(GameState state) {

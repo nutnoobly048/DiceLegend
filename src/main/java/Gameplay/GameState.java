@@ -37,6 +37,8 @@ public class GameState {
     public int lastRollResult = 0;
     public int currentPlayerTurnIndex = 0; // tracks index of players
 
+    public Runnable onAllClientsReady;
+
     public Board gameBoard;
 
     public Event currentEvent;
@@ -56,7 +58,8 @@ public class GameState {
         WAIT_FOR_TARGET,
         EXECUTE_ACTION,
         TURN_END,
-        GAME_END
+        GAME_END,
+        WAIT_FOR_ALL_CLIENTS
     }
 
     public enum TriggerEvent {
@@ -87,20 +90,16 @@ public class GameState {
     public void handleEvent(TriggerEvent event, String[] params) {
         switch (currentPhase) {
             case WAIT_FOR_PLAYERS -> handleWaitForPlayers(event, params);
-            case WAIT_FOR_READY -> handleWaitForReady(event, params);
+            case WAIT_FOR_ALL_CLIENTS -> handleWaitForAllClients(event, params);
             case TURN_START -> handleTurnStart(event, params);
             case WAIT_FOR_ROLL -> handleWaitForRoll(event, params);
-            case EXECUTE_MOVEMENT -> handleExecuteMovement(event, params);
             case CHECK_TILE -> handleCheckTile(event, params);
             case WAIT_FOR_TARGET -> handleWaitForTarget(event, params); // รอเป้าหมายจาก currentPlayerTurnID
-            case EXECUTE_ACTION -> handleExecuteAction(event, params); //เมื่อได้รับให้เรียกใช้ Item.UseItem()
             case TURN_END -> {}
             case GAME_END -> {}
             default -> System.out.println("Unhandled phase: " + currentPhase);
         }
     }
-
-
 
     public void handleEvent(TriggerEvent event) {
         handleEvent(event, null);
@@ -111,7 +110,6 @@ public class GameState {
             case PLAYER_JOINED -> onPlayerJoined(params);
             case PLAYER_LEFT -> onPlayerLeft(params);
             case GAME_START -> {
-
                 CommandHandler.sentIntent("INTENT:SELF:CHANGESCENETO:" + selectedMapId);
                 switch (selectedMapId) {
                     case "mysteriousJungle" -> gameBoard = new Board(
@@ -124,7 +122,8 @@ public class GameState {
                     case "goldenSeason" -> {}
                 }
                 setAllPlayersUnreadyToContinue();
-                changeStateTo(GamePhase.WAIT_FOR_READY);
+                onAllClientsReady = () -> changeStateTo(GamePhase.TURN_START);
+                changeStateTo(GamePhase.WAIT_FOR_ALL_CLIENTS);
             }
             case PLAYER_SPRITE_CHANGE -> {
                 allPlayers.get(params[0]).changeSpriteName(params[1]);
@@ -132,20 +131,20 @@ public class GameState {
         }
     }
 
-    private void handleWaitForReady(TriggerEvent event, String[] params) {
-        if (event != TriggerEvent.PLAYER_READY)
-            return;
-        String id = params[0];
-        allPlayers.get(id).setReadyToContinue(true);
-        System.out.println(id + " is ready to continue");
+    private void handleWaitForAllClients(TriggerEvent event, String[] params) {
+        if (event != TriggerEvent.PLAYER_READY) return;
+
+        allPlayers.get(params[0]).setReadyToContinue(true);
 
         if (isAllPlayersReadyToContinue()) {
             setAllPlayersUnreadyToContinue();
-            switch (previousPhase) {
-                case WAIT_FOR_PLAYERS -> changeStateTo(GamePhase.TURN_START);
-            }
+
+            Runnable next = onAllClientsReady;
+            onAllClientsReady = null;
+            next.run();
         }
     }
+
 
     private void handleTurnStart(TriggerEvent event, String[] params) {
         if (!isHost) return;
@@ -171,7 +170,7 @@ public class GameState {
         allPlayers.get(playerId).setOpenForNetworkInput(false);
 
         lastRollResult = roll;
-        int rollValue = lastRollResult + (currentEvent != null ? currentEvent.getRollValueModifier() : 0);
+        int rollValue = currentEvent != null ? currentEvent.modifyRollValue(lastRollResult) : lastRollResult;
 
 
         PawnCharacter pawn = spawnedCharacter.get(playerId);
@@ -189,20 +188,11 @@ public class GameState {
 
 
         setAllPlayersUnreadyToContinue();
-        changeStateTo(GamePhase.EXECUTE_MOVEMENT);
+        onAllClientsReady = () -> changeStateTo(GamePhase.CHECK_TILE);
+        changeStateTo(GamePhase.WAIT_FOR_ALL_CLIENTS);
     }
 
-    private void handleExecuteMovement(TriggerEvent event, String[] params) {
-        if (event != TriggerEvent.PLAYER_READY) return;
 
-        String id = params[0];
-        allPlayers.get(id).setReadyToContinue(true);
-
-        if (isAllPlayersReadyToContinue()) {
-            setAllPlayersUnreadyToContinue();
-            changeStateTo(GamePhase.CHECK_TILE);
-        }
-    }
 
     private void handleCheckTile(TriggerEvent event, String[] params) {
         if (!isHost) return;
@@ -231,9 +221,7 @@ public class GameState {
                     CommandHandler.broadcastResult("CHANGESCENETO", "lobbyScene");
 
                     for (Player player : currentGame.allPlayers.values()) {
-
                         player.setOpenForNetworkInput(true);
-
                     }
 
                     GameState.currentGame = null;
@@ -255,7 +243,8 @@ public class GameState {
                 currentEvent = selectedEvent;
 
                 setAllPlayersUnreadyToContinue();
-                changeStateTo(GamePhase.EXECUTE_ACTION);
+                onAllClientsReady = this::advanceToNextPlayer;
+                changeStateTo(GamePhase.WAIT_FOR_ALL_CLIENTS);
             }
             case ITEM_TILE -> {
                 Item selectedItem = RandomItems.resultRandomItem(selectedMapId); //แทนที่ด้วย randomItem() ในภายหลัง
@@ -268,8 +257,10 @@ public class GameState {
                     Player user = allPlayers.get(currentPlayerTurnId);
 
                     Item.useItem(selectedItem, user, user, this);
+
                     setAllPlayersUnreadyToContinue();
-                    changeStateTo(GamePhase.EXECUTE_ACTION);
+                    onAllClientsReady = this::advanceToNextPlayer;
+                    changeStateTo(GamePhase.WAIT_FOR_ALL_CLIENTS);
                 }
             }
             case WATER_TILE -> {}
@@ -291,20 +282,8 @@ public class GameState {
         currentItem = null;
 
         setAllPlayersUnreadyToContinue();
-        changeStateTo(GamePhase.EXECUTE_ACTION);
-    }
-
-    private void handleExecuteAction(TriggerEvent event, String[] params) {
-        if (event != TriggerEvent.PLAYER_READY) return;
-
-        String id = params[0];
-        allPlayers.get(id).setReadyToContinue(true);
-
-        if (isAllPlayersReadyToContinue()) {
-            setAllPlayersUnreadyToContinue();
-            advanceToNextPlayer();
-
-        }
+        onAllClientsReady = this::advanceToNextPlayer;
+        changeStateTo(GamePhase.WAIT_FOR_ALL_CLIENTS);
     }
 
     private void onPlayerJoined(String[] params) {
@@ -361,11 +340,8 @@ public class GameState {
     }
 
     public void changeStateTo(GamePhase newPhase) {
-        if (newPhase != GamePhase.WAIT_FOR_READY) {
-            previousPhase = currentPhase;
-        }
+        previousPhase = currentPhase;
         currentPhase = newPhase;
-
         System.out.println("Phase -> " + newPhase);
         handleEvent(TriggerEvent.ON_PHASE_ENTER);
     }
@@ -402,23 +378,29 @@ public class GameState {
             if (currentEvent.remainingTurn <= 0) {
                 currentEvent.onEventLeave(this);
                 currentEvent = null;
+                doAdvanceToNextPlayer(currentPlayer);
             } else {
+                currentEvent.onEventTriggered(this);
                 currentEvent.remainingTurn--;
+                setAllPlayersUnreadyToContinue();
+                onAllClientsReady = () -> doAdvanceToNextPlayer(currentPlayer);
+                changeStateTo(GamePhase.WAIT_FOR_ALL_CLIENTS);
             }
+            return;
         }
 
-        if (currentPlayer != null && currentPlayer.hasExtraTurns()) {
-            System.out.println(currentPlayer.hasExtraTurns());
-            currentPlayer.decreaseExtraTurns(1);
-            System.out.println("[EXTRA TURN] " + currentPlayer.getName() + " gets an extra turn! Remaining: " + currentPlayer.getExtraTurns());
+        doAdvanceToNextPlayer(currentPlayer);
+    }
 
+    private void doAdvanceToNextPlayer(Player currentPlayer) {
+        if (currentPlayer != null && currentPlayer.hasExtraTurns()) {
+            currentPlayer.decreaseExtraTurns(1);
             beginTurnForPlayer(currentPlayerTurnId);
             return;
         }
 
         currentPlayerTurnIndex = (currentPlayerTurnIndex + 1) % allPlayers.size();
-        currentPlayerTurnId = getPlayerIdByTurnIndex(currentPlayerTurnIndex);
-
+        currentPlayerTurnId    = getPlayerIdByTurnIndex(currentPlayerTurnIndex);
         beginTurnForPlayer(currentPlayerTurnId);
     }
     public String getLobbyName() {

@@ -27,6 +27,10 @@ public class ReverseEvent extends Event {
             CommandHandler.broadcastResult("MOVETO", character.getNetworkId(), Integer.toString(newIndex));
         }
     }
+    @Override
+    public void onEventTriggered(GameState game) {
+
+    }
 
 
 

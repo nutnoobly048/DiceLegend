@@ -1,6 +1,7 @@
 package service;
 
 import Gameplay.GameState;
+import Gameplay.LobbyState;
 import ServiceInterface.MQTTService;
 import ServiceInterface.ProcessByRunService;
 import graphicsUtilities.ImagePreload;
@@ -89,7 +90,8 @@ public class RunService {
                         break;
                     }
 
-                    if (GameState.currentGame != null) {
+                    if (LobbyState.current != null) {
+                        System.out.println("Sent");
                         CommandHandler.sentIntent(input);
                     }
                 }
