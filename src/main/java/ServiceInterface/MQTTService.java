@@ -118,4 +118,10 @@ public class MQTTService {
                 .join();
     }
 
+    public void unsubscribe(String topic) {
+        client.unsubscribeWith()
+                .topicFilter(topic)
+                .send();
+    }
+
 }

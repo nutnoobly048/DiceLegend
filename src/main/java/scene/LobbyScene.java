@@ -8,6 +8,7 @@ import animation.TweenProperty;
 import graphicsUtilities.ImagePreload;
 import graphicsUtilities.Scene;
 import graphicsUtilities.SceneUtilities;
+import misc.Player;
 import objectClass.GameButton;
 import objectClass.GameObject;
 import service.CommandHandler;
@@ -15,6 +16,7 @@ import service.RunService;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class LobbyScene extends Scene {
 
@@ -57,8 +59,36 @@ public class LobbyScene extends Scene {
                 RunService.mqtt.clearRetained("DiceLegend/" + LobbyState.current.lobbyName + "/room_state");
             }
             else if (RunService.mqtt.isConnected()) {
+                AtomicBoolean isMinus = new AtomicBoolean(false);
                 SceneUtilities.changeSceneTo(SceneList.mainMenu);
-                RunService.mqtt.disconnect();
+                CommandHandler.broadcastResult("PLAYER_LEFT", Player.localPlayer.getNetworkID());
+                String topicRoomAmount = "DiceLegend/" + LobbyState.current.lobbyName + "/room_amount";
+                RunService.mqtt.subscribe(topicRoomAmount, (t, msg) -> {
+
+                    if (!RunService.mqtt.isConnected()) return; 
+
+                    try {
+                        
+                        if (!isMinus.getAndSet(true)){
+                            int addAmount = Integer.parseInt(msg) - 1;
+
+                            if (addAmount < 0) addAmount = 0; 
+
+                            RunService.mqtt.publishRetained(topicRoomAmount, String.valueOf(addAmount));
+                            RunService.mqtt.unsubscribe(topicRoomAmount);
+                        }
+                        
+                        
+                    } catch (Exception e) {
+                        System.err.println("ไม่สามารถอัปเดตยอดคนได้ เนื่องจาก: " + e.getMessage());
+                    } finally {
+                        SwingUtilities.invokeLater(() -> {
+                            if (RunService.mqtt.isConnected()) {
+                                RunService.mqtt.disconnect();
+                            }
+                        });
+                    }
+                });
                 GameState.currentGame = null;
                 LobbyState.destroy();
             }
