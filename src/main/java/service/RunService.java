@@ -88,7 +88,7 @@ public class RunService {
                         System.out.println("Stopping console debugger...");
                         break;
                     }
-                    
+
                     if (GameState.currentGame != null) {
                         CommandHandler.sentIntent(input);
                     }

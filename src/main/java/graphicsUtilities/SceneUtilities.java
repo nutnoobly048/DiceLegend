@@ -24,6 +24,7 @@ public class SceneUtilities {
             case "mysteriousJungle" -> changeSceneTo(SceneList.buildMysteriousJungle);
             case "cryoGard" -> {}
             case "goldenSeason" -> {}
+            case "lobbyScene" -> changeSceneTo(SceneList.lobbyScene);
         }
     }
 

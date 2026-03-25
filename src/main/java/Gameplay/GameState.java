@@ -2,6 +2,8 @@ package Gameplay;
 
 
 import Item.Item;
+import OtherUtilities.RandomEvents;
+import OtherUtilities.RandomItems;
 import ServiceInterface.CellAttribute;
 import graphicsUtilities.SceneUtilities;
 import misc.Player;
@@ -224,8 +226,8 @@ public class GameState {
                 int delay = 5000;
                 Timer timer = new Timer(delay, e -> {
                     winAlert.setVisible(false);
-                    SceneUtilities.changeSceneTo(SceneList.lobbyScene);
-                    currentGame.spawnedCharacter.clear();
+                    GameState.currentGame = null;
+                    CommandHandler.broadcastResult("CHANGESCENETO", "lobbyScene");
                 });
 
                 timer.setRepeats(false);
@@ -236,7 +238,7 @@ public class GameState {
             }
 
             case EVENT_TILE -> {
-                Event selectedEvent = new ReverseEvent(); //แทนที่ด้วย randomEvent() ในภายหลัง
+                Event selectedEvent = RandomEvents.resultRandomEvent(selectedMapId); //แทนที่ด้วย randomEvent() ในภายหลัง
                 Event.useEvent(selectedEvent, GameState.currentGame);
 
                 currentEvent = selectedEvent;
@@ -245,7 +247,7 @@ public class GameState {
                 changeStateTo(GamePhase.EXECUTE_ACTION);
             }
             case ITEM_TILE -> {
-                Item selectedItem = new DoubleDiceItem(); //แทนที่ด้วย randomItem() ในภายหลัง
+                Item selectedItem = RandomItems.resultRandomItem(selectedMapId); //แทนที่ด้วย randomItem() ในภายหลัง
 
                 if (selectedItem.isRequireTarget()) {
                     allPlayers.get(currentPlayerTurnId).setOpenForNetworkInput(true);
