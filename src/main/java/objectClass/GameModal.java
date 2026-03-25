@@ -22,6 +22,7 @@ public class GameModal extends JPanel {
         this.setLayout(null);
     }
 
+
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);

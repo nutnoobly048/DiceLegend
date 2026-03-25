@@ -108,7 +108,7 @@ public class LoadingScene extends Scene {
                     CommandHandler.sentIntent(
                             "INTENT:" + Player.getLocalPlayerId() + ":JOIN_GAME:" + Player.getLocalPlayerName());
 
-                    SceneUtilities.changeSceneTo(new LobbyScene());
+                    SceneUtilities.changeSceneTo(SceneList.lobbyScene);
                 } else {
                     RunService.mqtt.disconnect();
                     System.out.println("Disconnect");

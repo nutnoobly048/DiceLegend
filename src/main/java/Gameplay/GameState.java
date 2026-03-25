@@ -3,9 +3,12 @@ package Gameplay;
 
 import Item.Item;
 import ServiceInterface.CellAttribute;
+import graphicsUtilities.SceneUtilities;
 import misc.Player;
 import misc.PawnCharacter;
 import objectClass.Board;
+import objectClass.GameModal;
+import scene.LobbyScene;
 import service.CommandHandler;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -14,6 +17,9 @@ import java.util.List;
 import Item.DoubleDiceItem;
 import Event.Event;
 import Event.ReverseEvent;
+import service.RunService;
+
+import javax.swing.*;
 
 
 //AKA ห้องเกม (Match)
@@ -196,7 +202,31 @@ public class GameState {
 
         //Tile Type Check
         switch (gameBoard.getAttributeFromIndex(currentIndex)) {
-            case WIN_TILE -> {}
+            case WIN_TILE -> {
+
+                for (Player player : currentGame.allPlayers.values()) { // Host will ignore messeage form other player
+
+                    player.setOpenForNetworkInput(false);
+
+                }
+
+                GameModal winAlert = new GameModal(100, 100, "licoCake.png");
+                winAlert.setVisible(true);
+
+                int delay = 5000;
+                Timer timer = new Timer(delay, e -> {
+                    winAlert.setVisible(false);
+                    SceneUtilities.changeSceneTo(SceneList.lobbyScene);
+                    currentGame.spawnedCharacter.clear();
+                });
+
+                timer.setRepeats(false);
+                timer.start();
+
+                System.out.println("Winner -> " + currentPawn.getNetworkId());
+
+            }
+
             case EVENT_TILE -> {
                 Event selectedEvent = new ReverseEvent(); //แทนที่ด้วย randomEvent() ในภายหลัง
                 Event.useEvent(selectedEvent, GameState.currentGame);
