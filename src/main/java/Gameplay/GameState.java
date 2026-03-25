@@ -229,6 +229,11 @@ public class GameState {
                     winAlert.setVisible(false);
                     GameState.currentGame = null;
                     CommandHandler.broadcastResult("CHANGESCENETO", "lobbyScene");
+                    for (Player player : currentGame.allPlayers.values()) {
+
+                        player.setOpenForNetworkInput(true);
+
+                    }
                 });
 
                 timer.setRepeats(false);
