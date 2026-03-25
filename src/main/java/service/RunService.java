@@ -88,10 +88,7 @@ public class RunService {
                         System.out.println("Stopping console debugger...");
                         break;
                     }
-
-                    if (input.equalsIgnoreCase("start")) {
-                        new GameState(false, "Lico");
-                    }
+                    
                     if (GameState.currentGame != null) {
                         CommandHandler.sentIntent(input);
                     }

@@ -159,7 +159,7 @@ public class GameState {
     }
 
     private void handleWaitForRoll(TriggerEvent event, String[] params) {
-        if (!isHost) return; //test code
+        if (!isHost) return;
         if (event != TriggerEvent.DICE_ROLL_EVENT) return;
 
         String playerId = params[0];
