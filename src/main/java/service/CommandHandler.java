@@ -79,12 +79,6 @@ public class CommandHandler {
                 GameState.currentGame.handleEvent(GameState.TriggerEvent.SET_TARGET, params);
             }
 
-            case "DISCONNECT" -> {
-                RunService.mqtt.disconnect();
-                GameState.currentGame = null;
-                LobbyState.destroy();
-            }
-
             default -> System.out.println("PRINT MESSAGE");
         }
 
@@ -118,6 +112,10 @@ public class CommandHandler {
 
             case "CHANGESCENETO" -> SceneUtilities.changeSceneTo(params[0]);
             case "UIEVENT"       -> UIEvent.HandleUIEvent(params);
+            case "DISCONNECT" -> {
+                RunService.mqtt.disconnect();
+                GameState.currentGame = null;
+                LobbyState.destroy();
         }
     }
 
