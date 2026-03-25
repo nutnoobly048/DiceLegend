@@ -34,13 +34,17 @@ public class MainGame extends JFrame {
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         addKeyListener(new UserInput());
+
         addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
-                if (GameState.currentGame != null) {
-                    RunService.mqtt.clearRetained("DiceLegend/" + GameState.currentGame.getLobbyName() + "/room_state");
-                    RunService.mqtt.disconnect();
+                if (RunService.mqtt.isConnected()) {
+                    if (GameState.currentGame != null) {
+                        RunService.mqtt.clearRetained("DiceLegend/" + GameState.currentGame.getLobbyName() + "/room_state");
+                        RunService.mqtt.disconnect();
+                    }
                 }
+
             }
         });
         //thanks, AI, for Fullscreen

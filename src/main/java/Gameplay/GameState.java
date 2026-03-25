@@ -28,8 +28,8 @@ public class GameState {
     public static GameState currentGame;
     public String selectedMapId = "mysteriousJungle";
 
-    public boolean isHost;
-    public String lobbyName;
+    public final boolean isHost;
+    public final String lobbyName;
     public String currentPlayerTurnId = "";
 
     public int lastRollResult = 0;
@@ -40,7 +40,7 @@ public class GameState {
     public Event currentEvent;
     public Item currentItem;
 
-    public final HashMap<String, Player> allPlayers = new LinkedHashMap<>();
+    public final HashMap<String, Player> allPlayers;
     public final HashMap<String, PawnCharacter> spawnedCharacter = new HashMap<>();
 
 
@@ -65,13 +65,21 @@ public class GameState {
     public GamePhase currentPhase = GamePhase.WAIT_FOR_PLAYERS;
     public GamePhase previousPhase = GamePhase.WAIT_FOR_PLAYERS;
 
+    //DEPRECATED
+//    public GameState(boolean isHost, String lobbyName) {
+//        this.isHost = isHost;
+//        this.lobbyName = lobbyName;
+//        currentGame = this;
+//
+//    }
 
-    public GameState(boolean isHost, String lobbyName) {
-        this.isHost = isHost;
-        this.lobbyName = lobbyName;
+    public GameState(LobbyState lobby) {
+        this.isHost = lobby.isHost;
+        this.lobbyName = lobby.lobbyName;
+        this.allPlayers = lobby.allPlayers; // shared reference, not a copy
         currentGame = this;
-
     }
+
 
 
     public void handleEvent(TriggerEvent event, String[] params) {
@@ -404,7 +412,4 @@ public class GameState {
         return lobbyName;
     }
 
-    public void setLobbyName(String lobbyName) {
-        this.lobbyName = lobbyName;
-    }
 }

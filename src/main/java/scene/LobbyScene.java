@@ -1,6 +1,7 @@
 package scene;
 
 import Gameplay.GameState;
+import Gameplay.LobbyState;
 import Gameplay.SceneList;
 import animation.Tween;
 import animation.TweenProperty;
@@ -54,6 +55,8 @@ public class LobbyScene extends Scene {
                 RunService.mqtt.clearRetained("DiceLegend/" + GameState.currentGame.getLobbyName() + "/room_state");
                 SceneUtilities.changeSceneTo(SceneList.mainMenu);
                 RunService.mqtt.disconnect();
+                GameState.currentGame = null;
+                LobbyState.current = null;
             }
         });
 

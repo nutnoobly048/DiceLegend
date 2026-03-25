@@ -1,6 +1,7 @@
 package scene;
 
 import Gameplay.GameState;
+import Gameplay.LobbyState;
 import Gameplay.SceneList;
 import animation.Tween;
 import animation.TweenProperty;
@@ -34,7 +35,7 @@ public class LoadingScene extends Scene {
 
         new Thread(() -> {
             try {
-                new GameState(this.isHost, this.lobbyName);
+                new LobbyState(this.isHost, this.lobbyName);
                 boolean connected = false;
                 boolean isRoomFull = false;
                 if (isHost) {
