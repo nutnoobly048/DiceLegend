@@ -27,6 +27,7 @@ public class SceneUtilities {
             case "cryoGard" -> {}
             case "goldenSeason" -> {}
             case "lobbyScene" -> changeSceneTo(SceneList.lobbyScene);
+            case "main_menu" -> changeSceneTo(SceneList.mainMenu);
         }
     }
 

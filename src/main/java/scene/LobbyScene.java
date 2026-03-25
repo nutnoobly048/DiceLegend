@@ -51,8 +51,12 @@ public class LobbyScene extends Scene {
 
     private void setupButtons() {
         backButton.setOnButtonClicked(() -> {
-            if (RunService.mqtt.isConnected()) {
+            if (RunService.mqtt.isConnected() && LobbyState.current.isHost) {
+                CommandHandler.broadcastResult("CHANGESCENETO", "main_menu");
+                CommandHandler.broadcastResult("DISCONNECT");
                 RunService.mqtt.clearRetained("DiceLegend/" + LobbyState.current.lobbyName + "/room_state");
+            }
+            else if (RunService.mqtt.isConnected()) {
                 SceneUtilities.changeSceneTo(SceneList.mainMenu);
                 RunService.mqtt.disconnect();
                 GameState.currentGame = null;
