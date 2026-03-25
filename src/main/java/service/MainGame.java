@@ -39,10 +39,11 @@ public class MainGame extends JFrame {
         addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
+                RunService.mqtt.clearRetained("DiceLegend/" + LobbyState.current.lobbyName + "/room_state");
                 if (RunService.mqtt.isConnected()) {
                     if (GameState.currentGame != null) {
                         RunService.mqtt.clearRetained("DiceLegend/" + GameState.currentGame.getLobbyName() + "/room_state");
-                        RunService.mqtt.clearRetained("DiceLegend/" + LobbyState.current.lobbyName + "/room_state");
+
                         RunService.mqtt.disconnect();
                     }
                 }
