@@ -226,14 +226,18 @@ public class GameState {
 
                 int delay = 5000;
                 Timer timer = new Timer(delay, e -> {
+
                     winAlert.setVisible(false);
-                    GameState.currentGame = null;
                     CommandHandler.broadcastResult("CHANGESCENETO", "lobbyScene");
+
                     for (Player player : currentGame.allPlayers.values()) {
 
                         player.setOpenForNetworkInput(true);
 
                     }
+
+                    GameState.currentGame = null;
+
                 });
 
                 timer.setRepeats(false);
