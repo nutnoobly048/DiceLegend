@@ -7,6 +7,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 //พื้นที่แสดงผล (Stage)
 //เปรียบเสมือนฉากในเกมที่เก็บรายการของ GameObject ทั้งหมดเอาไว้
@@ -17,7 +18,7 @@ public class Scene extends JPanel {
 
     // Default background
     private Image background = ImagePreload.get("blank.png");
-    private ArrayList<GameObject>            drawList     = new ArrayList<>();
+    private CopyOnWriteArrayList<GameObject>            drawList     = new CopyOnWriteArrayList<>();
     private HashMap<String, GameObject> currentSceneObject = new HashMap<>();
 
     private Runnable onEnterMethod = () -> {};

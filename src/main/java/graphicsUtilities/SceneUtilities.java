@@ -2,6 +2,7 @@ package graphicsUtilities;
 
 import Gameplay.SceneList;
 import objectClass.GameObject;
+import scene.MysteriousJungleScene;
 import service.MainGame;
 import service.RunService;
 
@@ -22,7 +23,7 @@ public class SceneUtilities {
     public static void changeSceneTo(String sceneName) {
         System.out.println("changes");
         switch (sceneName) {
-            case "mysteriousJungle" -> changeSceneTo(SceneList.buildMysteriousJungle);
+            case "mysteriousJungle" -> changeSceneTo(new MysteriousJungleScene());
             case "cryoGard" -> {}
             case "goldenSeason" -> {}
             case "lobbyScene" -> changeSceneTo(SceneList.lobbyScene);
