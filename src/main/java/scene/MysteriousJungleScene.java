@@ -1,6 +1,7 @@
 package scene;
 
 import Gameplay.GameState;
+import Gameplay.LobbyState;
 import animation.Tween;
 import animation.TweenProperty;
 import graphicsUtilities.Scene;
@@ -69,7 +70,7 @@ public class MysteriousJungleScene extends Scene {
     }
 
     private void spawnAllPawns() {
-        List<Player> players = List.copyOf(GameState.currentGame.allPlayers.values());
+        List<Player> players = List.copyOf(LobbyState.current.allPlayers.values());
 
         for (int slotIndex = 0; slotIndex < players.size(); slotIndex++) {
             Player player  = players.get(slotIndex);

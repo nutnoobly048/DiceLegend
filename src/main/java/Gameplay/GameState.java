@@ -111,7 +111,8 @@ public class GameState {
             case PLAYER_JOINED -> onPlayerJoined(params);
             case PLAYER_LEFT -> onPlayerLeft(params);
             case GAME_START -> {
-                CommandHandler.sentIntent("INTENT:SELF:CHANGESCENETO:" + GameState.currentGame.selectedMapId);
+
+                CommandHandler.sentIntent("INTENT:SELF:CHANGESCENETO:" + selectedMapId);
                 switch (selectedMapId) {
                     case "mysteriousJungle" -> gameBoard = new Board(
                             Board.coordinatesMysteriousJungle,
@@ -206,7 +207,7 @@ public class GameState {
     private void handleCheckTile(TriggerEvent event, String[] params) {
         if (!isHost) return;
 
-        PawnCharacter currentPawn = GameState.currentGame.spawnedCharacter.get(currentPlayerTurnId);
+        PawnCharacter currentPawn = spawnedCharacter.get(currentPlayerTurnId);
         int currentIndex = currentPawn.getCurrentTileIndex();
 
 
@@ -239,7 +240,7 @@ public class GameState {
 
             case EVENT_TILE -> {
                 Event selectedEvent = RandomEvents.resultRandomEvent(selectedMapId); //แทนที่ด้วย randomEvent() ในภายหลัง
-                
+                System.out.println(selectedEvent.getEventVisualName());
                 Event.useEvent(selectedEvent, GameState.currentGame);
 
                 currentEvent = selectedEvent;
@@ -249,7 +250,7 @@ public class GameState {
             }
             case ITEM_TILE -> {
                 Item selectedItem = RandomItems.resultRandomItem(selectedMapId); //แทนที่ด้วย randomItem() ในภายหลัง
-
+                System.out.println(selectedItem.getCardUIName());
                 if (selectedItem.isRequireTarget()) {
                     allPlayers.get(currentPlayerTurnId).setOpenForNetworkInput(true);
                     currentItem = selectedItem;

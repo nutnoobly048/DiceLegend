@@ -11,7 +11,12 @@ public class LobbyState {
 
     public final String lobbyName;
     public final boolean isHost;
+
     public final HashMap<String, Player> allPlayers = new LinkedHashMap<>();
+
+    public enum TriggerEvent {
+        PLAYER_JOINED, PLAYER_LEFT, PLAYER_SPRITE_CHANGE
+    }
 
     public LobbyState(boolean isHost, String lobbyName) {
         this.isHost = isHost;
@@ -25,5 +30,37 @@ public class LobbyState {
 
     public static void destroy() {
         current = null;
+    }
+
+    public void handleEvent(TriggerEvent event, String[] params) {
+        switch (event) {
+            case PLAYER_JOINED -> onPlayerJoined(params);
+            case PLAYER_LEFT   -> onPlayerLeft(params);
+            case PLAYER_SPRITE_CHANGE -> {
+                Player p = allPlayers.get(params[0]);
+                if (p != null) p.changeSpriteName(params[1]);
+            }
+        }
+    }
+
+    private void onPlayerJoined(String[] params) {
+        if (params == null || params.length < 2) return;
+
+        String id   = params[0];
+        String name = params[1];
+
+        allPlayers.putIfAbsent(id, new Player(id, name));
+        System.out.println("PLAYER JOINED: " + name + " [" + id + "]");
+        for (Player p : allPlayers.values()) {
+            System.out.println(p.getName());
+        }
+    }
+
+    private void onPlayerLeft(String[] params) {
+        if (params == null || params.length < 1) return;
+
+        String id = params[0];
+        allPlayers.remove(id);
+        System.out.println("PLAYER LEFT: " + id);
     }
 }

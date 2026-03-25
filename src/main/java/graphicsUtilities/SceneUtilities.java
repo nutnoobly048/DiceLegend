@@ -20,6 +20,7 @@ public class SceneUtilities {
     }
 
     public static void changeSceneTo(String sceneName) {
+        System.out.println("changes");
         switch (sceneName) {
             case "mysteriousJungle" -> changeSceneTo(SceneList.buildMysteriousJungle);
             case "cryoGard" -> {}

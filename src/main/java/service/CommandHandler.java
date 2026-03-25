@@ -25,12 +25,12 @@ public class CommandHandler {
 
     //ONLY HOST CAN USE THIS METHOD   format: [id]:     action:      params[0]:params[1]:.....:params[N]
     public static void handleIntent(String senderID, String action, String[] params) {
-        if (GameState.currentGame == null || !GameState.currentGame.isHost) return;
+        if (LobbyState.current == null || !LobbyState.current.isHost) return;
 
         boolean isSystemAction = action.equals("JOIN_GAME") || action.equals("LEAVE_GAME") || action.equals("CONTINUE");
 
         if (!isSystemAction) {
-            Player sender = GameState.currentGame.allPlayers.get(senderID);
+            Player sender = LobbyState.current.allPlayers.get(senderID);
            if (sender == null) return;
 
           if (!sender.isOpenForNetworkInput()) {
@@ -46,7 +46,7 @@ public class CommandHandler {
         switch (action) {
             case "JOIN_GAME" -> {
                 broadcastResult("PLAYER_JOINED", senderID, params[0]);
-                GameState.currentGame.allPlayers.forEach((id, p) -> sendResultTo(senderID, "PLAYER_JOINED", id, p.getName()));
+                LobbyState.current.allPlayers.forEach((id, p) -> sendResultTo(senderID, "PLAYER_JOINED", id, p.getName()));
             }
             case "LEAVE_GAME" -> broadcastResult("PLAYER_LEFT", senderID);
 
@@ -58,7 +58,7 @@ public class CommandHandler {
                 }
             }
             case "CONTINUE" -> {
-                if (GameState.currentGame.allPlayers.get(senderID) != null) {
+                if (LobbyState.current.allPlayers.get(senderID) != null) {
                     broadcastResult("CONTINUE", senderID);
                 }
             }
@@ -86,35 +86,32 @@ public class CommandHandler {
 
     //BOTH CLIENTS AND HOST CAN USE THIS METHOD
     public static void handleResult(String targetID, String action, String[] params) {
-        if (GameState.currentGame == null) return;
+        if (LobbyState.current == null) return;
         if (!targetID.equals("ALLCLIENTS") && !targetID.equals(Player.getLocalPlayerId())) return;
 
         switch (action) {
-            case "PLAYER_JOINED" -> GameState.currentGame.handleEvent(GameState.TriggerEvent.PLAYER_JOINED, params);
-            case "PLAYER_LEFT"   -> GameState.currentGame.handleEvent(GameState.TriggerEvent.PLAYER_LEFT, params);
-            case "GAME_STARTED"  -> GameState.currentGame.handleEvent(GameState.TriggerEvent.GAME_START, null);
-            case "CONTINUE" -> GameState.currentGame.handleEvent(GameState.TriggerEvent.PLAYER_READY, params);
-            case "PLAYER_SPRITE_CHANGED" -> GameState.currentGame.handleEvent(GameState.TriggerEvent.PLAYER_SPRITE_CHANGE, params);
+            // Lobby
+            case "PLAYER_JOINED"         -> LobbyState.current.handleEvent(LobbyState.TriggerEvent.PLAYER_JOINED, params);
+            case "PLAYER_LEFT"           -> LobbyState.current.handleEvent(LobbyState.TriggerEvent.PLAYER_LEFT, params);
+            case "PLAYER_SPRITE_CHANGED" -> LobbyState.current.handleEvent(LobbyState.TriggerEvent.PLAYER_SPRITE_CHANGE, params);
+
+            // Transition
+            case "GAME_STARTED" -> {
+                LobbyState.current.createMatch();
+                GameState.currentGame.handleEvent(GameState.TriggerEvent.GAME_START, null);
+            }
+
+            //Game
+            case "CONTINUE"    -> { if (GameState.currentGame != null) GameState.currentGame.handleEvent(GameState.TriggerEvent.PLAYER_READY, params); }
+            case "DICE_ROLLED" -> { if (GameState.currentGame != null) GameState.currentGame.handleEvent(GameState.TriggerEvent.DICE_ROLL_EVENT, params); }
+            case "MOVETO" -> {
+                if (GameState.currentGame == null) return;
+                PawnCharacter pawn = GameState.currentGame.spawnedCharacter.get(params[0]);
+                if (pawn != null) pawn.moveToTileIndex(Integer.parseInt(params[1]));
+            }
 
             case "CHANGESCENETO" -> SceneUtilities.changeSceneTo(params[0]);
-            case "DICE_ROLLED" -> GameState.currentGame.handleEvent(GameState.TriggerEvent.DICE_ROLL_EVENT, params);
-            case "MOVETO" -> {
-                String playerId = params[0];
-                int targetIndex = Integer.parseInt(params[1]);
-                PawnCharacter pawn = GameState.currentGame.spawnedCharacter.get(playerId);
-                //อย่าลืมส่ง INTENT:SELF:CONTINUE กลับมาหลังจากเสร็จ เนื่องจากต้องรอให้ทุกคน ขยับ เสร็จก่อน
-                //ในบางครั้ง MOVETO จะถูกส่งมา 2 รอบ (เดินปกติ กับ ย้ายไปยังเป้าหมายของบันได / งู)
-                 //เช็ค Logic ใน GameState บรรทัดที่ 140 - 150
-                pawn.moveToTileIndex(targetIndex); //เป็น mockup เฉยๆ
-            }
-
-
-            //ตอน BroadcastResult ==> BroadcastResult("UIEVENT", "WAITFOR", "player2")
-            //ตอนรับ UIEVENT:params[0]:params[1]:....:params[n] เช่น UIEVENT:WAITFOR:player2
-            //ไปดูวิธีการใช้ broadcastResult
-            case "UIEVENT" -> {
-                UIEvent.HandleUIEvent(params);
-            }
+            case "UIEVENT"       -> UIEvent.HandleUIEvent(params);
         }
     }
 

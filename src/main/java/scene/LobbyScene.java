@@ -56,7 +56,7 @@ public class LobbyScene extends Scene {
                 SceneUtilities.changeSceneTo(SceneList.mainMenu);
                 RunService.mqtt.disconnect();
                 GameState.currentGame = null;
-                LobbyState.current = null;
+                LobbyState.destroy();
             }
         });
 
