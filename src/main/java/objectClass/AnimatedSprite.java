@@ -31,6 +31,7 @@ public class AnimatedSprite implements Drawable {
 
     private int playDirection = 1; // 1 = เดินหน้า, -1 = ถอยหลัง
     private boolean isPlaying = true;
+    public Runnable onCompleted = () -> {};
 
     // Constructor 1
     public AnimatedSprite(String imgFileName, int x, int y, int frameCount, double fps) {
@@ -110,9 +111,11 @@ public class AnimatedSprite implements Drawable {
                 if (currentFrame >= frameCount) {
                     if (playLooped) {
                         currentFrame = 0; // วนกลับไปเฟรมศูนย์
+                        
                     } else {
                         currentFrame = frameCount - 1; // ค้างที่เฟรมสุดท้าย
                         isPlaying = false;
+                        onCompleted.run();
                     }
                 }
             }
@@ -127,7 +130,6 @@ public class AnimatedSprite implements Drawable {
             int sy1 = 0;
             int sx2 = sx1 + frameWidth;
             int sy2 = frameHeight;
-
             int dx1 = this.posX + offsetX;
             int dy1 = this.posY + offsetY;
             int dx2 = dx1 + frameWidth;
@@ -155,5 +157,10 @@ public class AnimatedSprite implements Drawable {
 
     public int getFrameHeight() {
         return frameHeight;
+    }
+
+    public void setOnComplete(Runnable method){
+        if (method == null) return;
+        onCompleted = method;
     }
 }

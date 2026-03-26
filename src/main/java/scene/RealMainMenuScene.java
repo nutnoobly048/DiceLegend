@@ -20,15 +20,18 @@ public class RealMainMenuScene extends Scene {
     private final GameButton creditButton = new GameButton("", "mainMenu-credit.png", "mainMenu-credit-hover.png");
     private final GameButton exitButton = new GameButton("", "mainMenu-quit.png", "mainMenu-quit-hover.png");
 
-    private final GameObject gameLogo = new GameObject("logo", new AnimatedSprite("mainMenu-logo-animation.png", 0, 0, 32, 14));
+    private final GameObject gameLogo = new GameObject("logo", new AnimatedSprite("mainMenu-logo-animation.png", 0, 0, 32, 14, false, false));
 
     public RealMainMenuScene() {
         this.setBackground(Color.BLACK);
         setupButtons();
         setupLogo();
-    }
 
+    }
     public void setupLogo() {
+        gameLogo.getSprite().setOnComplete(() -> {
+            System.out.println("RUN");
+        });
         this.spawnObjectAt(gameLogo, 0, 0);
     }
 
