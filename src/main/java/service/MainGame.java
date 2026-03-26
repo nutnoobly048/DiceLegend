@@ -3,7 +3,7 @@ package service;
 import Gameplay.GameState;
 import Gameplay.LobbyState;
 import Gameplay.SceneList;
-
+import OtherUtilities.RandomPortalPosition;
 import graphicsUtilities.Scene;
 import graphicsUtilities.*;
 import misc.Player;
@@ -26,6 +26,7 @@ public class MainGame extends JFrame {
             MainGame mainGame = new MainGame();
             mainGame.setVisible(true);
         });
+        System.out.println(RandomPortalPosition.resultRandomPortalPosition()[0][0]);
     }
 
     public MainGame() {
