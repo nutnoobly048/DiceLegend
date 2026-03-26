@@ -24,7 +24,6 @@ public class RandomItems {
         // เพิ่ม Item ที่มีทุกด่านตรงนี้
         // list.add(new Item());
         list.add(new DoubleDiceItem());
-
         list.add(new SwapItem());
         return list;
 
@@ -46,6 +45,7 @@ public class RandomItems {
         // list.add(new Item());
         list.add(new SpineItem());
         list.add(new BorealisItem());
+        list.add(new QuantumGateItem());
         return list;
 
     }

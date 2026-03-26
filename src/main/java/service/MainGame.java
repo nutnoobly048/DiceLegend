@@ -15,13 +15,11 @@ import java.awt.event.WindowEvent;
 
 public class MainGame extends JFrame {
 
-
     private static RunService runService;
     private JPanel container;
     private static Scene currentScene = null;
 
-
-    //Entry Main
+    // Entry Main
     public static void main(String[] args) {
         System.setProperty("sun.java2d.uiScale", "1.0");
         SwingUtilities.invokeLater(() -> {
@@ -41,9 +39,15 @@ public class MainGame extends JFrame {
             public void windowClosing(WindowEvent e) {
 
                 if (RunService.mqtt.isConnected()) {
-                    RunService.mqtt.clearRetained("DiceLegend/" + LobbyState.current.lobbyName + "/room_state");
+                    if (LobbyState.current.isHost) {
+                        RunService.mqtt.clearRetained("DiceLegend/" + LobbyState.current.lobbyName + "/room_state");
+                    }
+
                     if (GameState.currentGame != null) {
-                        RunService.mqtt.clearRetained("DiceLegend/" + GameState.currentGame.getLobbyName() + "/room_state");
+                        if (LobbyState.current.isHost) {
+                            RunService.mqtt.clearRetained(
+                                    "DiceLegend/" + GameState.currentGame.getLobbyName() + "/room_state");
+                        }
 
                         RunService.mqtt.disconnect();
                     }
@@ -51,18 +55,17 @@ public class MainGame extends JFrame {
 
             }
         });
-        //thanks, AI, for Fullscreen
+        // thanks, AI, for Fullscreen
         GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
 
         startRunService();
         startContainerPanel();
 
-
         SceneUtilities.changeSceneTo(SceneList.mainMenu);
-//        if (gd.isFullScreenSupported()) {
-//            this.setUndecorated(true);
-//            gd.setFullScreenWindow(this);
-//        }
+        // if (gd.isFullScreenSupported()) {
+        // this.setUndecorated(true);
+        // gd.setFullScreenWindow(this);
+        // }
 
     }
 
@@ -73,11 +76,10 @@ public class MainGame extends JFrame {
     }
 
     public void startContainerPanel() {
-        this.setSize(1920,1080);
-        this.container = new JPanel(new FlowLayout(FlowLayout.CENTER,0,0));
+        this.setSize(1920, 1080);
+        this.container = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0));
         this.add(container);
     }
-
 
     public Scene getCurrentScene() {
         return (Scene) this.container.getComponent(0);

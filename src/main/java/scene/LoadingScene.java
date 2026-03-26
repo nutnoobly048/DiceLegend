@@ -47,7 +47,7 @@ public class LoadingScene extends Scene {
 
                     // เช็คห้องว่าถูกใช้ไปหรือยัง
                     RunService.mqtt.subscribe(topics, (t, msg) -> {
-                        if (msg.equals("ACTIVE")) {
+                        if (msg.equals("ACTIVE") ||msg.equals("GAME_STARTED")) {
                             roomTaken.set(true);
                         }
                     });

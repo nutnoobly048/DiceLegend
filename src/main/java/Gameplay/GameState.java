@@ -82,6 +82,7 @@ public class GameState {
         this.isHost = lobby.isHost;
         this.lobbyName = lobby.lobbyName;
         this.allPlayers = lobby.allPlayers; // shared reference, not a copy
+        this.selectedMapId = lobby.getSelectedMapId();
         currentGame = this;
     }
 
@@ -118,7 +119,11 @@ public class GameState {
                             Board.itemTileMysteriousJungle,
                             Board.eventTileMysteriousJungle);
 
-                    case "cryoGard" -> {}
+                    case "cryoGard" -> gameBoard = new Board(
+                            Board.coordinatesMysteriousJungle,
+                            Board.destinationMysteriousJungle,
+                            Board.itemTileMysteriousJungle,
+                            Board.eventTileMysteriousJungle);
                     case "goldenSeason" -> {}
                 }
                 setAllPlayersUnreadyToContinue();
@@ -135,7 +140,7 @@ public class GameState {
         if (event != TriggerEvent.PLAYER_READY) return;
 
         allPlayers.get(params[0]).setReadyToContinue(true);
-
+        System.out.println(params[0] + " --> is ready to continue");
         if (isAllPlayersReadyToContinue()) {
             setAllPlayersUnreadyToContinue();
 
@@ -227,12 +232,10 @@ public class GameState {
                     GameState.currentGame = null;
 
                 });
-
                 timer.setRepeats(false);
                 timer.start();
 
                 System.out.println("Winner -> " + currentPawn.getNetworkId());
-
             }
 
             case EVENT_TILE -> {
@@ -248,6 +251,7 @@ public class GameState {
             }
             case ITEM_TILE -> {
                 Item selectedItem = RandomItems.resultRandomItem(selectedMapId); //แทนที่ด้วย randomItem() ในภายหลัง
+
                 System.out.println(selectedItem.getCardUIName());
                 if (selectedItem.isRequireTarget()) {
                     allPlayers.get(currentPlayerTurnId).setOpenForNetworkInput(true);

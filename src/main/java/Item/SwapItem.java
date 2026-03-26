@@ -9,7 +9,7 @@ public class SwapItem extends Item {
     private int userNewIndex;
     private int targetNewIndex;
 
-    public SwapItem() { super(false); }
+    public SwapItem() { super(true); }
 
     @Override
     public void doImmediateAction(Player user,Player targetPlayer, GameState state) {
@@ -30,7 +30,6 @@ public class SwapItem extends Item {
 
 
         }
-
         PawnCharacter player =  state.spawnedCharacter.get(user.getNetworkID());
 
         int currIndex = player.getCurrentTileIndex();

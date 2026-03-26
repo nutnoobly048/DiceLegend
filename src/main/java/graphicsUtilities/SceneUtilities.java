@@ -24,7 +24,7 @@ public class SceneUtilities {
         System.out.println("changes");
         switch (sceneName) {
             case "mysteriousJungle" -> changeSceneTo(new MysteriousJungleScene());
-            case "cryoGard" -> {}
+            case "cryoGard" -> changeSceneTo(new MysteriousJungleScene());
             case "goldenSeason" -> {}
             case "lobbyScene" -> changeSceneTo(SceneList.lobbyScene);
             case "main_menu" -> changeSceneTo(SceneList.mainMenu);
