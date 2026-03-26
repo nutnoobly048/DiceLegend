@@ -33,14 +33,15 @@ public class MainMenuScene extends Scene {
 
     private GameButton createaButton = new GameButton("");
     private GameButton joinButton    = new GameButton("");
+    private GameButton realMainMenuButton = new GameButton("");
     private GameButton exitButton    = new GameButton("");
     private JTextField textField        = new JTextField();
 
     private int hoveredItem             = -1;
-    private final String[] menuLabels   = { "CREATE", "JOIN", "EXIT"};
+    private final String[] menuLabels   = { "CREATE", "JOIN", "REAL MAIN MENU", "EXIT"};
     private final int MENU_X            = 260;
     private final int MENU_START        = 500;
-    private final int MENU_STEP         = 150;
+    private final int MENU_STEP         = 130;
     private final int BTN_W             = 500;
     private final int BTN_H             = 80;
 
@@ -74,6 +75,12 @@ public class MainMenuScene extends Scene {
         joinButton.setBorderPainted(false);
         add(joinButton);
 
+        realMainMenuButton.setBounds(MENU_X - 40, MENU_START + MENU_STEP * 2 - BTN_H / 2, BTN_W, BTN_H);
+        realMainMenuButton.setOpaque(false);
+        realMainMenuButton.setContentAreaFilled(false);
+        realMainMenuButton.setBorderPainted(false);
+        add(realMainMenuButton);
+
         textField.setBounds(750,650, 500,80);
         textField.setOpaque(true); // Make it clear
         textField.setFont(new Font("Arial", Font.BOLD, 18));
@@ -84,7 +91,7 @@ public class MainMenuScene extends Scene {
         textField.setHorizontalAlignment(JTextField.CENTER);
         add(textField);
 
-        exitButton.setBounds(MENU_X - 40, MENU_START + MENU_STEP * 2 - BTN_H / 2, BTN_W, BTN_H);
+        exitButton.setBounds(MENU_X - 40, MENU_START + MENU_STEP * 3 - BTN_H / 2, BTN_W, BTN_H);
         exitButton.setOpaque(false);
         exitButton.setContentAreaFilled(false);
         exitButton.setBorderPainted(false);
@@ -117,6 +124,10 @@ public class MainMenuScene extends Scene {
                 playExitTransition(() -> SceneUtilities.changeSceneTo(new LoadingScene(false, textField.getText())));
             });
             dialog.setVisible(true);
+        });
+
+        realMainMenuButton.setOnButtonClicked(() -> {
+            playExitTransition(() -> SceneUtilities.changeSceneTo(new RealMainMenuScene()));
         });
 
         exitButton.setOnButtonClicked(() -> {
@@ -219,7 +230,12 @@ public class MainMenuScene extends Scene {
                 g2.drawOval(x + 4, y - 13, 7, 7);
                 g2.drawArc(x,     y - 5,  16, 11, 0, 180);
                 break;
-            case 2: // X in Exit
+            case 2: // Home icon for Real Main Menu
+                g2.drawRect(x - 8, y - 2, 16, 10);
+                g2.drawLine(x - 10, y - 2, x, y - 10);
+                g2.drawLine(x, y - 10, x + 10, y - 2);
+                break;
+            case 3: // X in Exit
                 g2.drawLine(x - 7, y - 7, x + 7, y + 7);
                 g2.drawLine(x + 7, y - 7, x - 7, y + 7);
                 break;

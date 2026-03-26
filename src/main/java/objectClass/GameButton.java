@@ -1,6 +1,5 @@
 package objectClass;
 
-
 import graphicsUtilities.ImagePreload;
 
 import javax.swing.*;
@@ -10,9 +9,12 @@ import java.awt.event.MouseEvent;
 
 public class GameButton extends JButton {
 
-    public Runnable onMouseEntered = () -> {};
-    public Runnable onMouseExited = () -> {};
-    public Runnable onButtonClicked = () -> {};
+    public Runnable onMouseEntered = () -> {
+    };
+    public Runnable onMouseExited = () -> {
+    };
+    public Runnable onButtonClicked = () -> {
+    };
 
     public GameButton(String text, String normalImg, String hoverImg) {
         super(text);
@@ -69,4 +71,3 @@ public class GameButton extends JButton {
         this.onMouseEntered = onMouseEntered;
     }
 }
-
