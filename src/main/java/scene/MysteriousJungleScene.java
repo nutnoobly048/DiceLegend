@@ -77,22 +77,21 @@ public class MysteriousJungleScene extends Scene {
                 .toList();
 
         for (int slotIndex = 0; slotIndex < players.size(); slotIndex++) {
-            Player player  = players.get(slotIndex);
-            int[]  slot    = PawnCharacter.SLOT_OFFSETS[slotIndex];
+            Player player = players.get(slotIndex);
+            int[] slot = PawnCharacter.SLOT_OFFSETS[slotIndex];
 
             int spawnX = START_TILE_X + slot[0];
             int spawnY = START_TILE_Y + slot[1];
 
-//            PawnCharacter pawn = new PawnCharacter(player.getNetworkID(), player.getSpriteName(), spawnX, spawnY); รูปแบบไม่ Animated
-            PawnCharacter pawn = new PawnCharacter(player.getNetworkID(), new AnimatedSprite(player.getSpriteName(), 0,0, 2, 2), spawnX,spawnY);
+            PawnCharacter pawn = new PawnCharacter(player.getNetworkID(),
+                    new AnimatedSprite(player.getSpriteName(), 0, 0, 2, 2), spawnX, spawnY);
 
-            pawn.getSprite().offsetX = PAWN_OFFSET_X;
-            pawn.getSprite().offsetY = PAWN_OFFSET_Y;
+            pawn.getSprite().offsetX = PAWN_OFFSET_X + slot[0];
+            pawn.getSprite().offsetY = PAWN_OFFSET_Y + slot[1];
             pawn.slotIndex = slotIndex;
             pawn.z = slotIndex;
 
             spawnObjectAt(pawn, spawnX, spawnY);
-
             GameState.currentGame.spawnedCharacter.put(player.getNetworkID(), pawn);
         }
     }
