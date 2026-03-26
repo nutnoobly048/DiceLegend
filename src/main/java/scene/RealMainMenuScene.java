@@ -26,7 +26,7 @@ public class RealMainMenuScene extends Scene {
     private final GameButton exitButton = new GameButton("", "mainMenu-quit.png", "mainMenu-quit-hover.png");
 
     private final GameObject gameLogo = new GameObject("logo",
-            new AnimatedSprite("mainMenu-logo-animation.png", 0, 0, 32, 14, false, false));
+            new AnimatedSprite("mainMenu-logo-animation.png", 0, 0, 32, 14, true, false));
 
     private final JoinPopUp popUp = new JoinPopUp();
 
