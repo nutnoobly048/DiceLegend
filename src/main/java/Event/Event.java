@@ -43,7 +43,7 @@ public abstract class Event {
         return rollValue;
     }
 
-    //ให้เรียกใช้ทุกครั้งใน broadcastResult ถ้า Event นั้นไม่มีการขยับตัวละคร
+    //ให้เรียกใช้ทุกครั้งใน onEventEntered ถ้า Event นั้นไม่มีการขยับตัวละคร
     protected void broadcastContinueForAll(GameState state) {
         for (Player p : state.allPlayers.values()) {
             CommandHandler.broadcastResult("CONTINUE", p.getNetworkID());
