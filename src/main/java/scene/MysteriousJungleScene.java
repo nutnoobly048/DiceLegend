@@ -36,8 +36,8 @@ public class MysteriousJungleScene extends Scene {
     private static final int PAWN_OFFSET_Y  = -PAWN_SPRITE_H;
 
 
-    private static final int START_TILE_X = 530;
-    private static final int START_TILE_Y = 980;
+    private static final int START_TILE_X = 500; //-10 510-500
+    private static final int START_TILE_Y = 990; //+10 980->990
 
 
     public MysteriousJungleScene() {
@@ -80,14 +80,14 @@ public class MysteriousJungleScene extends Scene {
             Player player = players.get(slotIndex);
             int[] slot = PawnCharacter.SLOT_OFFSETS[slotIndex];
 
-            int spawnX = START_TILE_X + slot[0];
-            int spawnY = START_TILE_Y + slot[1];
+            int spawnX = START_TILE_X;
+            int spawnY = START_TILE_Y;
 
             PawnCharacter pawn = new PawnCharacter(player.getNetworkID(),
                     new AnimatedSprite(player.getSpriteName(), 0, 0, 2, 2), spawnX, spawnY);
 
-            pawn.getSprite().offsetX = 0;
-            pawn.getSprite().offsetY = 0;
+            pawn.getSprite().offsetX = PAWN_OFFSET_X + slot[0];
+            pawn.getSprite().offsetY = PAWN_OFFSET_Y + slot[1];
             pawn.slotIndex = slotIndex;
             pawn.z = slotIndex;
 

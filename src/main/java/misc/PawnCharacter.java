@@ -16,10 +16,10 @@ public class PawnCharacter extends GameObject {
     public int slotIndex = 0;
 
     public static final int[][] SLOT_OFFSETS = {
-            { 0, 0 },
-            { 0, 0 },
-            { 0, 0 },
-            { 0, 0 },
+            { -20, -20 },
+            {  20, -20 },
+            { -20,  20 },
+            {  20,  20 },
     };
 
     public PawnCharacter(String playerID, String imgFileName, int x, int y) {
