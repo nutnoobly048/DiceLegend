@@ -4,6 +4,7 @@ import misc.Player;
 
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.Map;
 
 public class LobbyState {
 
@@ -20,6 +21,13 @@ public class LobbyState {
     public enum TriggerEvent {
         PLAYER_JOINED, PLAYER_LEFT, PLAYER_SPRITE_CHANGE
     }
+
+    public static final HashMap<String, String[]> spriteEntries = new HashMap<>(Map.ofEntries(
+            Map.entry("YELLOW", new String[]{"walk_01.png", "walk_02.png"}),
+            Map.entry("BLACK", new String[]{"idle.png", "cast.png"}),
+            Map.entry("BLUE", new String[]{"shoot.png", ""}),
+            Map.entry("GREEN", new String[]{"", ""})
+    ));
 
     public LobbyState(boolean isHost, String lobbyName) {
         this.isHost = isHost;

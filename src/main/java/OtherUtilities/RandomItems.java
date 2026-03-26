@@ -14,10 +14,9 @@ public class RandomItems {
         allItems.put("mysteriousJungle", createMysteriousJungleItems(defaultItems));
         allItems.put("cryoGard", createCryoGardItems(defaultItems));
         allItems.put("goldenSeason", createGoldenSeasonItems(defaultItems));
-        
     }
 
-    
+
     public static ArrayList<Item> createDefaultItems(){
 
         ArrayList<Item> list = new ArrayList<>();
@@ -25,6 +24,7 @@ public class RandomItems {
         // list.add(new Item());
         list.add(new DoubleDiceItem());
         list.add(new SwapItem());
+        list.add(new PullItem());
         return list;
 
     }
@@ -65,7 +65,6 @@ public class RandomItems {
         ArrayList<Item> canUseItems = allItems.get(selectedMap);
         int index = RandomUtilities.randomInt(canUseItems.size());
         return canUseItems.get(index);
-
     }
 
 }

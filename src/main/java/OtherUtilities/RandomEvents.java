@@ -14,8 +14,6 @@ public class RandomEvents {
         allEvents.put("mysteriousJungle", createMysteriousJungleEvents(defaultEvents));
         allEvents.put("cryoGard", createCryoGardEvents(defaultEvents));
         allEvents.put("goldenSeason", createGoldenSeasonEvents(defaultEvents));
-
-
     }
 
     public static ArrayList<Event> createDefaultEvents(){
@@ -24,6 +22,8 @@ public class RandomEvents {
         // เพิ่ม Event ที่มีทุกด่านตรงนี้
         // list.add(new Event());
         list.add(new ReverseEvent());
+        list.add(new MoveFast());
+        list.add(new MoveSlow());
         return list;
 
     }
@@ -40,8 +40,8 @@ public class RandomEvents {
     public static ArrayList<Event> createCryoGardEvents(ArrayList<Event> base){
 
         ArrayList<Event> list = new ArrayList<>(base);
-        // เพิ่ม Event ของด่าน Cryo-Grad ตรงนี้
-        // list.add(new Event());
+
+        list.add(new FenrirFangEvent());
         return list;
 
     }

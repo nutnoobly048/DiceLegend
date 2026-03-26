@@ -8,6 +8,7 @@ import graphicsUtilities.Scene;
 import misc.PawnCharacter;
 import misc.Player;
 import objectClass.AnimatedSprite;
+import objectClass.Board;
 import objectClass.GameButton;
 import objectClass.GameObject;
 import service.CommandHandler;
@@ -35,8 +36,7 @@ public class MysteriousJungleScene extends Scene {
     private static final int PAWN_OFFSET_X  = -(PAWN_SPRITE_W  / 2);
     private static final int PAWN_OFFSET_Y  = -PAWN_SPRITE_H;
 
-
-    private static final int START_TILE_X = 500; //-10 510-500
+    private static final int START_TILE_X = 500 ; //-10 510-500
     private static final int START_TILE_Y = 990; //+10 980->990
 
 
