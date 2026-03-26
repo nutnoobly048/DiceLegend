@@ -4,9 +4,14 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+import javax.swing.Popup;
 import javax.swing.Timer;
 
 import OtherUtilities.RandomUtilities;
+import graphicsUtilities.ImagePreload;
 import graphicsUtilities.Scene;
 import graphicsUtilities.SceneUtilities;
 import objectClass.AnimatedSprite;
@@ -20,14 +25,18 @@ public class RealMainMenuScene extends Scene {
     private final GameButton creditButton = new GameButton("", "mainMenu-credit.png", "mainMenu-credit-hover.png");
     private final GameButton exitButton = new GameButton("", "mainMenu-quit.png", "mainMenu-quit-hover.png");
 
-    private final GameObject gameLogo = new GameObject("logo", new AnimatedSprite("mainMenu-logo-animation.png", 0, 0, 32, 14, false, false));
+    private final GameObject gameLogo = new GameObject("logo",
+            new AnimatedSprite("mainMenu-logo-animation.png", 0, 0, 32, 14, false, false));
+
+    private final JoinPopUp popUp = new JoinPopUp();
 
     public RealMainMenuScene() {
         this.setBackground(Color.BLACK);
         setupButtons();
         setupLogo();
-
+        this.add(popUp);
     }
+
     public void setupLogo() {
         gameLogo.getSprite().setOnComplete(() -> {
             System.out.println("RUN");
@@ -44,6 +53,10 @@ public class RealMainMenuScene extends Scene {
         });
 
         joinButton.setBounds(100, 450, joinButton.getPreferredSize().width, joinButton.getPreferredSize().height);
+        joinButton.setOnButtonClicked(() -> {
+            popUp.setVisible(true);
+        });
+
         creditButton.setBounds(100, 600, creditButton.getPreferredSize().width, creditButton.getPreferredSize().height);
 
         exitButton.setBounds(100, 750, exitButton.getPreferredSize().width, exitButton.getPreferredSize().height);
@@ -58,56 +71,99 @@ public class RealMainMenuScene extends Scene {
     }
 }
 
-class JoinPopUp {
-    
+class JoinPopUp extends JPanel {
+    private Image background = ImagePreload.get("mainMenu-join-popup.png");
+    private final GameButton joinButton = new GameButton("", "mainMenu-popup-join.png", "mainMenu-popup-join-hover.png");
+    private final GameButton closeButton = new GameButton("", "mainMenu-popup-close.png", "mainMenu-popup-close.png");
+    private final JTextField textField = new JTextField();
+
+    public JoinPopUp() {
+        this.setBounds(960-background.getWidth(null)/2, 540-background.getHeight(null)/2, background.getWidth(null), background.getHeight(null));
+        this.setBackground(null);
+        this.setLayout(null);
+        this.setVisible(false);
+
+        this.add(joinButton);
+        joinButton.setBounds(50, 300, 401, 71);
+        joinButton.setOnButtonClicked(() -> {
+            SceneUtilities.changeSceneTo(new LoadingScene(false, textField.getText()));
+        });
+
+        this.add(textField);
+        textField.setBackground(null);
+        textField.setForeground(Color.white);
+        textField.setFont(new Font("Arial", Font.PLAIN, 50));
+        textField.setHorizontalAlignment(JTextField.CENTER);
+        textField.setBounds(50, 160, 401, 100);
+        textField.setBorder(null);
+
+        this.add(closeButton);
+        closeButton.setBounds(background.getWidth(null) - 67, 0, 67, 67);
+        closeButton.setOnButtonClicked(() -> {
+            this.setVisible(false);
+        });
+    }
+
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        Graphics2D g2d = (Graphics2D) g;
+
+        if (background != null) {
+            g2d.drawImage(background, 0, 0, getWidth(), getHeight(), null);
+        }
+    }
 }
 
 // class Particle {
-//     float x, y, size, speedY, driftX, opacity;
-//     int colorType;
-//     Random rng;
+// float x, y, size, speedY, driftX, opacity;
+// int colorType;
+// Random rng;
 
-//     Particle(Random rng, int W, int H) {
-//         this.rng = rng;
-//         reset(W, H, true);
-//     }
+// Particle(Random rng, int W, int H) {
+// this.rng = rng;
+// reset(W, H, true);
+// }
 
-//     void reset(int W, int H, boolean anywhere) {
-//         x = rng.nextFloat() * W;
-//         y = anywhere ? rng.nextFloat() * H : H + 10;
-//         size = rng.nextFloat() * 3f + 1f;
-//         speedY = rng.nextFloat() * 0.6f + 0.2f;
-//         driftX = (rng.nextFloat() - 0.5f) * 0.3f;
-//         opacity = rng.nextFloat() * 0.6f + 0.2f;
-//         colorType = rng.nextInt(4);
-//     }
+// void reset(int W, int H, boolean anywhere) {
+// x = rng.nextFloat() * W;
+// y = anywhere ? rng.nextFloat() * H : H + 10;
+// size = rng.nextFloat() * 3f + 1f;
+// speedY = rng.nextFloat() * 0.6f + 0.2f;
+// driftX = (rng.nextFloat() - 0.5f) * 0.3f;
+// opacity = rng.nextFloat() * 0.6f + 0.2f;
+// colorType = rng.nextInt(4);
+// }
 
-//     void update(int W, int H) {
-//         y -= speedY;
-//         x += driftX;
-//         if (y < -10) reset(W, H, false);
-//         if (x < 0) x = W;
-//         if (x > W) x = 0;
-//     }
+// void update(int W, int H) {
+// y -= speedY;
+// x += driftX;
+// if (y < -10) reset(W, H, false);
+// if (x < 0) x = W;
+// if (x > W) x = 0;
+// }
 
-//     void draw(Graphics2D g2) {
-//         int r, gr, b;
-//         switch (colorType) {
-//             case 0: r = 0; gr = 230; b = 255; break; // cyan
-//             case 1: r = 255; gr = 50; b = 180; break; // magenta
-//             case 2: r = 80; gr = 255; b = 120; break; // lime
-//             default: r = 255; gr = 220; b = 50; break; // yellow
-//         }
-//         int a = (int) (opacity * 220);
+// void draw(Graphics2D g2) {
+// int r, gr, b;
+// switch (colorType) {
+// case 0: r = 0; gr = 230; b = 255; break; // cyan
+// case 1: r = 255; gr = 50; b = 180; break; // magenta
+// case 2: r = 80; gr = 255; b = 120; break; // lime
+// default: r = 255; gr = 220; b = 50; break; // yellow
+// }
+// int a = (int) (opacity * 220);
 
-//         g2.setColor(new Color(r, gr, b, (int) (opacity * 80)));
-//         float glow = size * 2.8f;
-//         g2.fillOval((int) (x - glow / 2), (int) (y - glow / 2), (int) glow, (int) glow);
+// g2.setColor(new Color(r, gr, b, (int) (opacity * 80)));
+// float glow = size * 2.8f;
+// g2.fillOval((int) (x - glow / 2), (int) (y - glow / 2), (int) glow, (int)
+// glow);
 
-//         g2.setColor(new Color(r, gr, b, a));
-//         g2.fillOval((int) (x - size / 2), (int) (y - size / 2), (int) size, (int) size);
+// g2.setColor(new Color(r, gr, b, a));
+// g2.fillOval((int) (x - size / 2), (int) (y - size / 2), (int) size, (int)
+// size);
 
-//         g2.setColor(new Color(255, 255, 255, (int) (opacity * 200)));
-//         g2.fillOval((int) (x - size / 4), (int) (y - size / 4), (int) (size / 2), (int) (size / 2));
-//     }
+// g2.setColor(new Color(255, 255, 255, (int) (opacity * 200)));
+// g2.fillOval((int) (x - size / 4), (int) (y - size / 4), (int) (size / 2),
+// (int) (size / 2));
+// }
 // }
