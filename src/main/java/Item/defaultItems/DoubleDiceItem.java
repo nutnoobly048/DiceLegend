@@ -1,16 +1,19 @@
-package Item;
+package Item.defaultItems;
 
 import Gameplay.GameState;
+import Item.base.Item;
 import misc.Player;
 import service.CommandHandler;
 
 public class DoubleDiceItem extends Item {
 
-    public DoubleDiceItem() { super(false); }
+    public DoubleDiceItem() {
+        super(false);
+    }
 
     @Override
     public void doImmediateAction(Player user, Player target, GameState state) {
-         user.increaseExtraTurns(1);
+        user.increaseExtraTurns(1);
     }
 
     @Override

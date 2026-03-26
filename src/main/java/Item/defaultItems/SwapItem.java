@@ -1,6 +1,7 @@
-package Item;
+package Item.defaultItems;
 
 import Gameplay.GameState;
+import Item.base.Item;
 import misc.PawnCharacter;
 import misc.Player;
 import service.CommandHandler;
@@ -9,12 +10,14 @@ public class SwapItem extends Item {
     private int userNewIndex;
     private int targetNewIndex;
 
-    public SwapItem() { super(true); }
+    public SwapItem() {
+        super(true);
+    }
 
     @Override
     public void doImmediateAction(Player user, Player target, GameState state) {
         PawnCharacter targetPlayer = state.spawnedCharacter.get(target);
-        PawnCharacter player =  state.spawnedCharacter.get(user);
+        PawnCharacter player = state.spawnedCharacter.get(user);
 
         int targetIndex = targetPlayer.getCurrentTileIndex();
         int currIndex = player.getCurrentTileIndex();
@@ -22,8 +25,8 @@ public class SwapItem extends Item {
         userNewIndex = targetIndex;
         targetNewIndex = currIndex;
 
-//        targetPlayer.setCurrentTileIndex(targetNewIndex);
-//        player.setCurrentTileIndex(userNewIndex);
+        // targetPlayer.setCurrentTileIndex(targetNewIndex);
+        // player.setCurrentTileIndex(userNewIndex);
     }
 
     @Override

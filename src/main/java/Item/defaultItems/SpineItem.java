@@ -1,10 +1,11 @@
-package Item;
+package Item.defaultItems;
 
 import Gameplay.GameState;
+import Item.base.Item;
 import misc.PawnCharacter;
 import misc.Player;
 
-public class SpineItem extends Item{
+public class SpineItem extends Item {
 
     public SpineItem() {
         super(true);

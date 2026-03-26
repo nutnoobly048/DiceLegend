@@ -1,7 +1,5 @@
 package Gameplay;
 
-
-import Item.Item;
 import OtherUtilities.RandomEvents;
 import OtherUtilities.RandomItems;
 import ServiceInterface.CellAttribute;
@@ -16,13 +14,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
-import Item.DoubleDiceItem;
-import Event.Event;
-import Event.ReverseEvent;
+
+import Item.base.Item;
+import Item.defaultItems.DoubleDiceItem;
+import Event.base.Event;
+import Event.defaultEvents.ReverseEvent;
 import service.RunService;
 
 import javax.swing.*;
-
 
 //AKA ห้องเกม (Match)
 public class GameState {
@@ -47,7 +46,6 @@ public class GameState {
     public final HashMap<String, Player> allPlayers;
     public final HashMap<String, PawnCharacter> spawnedCharacter = new HashMap<>();
 
-
     public enum GamePhase {
         WAIT_FOR_PLAYERS,
         WAIT_FOR_READY,
@@ -63,20 +61,20 @@ public class GameState {
     }
 
     public enum TriggerEvent {
-        ON_PHASE_ENTER, //ใช้แค่ตอนเปลี่ยน State
+        ON_PHASE_ENTER, // ใช้แค่ตอนเปลี่ยน State
         PLAYER_JOINED, PLAYER_LEFT, PLAYER_SPRITE_CHANGE, GAME_START, PLAYER_READY, DICE_ROLL_EVENT, SET_TARGET
     }
 
     public GamePhase currentPhase = GamePhase.WAIT_FOR_PLAYERS;
     public GamePhase previousPhase = GamePhase.WAIT_FOR_PLAYERS;
 
-    //DEPRECATED
-//    public GameState(boolean isHost, String lobbyName) {
-//        this.isHost = isHost;
-//        this.lobbyName = lobbyName;
-//        currentGame = this;
-//
-//    }
+    // DEPRECATED
+    // public GameState(boolean isHost, String lobbyName) {
+    // this.isHost = isHost;
+    // this.lobbyName = lobbyName;
+    // currentGame = this;
+    //
+    // }
 
     public GameState(LobbyState lobby) {
         this.isHost = lobby.isHost;
@@ -84,8 +82,6 @@ public class GameState {
         this.allPlayers = lobby.allPlayers; // shared reference, not a copy
         currentGame = this;
     }
-
-
 
     public void handleEvent(TriggerEvent event, String[] params) {
         switch (currentPhase) {
@@ -95,8 +91,10 @@ public class GameState {
             case WAIT_FOR_ROLL -> handleWaitForRoll(event, params);
             case CHECK_TILE -> handleCheckTile(event, params);
             case WAIT_FOR_TARGET -> handleWaitForTarget(event, params); // รอเป้าหมายจาก currentPlayerTurnID
-            case TURN_END -> {}
-            case GAME_END -> {}
+            case TURN_END -> {
+            }
+            case GAME_END -> {
+            }
             default -> System.out.println("Unhandled phase: " + currentPhase);
         }
     }
@@ -118,8 +116,10 @@ public class GameState {
                             Board.itemTileMysteriousJungle,
                             Board.eventTileMysteriousJungle);
 
-                    case "cryoGard" -> {}
-                    case "goldenSeason" -> {}
+                    case "cryoGard" -> {
+                    }
+                    case "goldenSeason" -> {
+                    }
                 }
                 setAllPlayersUnreadyToContinue();
                 onAllClientsReady = () -> changeStateTo(GamePhase.TURN_START);
@@ -132,7 +132,8 @@ public class GameState {
     }
 
     private void handleWaitForAllClients(TriggerEvent event, String[] params) {
-        if (event != TriggerEvent.PLAYER_READY) return;
+        if (event != TriggerEvent.PLAYER_READY)
+            return;
 
         allPlayers.get(params[0]).setReadyToContinue(true);
 
@@ -145,10 +146,11 @@ public class GameState {
         }
     }
 
-
     private void handleTurnStart(TriggerEvent event, String[] params) {
-        if (!isHost) return;
-        if (event != TriggerEvent.ON_PHASE_ENTER) return;
+        if (!isHost)
+            return;
+        if (event != TriggerEvent.ON_PHASE_ENTER)
+            return;
         for (PawnCharacter character : spawnedCharacter.values()) {
             character.setCurrentTileIndex(0);
         }
@@ -161,8 +163,10 @@ public class GameState {
     }
 
     private void handleWaitForRoll(TriggerEvent event, String[] params) {
-        if (!isHost) return;
-        if (event != TriggerEvent.DICE_ROLL_EVENT) return;
+        if (!isHost)
+            return;
+        if (event != TriggerEvent.DICE_ROLL_EVENT)
+            return;
 
         String playerId = params[0];
         int roll = Integer.parseInt(params[1]);
@@ -172,7 +176,6 @@ public class GameState {
         lastRollResult = roll;
         int rollValue = currentEvent != null ? currentEvent.modifyRollValue(lastRollResult) : lastRollResult;
 
-
         PawnCharacter pawn = spawnedCharacter.get(playerId);
         int currentIndex = pawn.getCurrentTileIndex();
         int rawDestination = Math.min(currentIndex + rollValue, gameBoard.getBoardSize() - 1);
@@ -180,28 +183,24 @@ public class GameState {
 
         int finalDestination = gameBoard.getDestinationFromIndex(rawDestination);
 
-        //if current cell has destination
+        // if current cell has destination
         if (finalDestination != rawDestination) {
             CommandHandler.broadcastResult("MOVETO", playerId, String.valueOf(finalDestination));
         }
-
-
 
         setAllPlayersUnreadyToContinue();
         onAllClientsReady = () -> changeStateTo(GamePhase.CHECK_TILE);
         changeStateTo(GamePhase.WAIT_FOR_ALL_CLIENTS);
     }
 
-
-
     private void handleCheckTile(TriggerEvent event, String[] params) {
-        if (!isHost) return;
+        if (!isHost)
+            return;
 
         PawnCharacter currentPawn = spawnedCharacter.get(currentPlayerTurnId);
         int currentIndex = currentPawn.getCurrentTileIndex();
 
-
-        //Tile Type Check
+        // Tile Type Check
         switch (gameBoard.getAttributeFromIndex(currentIndex)) {
             case WIN_TILE -> {
 
@@ -236,7 +235,10 @@ public class GameState {
             }
 
             case EVENT_TILE -> {
-                Event selectedEvent = RandomEvents.resultRandomEvent(selectedMapId); //แทนที่ด้วย randomEvent() ในภายหลัง
+                // Event selectedEvent = RandomEvents.resultRandomEvent(selectedMapId); //
+                Event selectedEvent = new ReverseEvent();
+                // แทนที่ด้วย randomEvent()
+                // ในภายหลัง
                 System.out.println(selectedEvent.getEventVisualName());
                 Event.useEvent(selectedEvent, GameState.currentGame);
 
@@ -247,7 +249,7 @@ public class GameState {
                 changeStateTo(GamePhase.WAIT_FOR_ALL_CLIENTS);
             }
             case ITEM_TILE -> {
-                Item selectedItem = RandomItems.resultRandomItem(selectedMapId); //แทนที่ด้วย randomItem() ในภายหลัง
+                Item selectedItem = RandomItems.resultRandomItem(selectedMapId); // แทนที่ด้วย randomItem() ในภายหลัง
                 System.out.println(selectedItem.getCardUIName());
                 if (selectedItem.isRequireTarget()) {
                     allPlayers.get(currentPlayerTurnId).setOpenForNetworkInput(true);
@@ -263,20 +265,23 @@ public class GameState {
                     changeStateTo(GamePhase.WAIT_FOR_ALL_CLIENTS);
                 }
             }
-            case WATER_TILE -> {}
+            case WATER_TILE -> {
+            }
             default -> advanceToNextPlayer();
         }
-        //advanceToNextPlayer();
+        // advanceToNextPlayer();
 
     }
 
     private void handleWaitForTarget(TriggerEvent event, String[] params) {
-        if (!isHost) return;
-        if (event != TriggerEvent.SET_TARGET) return;
+        if (!isHost)
+            return;
+        if (event != TriggerEvent.SET_TARGET)
+            return;
 
         String id = params[0];
         Player targetPlayer = allPlayers.get(id);
-        Player userPlayer   = allPlayers.get(currentPlayerTurnId);
+        Player userPlayer = allPlayers.get(currentPlayerTurnId);
 
         Item.useItem(currentItem, userPlayer, targetPlayer, this);
         currentItem = null;
@@ -400,9 +405,10 @@ public class GameState {
         }
 
         currentPlayerTurnIndex = (currentPlayerTurnIndex + 1) % allPlayers.size();
-        currentPlayerTurnId    = getPlayerIdByTurnIndex(currentPlayerTurnIndex);
+        currentPlayerTurnId = getPlayerIdByTurnIndex(currentPlayerTurnIndex);
         beginTurnForPlayer(currentPlayerTurnId);
     }
+
     public String getLobbyName() {
         return lobbyName;
     }

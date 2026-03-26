@@ -1,11 +1,12 @@
-package Item;
+package Item.cryoGradItems;
 
 import Gameplay.GameState;
+import Item.base.Item;
 import misc.PawnCharacter;
 import misc.Player;
 import service.CommandHandler;
 
-public class BorealisItem extends Item{
+public class BorealisItem extends Item {
 
     int targetIndex;
 
@@ -21,8 +22,6 @@ public class BorealisItem extends Item{
         int currentPlayerIndex = player.getCurrentTileIndex();
 
         targetIndex = currentPlayerIndex;
-
-
 
         target.increaseSkipTurns(1);
     }

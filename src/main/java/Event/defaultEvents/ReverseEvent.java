@@ -1,18 +1,19 @@
-package Event;
+package Event.defaultEvents;
 
+import Event.base.Event;
 import Gameplay.GameState;
 import misc.PawnCharacter;
 import service.CommandHandler;
 
 public class ReverseEvent extends Event {
 
-    public ReverseEvent() {}
+    public ReverseEvent() {
+    }
 
     @Override
     public String getEventVisualName() {
         return "Reverse";
     }
-
 
     @Override
     public void doVisual(GameState game) {
@@ -21,18 +22,17 @@ public class ReverseEvent extends Event {
 
     @Override
     public void onEventEntered(GameState game) {
-        for (PawnCharacter character: game.spawnedCharacter.values()){
+        for (PawnCharacter character : game.spawnedCharacter.values()) {
             int move = 1;
             int newIndex = Math.max(0, character.getCurrentTileIndex() - move);
             CommandHandler.broadcastResult("MOVETO", character.getNetworkId(), Integer.toString(newIndex));
         }
     }
+
     @Override
     public void onEventTriggered(GameState game) {
 
     }
-
-
 
     @Override
     public void onEventLeave(GameState game) {

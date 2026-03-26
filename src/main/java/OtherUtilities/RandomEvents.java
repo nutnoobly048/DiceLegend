@@ -1,67 +1,60 @@
 package OtherUtilities;
 
 import java.util.*;
-import Event.*;
+import Event.base.Event;
 
 public class RandomEvents {
-    
+
     private static HashMap<String, ArrayList<Event>> allEvents = new HashMap<>();
 
     static {
 
-        ArrayList<Event> defaultEvents = createDefaultEvents();
+        // โหลดแต่ละ folder
+        ArrayList<Event> defaultEvents = new ArrayList<>(EventLoader.loadEventsFromPackage("Event.defaultEvents"));
 
-        allEvents.put("mysteriousJungle", createMysteriousJungleEvents(defaultEvents));
-        allEvents.put("cryoGard", createCryoGardEvents(defaultEvents));
-        allEvents.put("goldenSeason", createGoldenSeasonEvents(defaultEvents));
+        ArrayList<Event> mysteriousEvents = new ArrayList<>(
+                EventLoader.loadEventsFromPackage("Event.mysteriousEvents"));
 
+        ArrayList<Event> cryoEvents = new ArrayList<>(EventLoader.loadEventsFromPackage("Event.cryoGradEvents"));
 
+        ArrayList<Event> goldenEvents = new ArrayList<>(EventLoader.loadEventsFromPackage("Event.goldenSeasonEvents"));
+
+        // 👉 รวม default เข้าไปทุก map (กันว่าง)
+        allEvents.put("default", defaultEvents);
+
+        allEvents.put("mysteriousJungle", combine(defaultEvents, mysteriousEvents));
+        allEvents.put("cryoGrad", combine(defaultEvents, cryoEvents));
+        allEvents.put("goldenSeason", combine(defaultEvents, goldenEvents));
     }
 
-    public static ArrayList<Event> createDefaultEvents(){
-
-        ArrayList<Event> list = new ArrayList<>();
-        // เพิ่ม Event ที่มีทุกด่านตรงนี้
-        // list.add(new Event());
-        list.add(new ReverseEvent());
-        return list;
-
+    // รวม list
+    private static ArrayList<Event> combine(List<Event> base, List<Event> extra) {
+        ArrayList<Event> result = new ArrayList<>(base);
+        result.addAll(extra);
+        return result;
     }
 
-    public static ArrayList<Event> createMysteriousJungleEvents(ArrayList<Event> base){
+    // 🎲 random event
+    public static Event resultRandomEvent(String selectedMap) {
 
-        ArrayList<Event> list = new ArrayList<>(base);
-        // เพิ่ม Event ของด่าน Mysterious Jungle ตรงนี้
-        // list.add(new Event());
-        return list;
+        ArrayList<Event> list = allEvents.get(selectedMap);
 
+        // ✅ fallback กันพัง
+        if (list == null || list.isEmpty()) {
+            System.out.println("⚠️ No events in map: " + selectedMap + ", fallback to default");
+            list = allEvents.get("default");
+        }
+
+        if (list == null || list.isEmpty()) {
+            throw new RuntimeException("❌ No events available at all!");
+        }
+
+        int index = RandomUtilities.randomInt(list.size());
+        return list.get(index);
     }
 
-    public static ArrayList<Event> createCryoGardEvents(ArrayList<Event> base){
-
-        ArrayList<Event> list = new ArrayList<>(base);
-        // เพิ่ม Event ของด่าน Cryo-Grad ตรงนี้
-        // list.add(new Event());
-        return list;
-
-    }
-
-    public static ArrayList<Event> createGoldenSeasonEvents(ArrayList<Event> base){
-
-        ArrayList<Event> list = new ArrayList<>(base);
-        // เพิ่ม Event ของด่าน Golden Season ตรงนี้
-        // list.add(new Event());
-        return list;
-
-    }
-
-    // Method สำหรับส่งผลลัพธ์การสุ่ม วิธีใช้ => RandomEvents.resultRandomEvent();
-    public static Event resultRandomEvent(String selectedMap){
-
-        ArrayList<Event> canUseEvents = allEvents.get(selectedMap);
-        int index = RandomUtilities.randomInt(canUseEvents.size());
-        return canUseEvents.get(index);
-
+    public static void logging() {
+        System.out.println(allEvents);
     }
 
 }

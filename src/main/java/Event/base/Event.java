@@ -1,4 +1,4 @@
-package Event;
+package Event.base;
 
 import Gameplay.GameState;
 import misc.Player;
@@ -16,11 +16,10 @@ public abstract class Event {
         this.remainingTurn = 0;
     }
 
-    //GAMESTATE มีหน้าที่เรียกใช้
-    public static void useEvent(Event event, GameState state){
+    // GAMESTATE มีหน้าที่เรียกใช้
+    public static void useEvent(Event event, GameState state) {
         event.execute(state);
     }
-
 
     public final void execute(GameState game) {
         doVisual(game);
@@ -29,12 +28,13 @@ public abstract class Event {
 
     public abstract String getEventVisualName();
 
-
-    //ทำงาน Visual Effect เริ่มต้น
+    // ทำงาน Visual Effect เริ่มต้น
     public abstract void doVisual(GameState game);
-    //ทำงาน Event
+
+    // ทำงาน Event
     public abstract void onEventEntered(GameState game);
-    //เมื่อ Event หมด
+
+    // เมื่อ Event หมด
     public abstract void onEventLeave(GameState game);
 
     public abstract void onEventTriggered(GameState game);
@@ -43,7 +43,7 @@ public abstract class Event {
         return rollValue;
     }
 
-    //ให้เรียกใช้ทุกครั้งใน broadcastResult ถ้า Event นั้นไม่มีการขยับตัวละคร
+    // ให้เรียกใช้ทุกครั้งใน broadcastResult ถ้า Event นั้นไม่มีการขยับตัวละคร
     protected void broadcastContinueForAll(GameState state) {
         for (Player p : state.allPlayers.values()) {
             CommandHandler.broadcastResult("CONTINUE", p.getNetworkID());

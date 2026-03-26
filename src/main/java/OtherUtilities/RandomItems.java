@@ -1,71 +1,68 @@
 package OtherUtilities;
 
 import java.util.*;
-import Item.*;
+import Item.base.Item;
 
 public class RandomItems {
 
-    private static HashMap<String, ArrayList<Item>> allItems = new HashMap<>();
-    
+    private static HashMap<String, ArrayList<Class<? extends Item>>> allItems = new HashMap<>();
+
     static {
 
-        ArrayList<Item> defaultItems = createDefaultItems();
+        // ✅ default มี 3 ตัวที่คุณต้องการ
+        ArrayList<Class<? extends Item>> defaultItems = new ArrayList<>(
+                ItemLoader.loadItemClasses("Item.defaultItems"));
 
-        allItems.put("mysteriousJungle", createMysteriousJungleItems(defaultItems));
-        allItems.put("cryoGard", createCryoGardItems(defaultItems));
-        allItems.put("goldenSeason", createGoldenSeasonItems(defaultItems));
-        
+        ArrayList<Class<? extends Item>> mysteriousItems = new ArrayList<>(
+                ItemLoader.loadItemClasses("Item.mysteriousItems"));
+
+        ArrayList<Class<? extends Item>> cryoItems = new ArrayList<>(ItemLoader.loadItemClasses("Item.cryoGradItems"));
+
+        ArrayList<Class<? extends Item>> goldenItems = new ArrayList<>(
+                ItemLoader.loadItemClasses("Item.goldenSeasonItems"));
+
+        // 👉 รวม default เข้าไปทุก map
+        allItems.put("default", defaultItems);
+        allItems.put("mysteriousJungle", combine(defaultItems, mysteriousItems));
+        allItems.put("cryoGard", combine(defaultItems, cryoItems));
+        allItems.put("goldenSeason", combine(defaultItems, goldenItems));
     }
 
-    
-    public static ArrayList<Item> createDefaultItems(){
-
-        ArrayList<Item> list = new ArrayList<>();
-        // เพิ่ม Item ที่มีทุกด่านตรงนี้
-        // list.add(new Item());
-        list.add(new DoubleDiceItem());
-
-        list.add(new SwapItem());
-        return list;
-
+    // รวม list
+    private static ArrayList<Class<? extends Item>> combine(
+            List<Class<? extends Item>> base,
+            List<Class<? extends Item>> extra) {
+        ArrayList<Class<? extends Item>> result = new ArrayList<>(base);
+        result.addAll(extra);
+        return result;
     }
 
-    public static ArrayList<Item> createMysteriousJungleItems(ArrayList<Item> base){
+    // 🎯 random item (new ใหม่ทุกครั้ง)
+    public static Item resultRandomItem(String selectedMap) {
 
-        ArrayList<Item> list = new ArrayList<>(base);
-        // เพิ่ม Item ของด่าน Mysterious Jungle ตรงนี้
-        // list.add(new Item());
-        return list;
+        ArrayList<Class<? extends Item>> list = allItems.get(selectedMap);
 
+        // ✅ กันพัง
+        if (list == null || list.isEmpty()) {
+            System.out.println("⚠️ No items in map: " + selectedMap + ", fallback to default");
+            list = allItems.get("default");
+        }
+
+        if (list == null || list.isEmpty()) {
+            throw new RuntimeException("❌ No items available!");
+        }
+
+        int index = RandomUtilities.randomInt(list.size());
+
+        try {
+            return list.get(index).getDeclaredConstructor().newInstance();
+        } catch (Exception e) {
+            throw new RuntimeException("❌ Cannot create item", e);
+        }
     }
 
-    public static ArrayList<Item> createCryoGardItems(ArrayList<Item> base){
-
-        ArrayList<Item> list = new ArrayList<>(base);
-        // เพิ่ม Item ของด่าน Cryo-Gard ตรงนี้
-        // list.add(new Item());
-        list.add(new SpineItem());
-        list.add(new BorealisItem());
-        return list;
-
-    }
-
-    public static ArrayList<Item> createGoldenSeasonItems(ArrayList<Item> base){
-
-        ArrayList<Item> list = new ArrayList<>(base);
-        // เพิ่ม Item ของด่าน Golden Season ตรงนี้
-        // list.add(new Item());
-        return list;
-
-    }
-
-    // Method สำหรับส่งผลลัพธ์การสุ่ม วิธีใช้ => RandomItems.resultRandomItem();
-    public static Item resultRandomItem(String selectedMap){
-
-        ArrayList<Item> canUseItems = allItems.get(selectedMap);
-        int index = RandomUtilities.randomInt(canUseItems.size());
-        return canUseItems.get(index);
-
+    public static void logging() {
+        System.out.println(allItems);
     }
 
 }
