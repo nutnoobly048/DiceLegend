@@ -68,7 +68,7 @@ public class MainGame extends JFrame {
          gd.setFullScreenWindow(this);
          }
 
-         AudioService.getInstance().playMusic("sampleCeleste.wav");
+         AudioService.getInstance().playMusic("Forsaken.wav");
     }
 
     public void startRunService() {

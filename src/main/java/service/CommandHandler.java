@@ -117,6 +117,8 @@ public class CommandHandler {
                 GameState.currentGame = null;
                 LobbyState.destroy();
             }
+            case "CHANGEMUSIC" -> AudioService.getInstance().playMusic(params[0]);
+            case "PLAYSFX" -> AudioService.getInstance().playSFX(params[0]).play();
         }
     }
 
