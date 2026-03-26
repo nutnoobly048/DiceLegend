@@ -128,7 +128,8 @@ public class PawnCharacter extends GameObject {
         final double jumpDuration = 1.0;
 
         Timeline jumpTL = new Timeline();
-        int slot = getSlotOffsetIndex(targetIndex);
+//        int slot = getSlotOffsetIndex(targetIndex);
+        int slot = getMySlotIndex();
         int[] offset = SLOT_OFFSETS[slot];
 
         int toX = GameState.currentGame.gameBoard.getPositionFromIndex(targetIndex)[0] + offset[0];
@@ -144,6 +145,15 @@ public class PawnCharacter extends GameObject {
 
         this.setCurrentTileIndex(targetIndex);
         jumpTL.play();
+    }
+
+    private int getMySlotIndex() {
+        int index = 0;
+        for (String id : GameState.currentGame.allPlayers.keySet()) {
+            if (id.equals(this.networkId)) return index;
+            index++;
+        }
+        return 0;
     }
 
 }
