@@ -13,6 +13,7 @@ import service.CommandHandler;
 public class PawnCharacter extends GameObject {
 
     private int currentTileIndex = 0;
+    public int slotIndex = 0;
 
     public static final int[][] SLOT_OFFSETS = {
             { -20, -20 },
@@ -97,7 +98,8 @@ public class PawnCharacter extends GameObject {
 
         for (int i = this.getCurrentTileIndex() + 1; i <= targetIndex; i++) {
 //            int slot = getSlotOffsetIndex(i);
-            int slot = getMySlotIndex();
+//            int slot = getMySlotIndex();
+            int slot = this.slotIndex;
             int[] offset = SLOT_OFFSETS[slot];
             
             int toX = GameState.currentGame.gameBoard.getPositionFromIndex(i)[0] + offset[0];
@@ -130,8 +132,8 @@ public class PawnCharacter extends GameObject {
 
         Timeline jumpTL = new Timeline();
 //        int slot = getSlotOffsetIndex(targetIndex);
-        int slot = getMySlotIndex();
-//        int slot = this.slotIndex;
+//        int slot = getMySlotIndex();
+        int slot = this.slotIndex;
         int[] offset = SLOT_OFFSETS[slot];
 
         int toX = GameState.currentGame.gameBoard.getPositionFromIndex(targetIndex)[0] + offset[0];
