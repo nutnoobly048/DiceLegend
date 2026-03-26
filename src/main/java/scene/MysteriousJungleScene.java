@@ -81,9 +81,10 @@ public class MysteriousJungleScene extends Scene {
 
 //            PawnCharacter pawn = new PawnCharacter(player.getNetworkID(), player.getSpriteName(), spawnX, spawnY); รูปแบบไม่ Animated
             PawnCharacter pawn = new PawnCharacter(player.getNetworkID(), new AnimatedSprite(player.getSpriteName(), 0,0, 2, 2), spawnX,spawnY);
-            pawn.slotIndex = slotIndex;
+
             pawn.getSprite().offsetX = PAWN_OFFSET_X;
             pawn.getSprite().offsetY = PAWN_OFFSET_Y;
+            pawn.slotIndex = slotIndex;
             pawn.z = slotIndex;
 
             spawnObjectAt(pawn, spawnX, spawnY);

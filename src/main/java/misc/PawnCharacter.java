@@ -97,10 +97,7 @@ public class PawnCharacter extends GameObject {
         Tween lastTween = null;
 
         for (int i = this.getCurrentTileIndex() + 1; i <= targetIndex; i++) {
-//            int slot = getSlotOffsetIndex(i);
-//            int slot = getMySlotIndex();
-            int slot = this.slotIndex;
-            int[] offset = SLOT_OFFSETS[slot];
+            int[] offset = SLOT_OFFSETS[this.slotIndex];
             
             int toX = GameState.currentGame.gameBoard.getPositionFromIndex(i)[0] + offset[0];
             int toY = GameState.currentGame.gameBoard.getPositionFromIndex(i)[1] + offset[1];
@@ -131,10 +128,7 @@ public class PawnCharacter extends GameObject {
         final double jumpDuration = 1.0;
 
         Timeline jumpTL = new Timeline();
-//        int slot = getSlotOffsetIndex(targetIndex);
-//        int slot = getMySlotIndex();
-        int slot = this.slotIndex;
-        int[] offset = SLOT_OFFSETS[slot];
+        int[] offset = SLOT_OFFSETS[this.slotIndex];
 
         int toX = GameState.currentGame.gameBoard.getPositionFromIndex(targetIndex)[0] + offset[0];
         int toY = GameState.currentGame.gameBoard.getPositionFromIndex(targetIndex)[1] + offset[1];
