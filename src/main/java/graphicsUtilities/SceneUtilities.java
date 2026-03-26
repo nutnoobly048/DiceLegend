@@ -49,7 +49,7 @@ public class SceneUtilities {
         }
 
 
-        newScene.setFocusable(false);
+        newScene.setFocusable(true);
         currentGameScene = newScene;
         mainGameFrame.getContainer().add(newScene);
 

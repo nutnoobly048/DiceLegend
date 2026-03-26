@@ -21,10 +21,10 @@ public class RandomPortalPosition {
 
     public static int[][] resultRandomPortalPosition(){
         
-        int[][] result = new int[3][2];
+        int[][] result = new int[7][2];
         int head;
         int tail;
-        for ( int j = 0; j < 3; j++ ){
+        for ( int j = 0; j < 7; j++ ){
 
             do{
                 head = RandomUtilities.randomInt(100);
@@ -35,10 +35,10 @@ public class RandomPortalPosition {
             }while(head == tail || banPosition.contains(tail));
 
             result[j][0] = head;
-            result[j][0] = tail;
+            result[j][1] = tail;
 
         }
-        
+        System.out.println("First Portal : " + result[0][0] + "," + result[0][1]);
         return result;
 
     }

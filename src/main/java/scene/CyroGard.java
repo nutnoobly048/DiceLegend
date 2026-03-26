@@ -4,15 +4,20 @@ import Gameplay.GameState;
 import Gameplay.LobbyState;
 import animation.Tween;
 import animation.TweenProperty;
+import graphicsUtilities.ImagePreload;
 import graphicsUtilities.Scene;
 import misc.PawnCharacter;
 import misc.Player;
 import objectClass.AnimatedSprite;
+import objectClass.Board;
 import objectClass.GameButton;
 import objectClass.GameObject;
 import service.CommandHandler;
 
 import java.awt.*;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.util.Comparator;
 import java.util.List;
 
@@ -47,6 +52,16 @@ public class CyroGard extends Scene {
             CommandHandler.sentIntent("INTENT:SELF:CONTINUE");
         });
 
+        addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                int key = e.getKeyCode();
+                if (key == 32) {
+                    CommandHandler.sentIntent("INTENT:SELF:ROLLEVENT");
+                }
+            }
+        });
+
     }
 
     private void setupObjects() {
@@ -66,6 +81,46 @@ public class CyroGard extends Scene {
             CommandHandler.sentIntent("INTENT:SELF:ROLLEVENT");
         });
         add(rollBtn);
+
+        for (int i = 0; i < Board.destinationCyroGard.length; i++) {
+
+            int portalInIndex;
+            int[] portalInPosition;
+            int portalInX;
+            int portalInY;
+
+            int portalOutIndex;
+            int[] portalOutPosition;
+            int portalOutX;
+            int portalOutY;
+
+            portalInIndex = Board.destinationCyroGard[i][0];
+            portalInPosition = GameState.currentGame.gameBoard.getPositionFromIndex(portalInIndex);
+            portalInX = portalInPosition[0];
+            portalInY = portalInPosition[1];
+
+            AnimatedSprite portalInSprite = new AnimatedSprite("PortalIn.png", portalInX, portalInY, 6, 2);
+            portalInSprite.offsetX = -40;
+            portalInSprite.offsetY = -50;
+
+
+            portalOutIndex = Board.destinationCyroGard[i][1];
+            portalOutPosition = GameState.currentGame.gameBoard.getPositionFromIndex(portalOutIndex);
+            portalOutX = portalOutPosition[0];
+            portalOutY = portalOutPosition[1];
+
+            AnimatedSprite portalOutSprite = new AnimatedSprite("PortalOut.png", portalOutX, portalOutY, 6, 2);
+            portalOutSprite.offsetX = -40;
+            portalOutSprite.offsetY = -50;
+
+            GameObject portalIn = new GameObject(Integer.toString(i), portalInSprite, portalInX, portalInY);
+
+            GameObject portalOut = new GameObject(Integer.toString(i + 20), portalOutSprite, portalOutX, portalOutY);
+
+            spawnObjectAt(portalIn);
+            spawnObjectAt(portalOut);
+
+        }
     }
 
     private void spawnAllPawns() {

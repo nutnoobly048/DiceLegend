@@ -1,13 +1,12 @@
 package objectClass;
 
 import Gameplay.Cell;
+import OtherUtilities.RandomPortalPosition;
 import ServiceInterface.CellAttribute;
-
-import java.util.EnumSet;
 
 public class Board {
 
-    public static int[][] coordinatesMysteriousJungle = {
+    public static int[][] defaultPosition = {
             {500, 990}, {600, 990}, {700, 990}, {800, 990}, {900, 990}, {1000, 990}, {1100, 990}, {1200, 990}, {1300, 990}, {1400, 990},
             {1400, 890}, {1300, 890}, {1200, 890}, {1100, 890}, {1000, 890}, {900, 890}, {800, 890}, {700, 890}, {600, 890}, {500, 890},
             {500, 790}, {600, 790}, {700, 790}, {800, 790}, {900, 790}, {1000, 790}, {1100, 790}, {1200, 790}, {1300, 790}, {1400, 790},
@@ -25,6 +24,10 @@ public class Board {
     public static int[][] destinationMysteriousJungle = {{1,49}, {2,49}, {3, 49}, {4,49}, {5,49}, {6,49}, {7, 49}};
     public static int[] itemTileMysteriousJungle = {49,50,51,52,53,54,55,56,57,58,59,60}; //mock data
     public static int[] eventTileMysteriousJungle = {}; //mock data
+
+    public static int[][] destinationCyroGard = RandomPortalPosition.resultRandomPortalPosition();
+    public static int[] itemTileCyroGard = {};
+    public static int[] eventTileCyroGard = {};
 
 
 
