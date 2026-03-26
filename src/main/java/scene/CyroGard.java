@@ -34,6 +34,8 @@ public class CyroGard extends Scene {
 
     private GameObject boardFrame=  new GameObject("boardFrame", "CyroBoardFrame.png", SCREEN_W/2, SCREEN_H/2);
     private GameObject boardTexture = new GameObject("board", "CyroGardBoard.png", SCREEN_W / 2, SCREEN_H / 2);
+    private GameObject diceBackground = new GameObject("diceBackground", "CyroDiceFrame.png", 1495, 27);
+    private GameObject itemFrame = new GameObject("itemFrame", "CyroItemFrame.png", 32, 27);
 
     private static final int PAWN_SPRITE_W  = 64;
     private static final int PAWN_SPRITE_H  = 96;
@@ -76,6 +78,12 @@ public class CyroGard extends Scene {
         boardTexture.getSprite().offsetY = -500;
         boardTexture.z = -1;
         spawnObjectAt(boardTexture);
+
+        diceBackground.z = -2;
+        spawnObjectAt(diceBackground);
+
+        itemFrame.z = -2;
+        spawnObjectAt(itemFrame);
 
         spawnObjectAt(transition_left);
         spawnObjectAt(transition_right);
