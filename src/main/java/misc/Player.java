@@ -75,6 +75,14 @@ public class Player {
         this.localSpriteName = localSpriteName;
     }
 
+    public String getLocalSpritePortraitName() {
+        return localSpritePortraitName;
+    }
+
+    public void changeLocalSpritePortraitName(String localSpritePortraitName) {
+        this.localSpritePortraitName = localSpritePortraitName;
+    }
+
     public static void setLocalPlayerName(String name) {
         localPlayer.name = name;
     }

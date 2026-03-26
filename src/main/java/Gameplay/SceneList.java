@@ -19,19 +19,4 @@ public class SceneList {
 
     public static Scene buildMysteriousJungle = new MysteriousJungleScene();
 
-    public static Scene buildCryoGarden() {
-        return new Scene() {
-            {
-
-            }
-        };
-    }
-
-    public static Scene buildGoldenSeason() {
-        return new Scene() {
-            {
-
-            }
-        };
-    }
 }

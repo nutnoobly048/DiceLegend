@@ -25,11 +25,7 @@ public class UserInput implements KeyListener{
     }
 
     public static void updateAndSync() {
-        if (isKeyJustPressed(KeyEvent.VK_SPACE)) {
-            CommandHandler.sentIntent("INTENT:SELF:ROLLEVENT");
-        }
         copyKeyMap.putAll(keyMap);
-
     }
     // Listen To KeyTyped
     @Override

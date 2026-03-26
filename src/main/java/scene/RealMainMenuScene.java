@@ -17,6 +17,12 @@ import graphicsUtilities.SceneUtilities;
 import objectClass.AnimatedSprite;
 import objectClass.GameButton;
 import objectClass.GameObject;
+import service.AudioService;
+
+import javax.swing.JSlider;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+import javax.swing.plaf.basic.BasicSliderUI;
 
 public class RealMainMenuScene extends Scene {
 
@@ -35,6 +41,8 @@ public class RealMainMenuScene extends Scene {
         setupButtons();
         setupLogo();
         this.add(popUp);
+
+
     }
 
     public void setupLogo() {
@@ -68,6 +76,54 @@ public class RealMainMenuScene extends Scene {
         this.add(joinButton);
         this.add(creditButton);
         this.add(exitButton);
+        setupVolumeSlider();
+    }
+
+    public void setupVolumeSlider() {
+        JSlider volumeSlider = new JSlider(JSlider.HORIZONTAL, 0, 100, 30);
+        volumeSlider.setFocusable(false);
+        volumeSlider.setRequestFocusEnabled(false);
+
+        volumeSlider.setUI(new BasicSliderUI(volumeSlider) {
+            @Override
+            public void paintThumb(Graphics g) {
+                Graphics2D g2d = (Graphics2D) g;
+                g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                Image diceMover = ImagePreload.get("DiceThumb.png");
+                g2d.drawImage(diceMover, thumbRect.x, thumbRect.y, thumbRect.width, thumbRect.height, null);
+
+            }
+
+            @Override
+            public void paintTrack(Graphics g) {
+                Graphics2D g2d = (Graphics2D) g;
+                g2d.setColor(new Color(101, 67, 33));
+                int trackY = trackRect.y + (trackRect.height / 2) - 3;
+                g2d.fillRoundRect(trackRect.x, trackY, trackRect.width, 6, 10, 10);
+            }
+
+            @Override
+            protected Dimension getThumbSize() {
+                return new Dimension(20, 20);
+            }
+        });
+
+        volumeSlider.setBounds(64, 1016, 200, 50);
+        volumeSlider.setOpaque(false);
+
+        volumeSlider.addChangeListener(new ChangeListener() {
+            public void stateChanged(ChangeEvent e) {
+                float volume = volumeSlider.getValue() / 100f;
+
+                AudioService.getInstance().setMasterVolume(volume);
+
+                if (AudioService.getInstance().getCurrentMusic() != null) {
+                    AudioService.getInstance().getCurrentMusic().setVolume(volume);
+                }
+            }
+        });
+
+        this.add(volumeSlider);
     }
 }
 
@@ -113,6 +169,8 @@ class JoinPopUp extends JPanel {
             g2d.drawImage(background, 0, 0, getWidth(), getHeight(), null);
         }
     }
+
+
 }
 
 // class Particle {

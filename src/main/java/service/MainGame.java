@@ -6,7 +6,6 @@ import Gameplay.SceneList;
 import OtherUtilities.RandomPortalPosition;
 import graphicsUtilities.Scene;
 import graphicsUtilities.*;
-import misc.Player;
 
 import javax.swing.*;
 import java.awt.*;
@@ -69,6 +68,7 @@ public class MainGame extends JFrame {
          gd.setFullScreenWindow(this);
          }
 
+         AudioService.getInstance().playMusic("sampleCeleste.wav");
     }
 
     public void startRunService() {

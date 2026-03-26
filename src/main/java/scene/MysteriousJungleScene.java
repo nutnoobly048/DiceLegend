@@ -12,8 +12,10 @@ import objectClass.Board;
 import objectClass.GameButton;
 import objectClass.GameObject;
 import service.CommandHandler;
+import service.UserInput;
 
 import java.awt.*;
+import java.awt.event.KeyEvent;
 import java.util.Comparator;
 import java.util.List;
 

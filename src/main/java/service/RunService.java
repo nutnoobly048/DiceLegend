@@ -69,6 +69,7 @@ public class RunService {
 
     public void start() {
         ImagePreload.preloadAllImage();
+        AudioService.preloadAllClips();
 
         SceneUtilities.setCurrentGameFrame(mainGameFrame);
 

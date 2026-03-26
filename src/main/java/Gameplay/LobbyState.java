@@ -23,10 +23,10 @@ public class LobbyState {
     }
 
     public static final HashMap<String, String[]> spriteEntries = new HashMap<>(Map.ofEntries(
-            Map.entry("YELLOW", new String[]{"walk_01.png", "walk_02.png"}),
-            Map.entry("BLACK", new String[]{"idle.png", "cast.png"}),
-            Map.entry("BLUE", new String[]{"shoot.png", ""}),
-            Map.entry("GREEN", new String[]{"", ""})
+            Map.entry("YELLOW", new String[]{"YellowCharacter.png", "YellowFace.png"}),
+            Map.entry("BLACK", new String[]{"BlackCharacter.png", "BlackFace.png"}),
+            Map.entry("BLUE", new String[]{"BlueCharacter.png", "BlueFace.png"}),
+            Map.entry("GREEN", new String[]{"GreenCharacter.png", "GreenFace.png"})
     ));
 
     public LobbyState(boolean isHost, String lobbyName) {
@@ -49,8 +49,14 @@ public class LobbyState {
             case PLAYER_JOINED -> onPlayerJoined(params);
             case PLAYER_LEFT   -> onPlayerLeft(params);
             case PLAYER_SPRITE_CHANGE -> {
-                Player p = allPlayers.get(params[0]);
-                if (p != null) p.changeSpriteName(params[1]);
+                Player player = allPlayers.get(params[0]);
+                String[] imgLoad = spriteEntries.get(params[1]);
+                if (player != null) {
+                    System.out.println("Changed to: " + imgLoad[0]);
+                    player.changeSpriteName(imgLoad[0]);
+                    System.out.println("Changed to: " + imgLoad[1]);
+                    player.changeLocalSpritePortraitName(imgLoad[1]);
+                }
             }
         }
     }
