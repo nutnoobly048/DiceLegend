@@ -4,22 +4,16 @@ package Gameplay;
 import Item.Item;
 import OtherUtilities.RandomEvents;
 import OtherUtilities.RandomItems;
-import ServiceInterface.CellAttribute;
-import graphicsUtilities.SceneUtilities;
 import misc.Player;
 import misc.PawnCharacter;
 import objectClass.Board;
 import objectClass.GameModal;
-import scene.LobbyScene;
 import service.CommandHandler;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
-import Item.DoubleDiceItem;
+
 import Event.Event;
-import Event.ReverseEvent;
-import service.RunService;
 
 import javax.swing.*;
 
@@ -114,16 +108,16 @@ public class GameState {
                 CommandHandler.sentIntent("INTENT:SELF:CHANGESCENETO:" + selectedMapId);
                 switch (selectedMapId) {
                     case "mysteriousJungle" -> gameBoard = new Board(
-                            Board.coordinatesMysteriousJungle,
+                            Board.defaultPosition,
                             Board.destinationMysteriousJungle,
                             Board.itemTileMysteriousJungle,
                             Board.eventTileMysteriousJungle);
 
                     case "cryoGard" -> gameBoard = new Board(
-                            Board.coordinatesMysteriousJungle,
-                            Board.destinationMysteriousJungle,
-                            Board.itemTileMysteriousJungle,
-                            Board.eventTileMysteriousJungle);
+                            Board.defaultPosition,
+                            Board.destinationCyroGard,
+                            Board.itemTileCyroGard,
+                            Board.eventTileCyroGard);
                     case "goldenSeason" -> {}
                 }
                 setAllPlayersUnreadyToContinue();

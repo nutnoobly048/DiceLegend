@@ -10,6 +10,8 @@ import misc.Player;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
@@ -26,14 +28,13 @@ public class MainGame extends JFrame {
             MainGame mainGame = new MainGame();
             mainGame.setVisible(true);
         });
-        System.out.println(RandomPortalPosition.resultRandomPortalPosition()[0][0]);
     }
 
     public MainGame() {
         setTitle("Dice Legend");
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        addKeyListener(new UserInput());
+
 
         addWindowListener(new WindowAdapter() {
             @Override
