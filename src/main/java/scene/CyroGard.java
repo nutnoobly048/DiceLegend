@@ -32,6 +32,7 @@ public class CyroGard extends Scene {
     private GameObject transition_up    = new GameObject("transit_up",    "Transition.png", 0, 0);
     private GameObject transition_down  = new GameObject("transit_down",  "Transition.png", 0, 0);
 
+    private GameObject boardFrame=  new GameObject("boardFrame", "CyroBoardFrame.png", SCREEN_W/2, SCREEN_H/2);
     private GameObject boardTexture = new GameObject("board", "CyroGardBoard.png", SCREEN_W / 2, SCREEN_H / 2);
 
     private static final int PAWN_SPRITE_W  = 64;
@@ -44,7 +45,7 @@ public class CyroGard extends Scene {
 
 
     public CyroGard() {
-        setBackground(Color.BLACK);
+        setBackground(ImagePreload.get("CyroMainBackground.png"));
         setupObjects();
         setOnSceneEnter(() -> {
             playEnterTransition();
@@ -62,9 +63,15 @@ public class CyroGard extends Scene {
             }
         });
 
+
     }
 
     private void setupObjects() {
+        boardFrame.getSprite().offsetY = -513;
+        boardFrame.getSprite().offsetX = -513;
+        boardFrame.z = -2;
+        spawnObjectAt(boardFrame);
+
         boardTexture.getSprite().offsetX = -500;
         boardTexture.getSprite().offsetY = -500;
         boardTexture.z = -1;
@@ -75,8 +82,8 @@ public class CyroGard extends Scene {
         spawnObjectAt(transition_up);
         spawnObjectAt(transition_down);
 
-        GameButton rollBtn = new GameButton("roll", "button.png", "buttonOnHover.png");
-        rollBtn.setBounds(50, 50, 150, 60);
+        GameButton rollBtn = new GameButton("", "CyroRoll.png", "CyroRollHover.png");
+        rollBtn.setBounds(70, 70, 289, 108);
         rollBtn.setOnButtonClicked(() -> {
             CommandHandler.sentIntent("INTENT:SELF:ROLLEVENT");
         });
