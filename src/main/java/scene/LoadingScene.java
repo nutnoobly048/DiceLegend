@@ -47,7 +47,7 @@ public class LoadingScene extends Scene {
 
                     // เช็คห้องว่าถูกใช้ไปหรือยัง
                     RunService.mqtt.subscribe(topics, (t, msg) -> {
-                        if (msg.equals("ACTIVE") ||msg.equals("GAME_STARTED")) {
+                        if (msg.equals("ACTIVE") || msg.equals("GAME_STARTED")) {
                             roomTaken.set(true);
                         }
                     });
@@ -58,6 +58,12 @@ public class LoadingScene extends Scene {
 
                         RunService.mqtt.subscribe(baseTopic + "/Intents",
                                 (topic, msg) -> RunService.intentQueue.add(msg));
+                        RunService.mqtt.subscribe(baseTopic + "/player-left", (t, msg) -> {
+                            if (msg.startsWith("DISCONNECT:")) {
+                                String disconnectedId = msg.replace("DISCONNECT:", "");
+                                CommandHandler.sentIntent("INTENT:" + disconnectedId + ":LEAVE_GAME");
+                            }
+                        });
                         RunService.mqtt.publishRetained(baseTopic + "/room_state", "ACTIVE");
                         RunService.mqtt.publishRetained(baseTopic + "/room_amount", "1");
                         connected = true;
@@ -65,10 +71,11 @@ public class LoadingScene extends Scene {
                     }
 
                 } else {
-                    RunService.mqtt.connect();
+                    // RunService.mqtt.connect();
+                    RunService.mqtt.connectClientWithWill(this.lobbyName, RunService.mqtt.clientId);
                     AtomicBoolean state = new AtomicBoolean(false);
                     AtomicBoolean checkAmountRoom = new AtomicBoolean(false);
-                    
+
                     String topicRoomState = baseTopic + "/room_state";
                     RunService.mqtt.subscribe(topicRoomState, (t, msg) -> {
                         if (msg.equals("ACTIVE"))
@@ -92,12 +99,12 @@ public class LoadingScene extends Scene {
 
                     RunService.mqtt.subscribe(baseTopic + "/Results", (topic, msg) -> RunService.resultQueue.add(msg));
 
-                    if(!isHost){
-                        
+                    if (!isHost) {
+
                         String topicRoomAmount = baseTopic + "/room_amount";
                         AtomicBoolean isAdd = new AtomicBoolean(false);
                         RunService.mqtt.subscribe(topicRoomAmount, (t, msg) -> {
-                            if (!isAdd.getAndSet(true)){
+                            if (!isAdd.getAndSet(true)) {
 
                                 int addAmount = Integer.parseInt(msg) + 1;
                                 RunService.mqtt.publishRetained(topicRoomAmount, String.valueOf(addAmount));
