@@ -16,8 +16,8 @@ public class QuantumGateItem extends Item{
 
     @Override
     public void doImmediateAction(Player user, Player target, GameState state) {
-        PawnCharacter targetPlayer = state.spawnedCharacter.get(target);
-        PawnCharacter player =  state.spawnedCharacter.get(user);
+        PawnCharacter targetPlayer = state.spawnedCharacter.get(target.getNetworkID());
+        PawnCharacter player =  state.spawnedCharacter.get(user.getNetworkID());
 
         int targetIndex = targetPlayer.getCurrentTileIndex();
         int currIndex = player.getCurrentTileIndex();
