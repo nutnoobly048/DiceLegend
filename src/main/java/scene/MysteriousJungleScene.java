@@ -13,6 +13,7 @@ import objectClass.GameObject;
 import service.CommandHandler;
 
 import java.awt.*;
+import java.util.Comparator;
 import java.util.List;
 
 public class MysteriousJungleScene extends Scene {
@@ -70,7 +71,10 @@ public class MysteriousJungleScene extends Scene {
     }
 
     private void spawnAllPawns() {
-        List<Player> players = List.copyOf(LobbyState.current.allPlayers.values());
+        List<Player> players = LobbyState.current.allPlayers.values()
+                .stream()
+                .sorted(Comparator.comparing(Player::getNetworkID))
+                .collect(java.util.stream.Collectors.toList());
 
         for (int slotIndex = 0; slotIndex < players.size(); slotIndex++) {
             Player player  = players.get(slotIndex);
