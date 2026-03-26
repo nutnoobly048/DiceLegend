@@ -17,7 +17,7 @@ public class SpineItem extends Item{
 
     @Override
     public void broadcastResult(Player user, Player target, GameState state) {
-
+        broadcastContinueForAll(state);
     }
 
     @Override

@@ -13,6 +13,7 @@ import objectClass.GameObject;
 import service.CommandHandler;
 
 import java.awt.*;
+import java.util.Comparator;
 import java.util.List;
 
 public class MysteriousJungleScene extends Scene {
@@ -70,7 +71,10 @@ public class MysteriousJungleScene extends Scene {
     }
 
     private void spawnAllPawns() {
-        List<Player> players = List.copyOf(LobbyState.current.allPlayers.values());
+        List<Player> players = LobbyState.current.allPlayers.values()
+                .stream()
+                .sorted(Comparator.comparing(Player::getNetworkID))
+                .collect(java.util.stream.Collectors.toList());
 
         for (int slotIndex = 0; slotIndex < players.size(); slotIndex++) {
             Player player  = players.get(slotIndex);
@@ -81,9 +85,10 @@ public class MysteriousJungleScene extends Scene {
 
 //            PawnCharacter pawn = new PawnCharacter(player.getNetworkID(), player.getSpriteName(), spawnX, spawnY); รูปแบบไม่ Animated
             PawnCharacter pawn = new PawnCharacter(player.getNetworkID(), new AnimatedSprite(player.getSpriteName(), 0,0, 2, 2), spawnX,spawnY);
-            pawn.slotIndex = slotIndex;
+
             pawn.getSprite().offsetX = PAWN_OFFSET_X;
             pawn.getSprite().offsetY = PAWN_OFFSET_Y;
+            pawn.slotIndex = slotIndex;
             pawn.z = slotIndex;
 
             spawnObjectAt(pawn, spawnX, spawnY);

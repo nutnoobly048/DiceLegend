@@ -12,31 +12,23 @@ public class SwapItem extends Item {
     public SwapItem() { super(true); }
 
     @Override
-    public void doImmediateAction(Player user,Player targetPlayer, GameState state) {
+    public void doImmediateAction(Player user, Player targetPlayer, GameState state) {
+        PawnCharacter furthest = null;
 
-        PawnCharacter target = GameState.currentGame.spawnedCharacter.get(user.getNetworkID());
+        for (PawnCharacter character : state.spawnedCharacter.values()) {
+            if (character.getNetworkId().equals(user.getNetworkID())) continue;
 
-        for (PawnCharacter character: GameState.currentGame.spawnedCharacter.values()) {
-
-            if (target == null) {
-
-                target = character;
-
-            } else if (character.getCurrentTileIndex() > target.getCurrentTileIndex()) {
-
-                target = character;
-
+            if (furthest == null || character.getCurrentTileIndex() > furthest.getCurrentTileIndex()) {
+                furthest = character;
             }
-
-
         }
-        PawnCharacter player =  state.spawnedCharacter.get(user.getNetworkID());
 
-        int currIndex = player.getCurrentTileIndex();
+        PawnCharacter userPawn = state.spawnedCharacter.get(user.getNetworkID());
 
-        userNewIndex = target.getCurrentTileIndex();
-        targetNewIndex = currIndex;
+        if (furthest == null || furthest == userPawn) return; // no valid target
 
+        userNewIndex   = furthest.getCurrentTileIndex();
+        targetNewIndex = userPawn.getCurrentTileIndex();
     }
 
     @Override
