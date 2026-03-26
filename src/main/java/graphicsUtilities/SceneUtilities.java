@@ -2,6 +2,7 @@ package graphicsUtilities;
 
 import Gameplay.SceneList;
 import objectClass.GameObject;
+import scene.CyroGard;
 import scene.MysteriousJungleScene;
 import service.MainGame;
 import service.RunService;
@@ -24,7 +25,7 @@ public class SceneUtilities {
         System.out.println("changes");
         switch (sceneName) {
             case "mysteriousJungle" -> changeSceneTo(new MysteriousJungleScene());
-            case "cryoGard" -> changeSceneTo(new MysteriousJungleScene());
+            case "cryoGard" -> changeSceneTo(new CyroGard());
             case "goldenSeason" -> {}
             case "lobbyScene" -> changeSceneTo(SceneList.lobbyScene);
             case "main_menu" -> changeSceneTo(SceneList.mainMenu);
