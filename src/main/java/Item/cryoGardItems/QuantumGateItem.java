@@ -1,9 +1,10 @@
-package Item;
+package Item.cryoGardItems;
 
 import Gameplay.GameState;
 import misc.PawnCharacter;
 import misc.Player;
 import service.CommandHandler;
+import Item.base.Item;
 
 public class QuantumGateItem extends Item{
 

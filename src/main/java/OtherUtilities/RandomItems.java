@@ -16,7 +16,7 @@ public class RandomItems {
         ArrayList<Class<? extends Item>> mysteriousItems = new ArrayList<>(
                 ItemLoader.loadItemClasses("Item.mysteriousItems"));
 
-        ArrayList<Class<? extends Item>> cryoItems = new ArrayList<>(ItemLoader.loadItemClasses("Item.cryoGradItems"));
+        ArrayList<Class<? extends Item>> cryoItems = new ArrayList<>(ItemLoader.loadItemClasses("Item.cryoGardItems"));
 
         ArrayList<Class<? extends Item>> goldenItems = new ArrayList<>(
                 ItemLoader.loadItemClasses("Item.goldenSeasonItems"));
@@ -59,6 +59,7 @@ public class RandomItems {
         } catch (Exception e) {
             throw new RuntimeException("❌ Cannot create item", e);
         }
+
     }
 
     public static void logging() {

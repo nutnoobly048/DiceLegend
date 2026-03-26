@@ -1,4 +1,4 @@
-package Item.cryoGradItems;
+package Item.cryoGardItems;
 
 import Gameplay.GameState;
 import Item.base.Item;

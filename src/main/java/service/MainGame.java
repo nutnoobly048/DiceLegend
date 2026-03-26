@@ -3,6 +3,7 @@ package service;
 import Gameplay.GameState;
 import Gameplay.LobbyState;
 import Gameplay.SceneList;
+import Item.base.Item;
 import OtherUtilities.RandomEvents;
 import OtherUtilities.RandomItems;
 import graphicsUtilities.Scene;
@@ -13,6 +14,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import Event.base.Event;
 
 public class MainGame extends JFrame {
 
@@ -27,6 +29,13 @@ public class MainGame extends JFrame {
             MainGame mainGame = new MainGame();
             mainGame.setVisible(true);
         });
+
+        Item sampleItem = RandomItems.resultRandomItem("cryoGard");
+        Event sampleEvent = RandomEvents.resultRandomEvent("cryoGard");
+
+        System.out.println(sampleEvent.getEventVisualName());
+        System.out.println(sampleItem.getCardUIName());
+
         RandomEvents.logging();
         RandomItems.logging();
     }

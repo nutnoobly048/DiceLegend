@@ -15,7 +15,7 @@ public class RandomEvents {
         ArrayList<Event> mysteriousEvents = new ArrayList<>(
                 EventLoader.loadEventsFromPackage("Event.mysteriousEvents"));
 
-        ArrayList<Event> cryoEvents = new ArrayList<>(EventLoader.loadEventsFromPackage("Event.cryoGradEvents"));
+        ArrayList<Event> cryoEvents = new ArrayList<>(EventLoader.loadEventsFromPackage("Event.cryoGardEvents"));
 
         ArrayList<Event> goldenEvents = new ArrayList<>(EventLoader.loadEventsFromPackage("Event.goldenSeasonEvents"));
 
@@ -23,7 +23,7 @@ public class RandomEvents {
         allEvents.put("default", defaultEvents);
 
         allEvents.put("mysteriousJungle", combine(defaultEvents, mysteriousEvents));
-        allEvents.put("cryoGrad", combine(defaultEvents, cryoEvents));
+        allEvents.put("cryoGard", combine(defaultEvents, cryoEvents));
         allEvents.put("goldenSeason", combine(defaultEvents, goldenEvents));
     }
 
