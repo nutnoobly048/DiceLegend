@@ -10,23 +10,35 @@ public class SwapItem extends Item {
     private int userNewIndex;
     private int targetNewIndex;
 
-    public SwapItem() {
-        super(true);
-    }
+    public SwapItem() { super(false); }
 
     @Override
-    public void doImmediateAction(Player user, Player target, GameState state) {
-        PawnCharacter targetPlayer = state.spawnedCharacter.get(target);
-        PawnCharacter player = state.spawnedCharacter.get(user);
+    public void doImmediateAction(Player user,Player targetPlayer, GameState state) {
 
-        int targetIndex = targetPlayer.getCurrentTileIndex();
+        PawnCharacter target = GameState.currentGame.spawnedCharacter.get(user.getNetworkID());
+
+        for (PawnCharacter character: GameState.currentGame.spawnedCharacter.values()) {
+
+            if (target == null) {
+
+                target = character;
+
+            } else if (character.getCurrentTileIndex() > target.getCurrentTileIndex()) {
+
+                target = character;
+
+            }
+
+
+        }
+
+        PawnCharacter player =  state.spawnedCharacter.get(user.getNetworkID());
+
         int currIndex = player.getCurrentTileIndex();
 
-        userNewIndex = targetIndex;
+        userNewIndex = target.getCurrentTileIndex();
         targetNewIndex = currIndex;
 
-        // targetPlayer.setCurrentTileIndex(targetNewIndex);
-        // player.setCurrentTileIndex(userNewIndex);
     }
 
     @Override
