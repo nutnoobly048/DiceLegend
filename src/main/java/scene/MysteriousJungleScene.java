@@ -74,7 +74,7 @@ public class MysteriousJungleScene extends Scene {
         List<Player> players = LobbyState.current.allPlayers.values()
                 .stream()
                 .sorted(Comparator.comparing(Player::getNetworkID))
-                .collect(java.util.stream.Collectors.toList());
+                .toList();
 
         for (int slotIndex = 0; slotIndex < players.size(); slotIndex++) {
             Player player  = players.get(slotIndex);
