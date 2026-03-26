@@ -95,6 +95,8 @@ public class LobbyScene extends Scene {
         });
 
         startButton.setOnButtonClicked(() -> {
+            String baseTopic = "DiceLegend/" + LobbyState.current.lobbyName;
+            RunService.mqtt.publishRetained(baseTopic + "/room_state", "GAME_STARTED");
             CommandHandler.sentIntent("INTENT:SELF:START_GAME");
         });
     }
