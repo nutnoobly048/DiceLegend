@@ -37,7 +37,7 @@ public class Board {
     //Board number - 1 = Array Index Number
     //{3, 58} => เมื่อเหยียบ 4 จะพาไป 59
     public static int[][] destinationMysteriousJungle = {{1,49}, {2,49}, {3, 49}, {4,49}, {5,49}, {6,49}, {7, 49}};
-    public static int[] itemTileMysteriousJungle = {}; //mock data
+    public static int[] itemTileMysteriousJungle = {49,50,51,52,53,54,55,56,57,58,59,60}; //mock data
     public static int[] eventTileMysteriousJungle = {}; //mock data
 
 

@@ -63,10 +63,10 @@ public class MainGame extends JFrame {
         startContainerPanel();
 
         SceneUtilities.changeSceneTo(SceneList.mainMenu);
-         if (gd.isFullScreenSupported()) {
-         this.setUndecorated(true);
-         gd.setFullScreenWindow(this);
-         }
+//         if (gd.isFullScreenSupported()) {
+//         this.setUndecorated(true);
+//         gd.setFullScreenWindow(this);
+//         }
 
     }
 
