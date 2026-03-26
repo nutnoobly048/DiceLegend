@@ -12,6 +12,9 @@ public class LobbyState {
     public final String lobbyName;
     public final boolean isHost;
 
+
+    public String selectedMapId;
+
     public final HashMap<String, Player> allPlayers = new LinkedHashMap<>();
 
     public enum TriggerEvent {
@@ -22,6 +25,7 @@ public class LobbyState {
         this.isHost = isHost;
         this.lobbyName = lobbyName;
         current = this;
+        this.selectedMapId = "cryoGard";
     }
 
     public GameState createMatch() {
@@ -62,5 +66,13 @@ public class LobbyState {
         String id = params[0];
         allPlayers.remove(id);
         System.out.println("PLAYER LEFT: " + id);
+    }
+
+    public String getSelectedMapId() {
+        return selectedMapId;
+    }
+
+    public void setSelectedMapId(String selectedMapId) {
+        this.selectedMapId = selectedMapId;
     }
 }

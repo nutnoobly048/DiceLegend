@@ -1,0 +1,41 @@
+package Event;
+
+import Gameplay.GameState;
+
+public class FenrirFangEvent extends Event{
+
+    public FenrirFangEvent() {
+        super(3);
+    }
+    @Override
+    public String getEventVisualName() {
+        return "Fenrir's Fang";
+    }
+
+    @Override
+    public int modifyRollValue(int rollValue) {
+        return 1;
+    }
+
+    @Override
+    public void doVisual(GameState game) {
+
+    }
+
+    @Override
+    public void onEventEntered(GameState game) {
+
+    }
+
+    @Override
+    public void onEventLeave(GameState game) {
+
+    }
+
+    @Override
+    public void onEventTriggered(GameState game) {
+
+    }
+
+
+}
