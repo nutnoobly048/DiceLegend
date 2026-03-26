@@ -24,8 +24,10 @@ public class MQTTService {
                 .identifier(clientId)
                 .serverHost("broker.hivemq.com")
                 .serverPort(1883)
+                .automaticReconnectWithDefaultConfig()
                 .buildAsync();
     }
+
     // ส่วนของการเชื่อมต่อกับ MQTT Broker ของ Player
     public void connect() {
         client.connect().join();
@@ -44,6 +46,22 @@ public class MQTTService {
                 .send()
                 .join();
         System.out.println("Host connected to MQTT Broker");
+    }
+
+    // เพิ่ม method นี้ต่อจาก connectWithWill()
+    public void connectClientWithWill(String lobbyId, String myClientId) {
+        String willTopic = "lobby/" + lobbyId + "/player-left";
+        String willMessage = "DISCONNECT:" + myClientId;
+        client.connectWith()
+                .willPublish()
+                .topic(willTopic)
+                .payload(willMessage.getBytes(StandardCharsets.UTF_8))
+                .qos(MqttQos.AT_LEAST_ONCE)
+                .retain(false)
+                .applyWillPublish()
+                .send()
+                .join();
+        System.out.println("Client connected with Will to MQTT Broker");
     }
 
     // ส่วนของการ disconnect เมื่อต้องการออกจากห้อง/หลุดออกจากห้อง
@@ -89,6 +107,7 @@ public class MQTTService {
                 .send()
                 .join();
     }
+
     public boolean isConnected() {
         return client.getState().isConnected();
     }
