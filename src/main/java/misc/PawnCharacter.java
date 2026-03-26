@@ -18,8 +18,8 @@ public class PawnCharacter extends GameObject {
     public static final int[][] SLOT_OFFSETS = {
             { -20, -20 },
             {  20, -20 },
-            { -20,  10 },
-            {  20,  10 },
+            { -20,  20 },
+            {  20,  20 },
     };
 
     public PawnCharacter(String playerID, String imgFileName, int x, int y) {
@@ -98,9 +98,9 @@ public class PawnCharacter extends GameObject {
 
         for (int i = this.getCurrentTileIndex() + 1; i <= targetIndex; i++) {
             int[] offset = SLOT_OFFSETS[this.slotIndex];
-            
-            int toX = GameState.currentGame.gameBoard.getPositionFromIndex(i)[0] + offset[0];
-            int toY = GameState.currentGame.gameBoard.getPositionFromIndex(i)[1] + offset[1];
+
+            int toX = GameState.currentGame.gameBoard.getPositionFromIndex(i)[0];
+            int toY = GameState.currentGame.gameBoard.getPositionFromIndex(i)[1];
             System.out.println("[DEBUG] step " + i + ": (" + fromX + "," + fromY + ") -> (" + toX + "," + toY
                      + ") delay=" + delay);
             Tween moveX = new Tween(this, TweenProperty.X, fromX, toX, moveDuration);
@@ -130,8 +130,8 @@ public class PawnCharacter extends GameObject {
         Timeline jumpTL = new Timeline();
         int[] offset = SLOT_OFFSETS[this.slotIndex];
 
-        int toX = GameState.currentGame.gameBoard.getPositionFromIndex(targetIndex)[0] + offset[0];
-        int toY = GameState.currentGame.gameBoard.getPositionFromIndex(targetIndex)[1] + offset[1];
+        int toX = GameState.currentGame.gameBoard.getPositionFromIndex(targetIndex)[0];
+        int toY = GameState.currentGame.gameBoard.getPositionFromIndex(targetIndex)[1];
 
         Tween jumpX = new Tween(this, TweenProperty.X, this.x, toX, jumpDuration);
         Tween jumpY = new Tween(this, TweenProperty.Y, this.y, toY, jumpDuration);
