@@ -8,7 +8,7 @@ public abstract class Event {
 
     public int remainingTurn;
 
-    public Event(int remainingTurn, int rollValueModifier) {
+    public Event(int remainingTurn) {
         this.remainingTurn = remainingTurn;
     }
 
