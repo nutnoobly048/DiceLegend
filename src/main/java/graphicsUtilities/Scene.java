@@ -69,18 +69,13 @@ public abstract class Scene extends JPanel {
     }
 
     private void registerObject(GameObject g) {
+        if (currentSceneObject.containsKey(g.networkId)) return;
+
         g.setCurrentGameScene(this);
-
-        int insertAt = drawList.size();
-        for (int i = 0; i < drawList.size(); i++) {
-            if (g.z < drawList.get(i).z) {
-                insertAt = i;
-                break;
-            }
-        }
-        drawList.add(insertAt, g);
-
+        drawList.add(g);
         currentSceneObject.put(g.networkId, g);
+
+        drawList.sort((o1, o2) -> Integer.compare(o1.z, o2.z));
 
         if (SceneUtilities.getCurrentGameScene() == this) {
             RunService.GetService().addProcess(g);

@@ -107,6 +107,7 @@ public class CommandHandler {
             //Game
             case "CONTINUE"    -> { if (GameState.currentGame != null) GameState.currentGame.handleEvent(GameState.TriggerEvent.PLAYER_READY, params); }
             case "DICE_ROLLED" -> {
+
                 if (GameState.currentGame != null) GameState.currentGame.handleEvent(GameState.TriggerEvent.DICE_ROLL_EVENT, params);
             }
             case "MOVETO" -> {

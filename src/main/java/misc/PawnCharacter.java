@@ -87,8 +87,8 @@ public class PawnCharacter extends GameObject {
     }
     
     private void animateStepByStep(int targetIndex) {
-        final double moveDuration = 0.5;
-        final double pauseDuration = 0.3;
+        final double moveDuration = 0.4;
+        final double pauseDuration = 0.15;
         double delay = 0;
 
         Timeline moveTL = new Timeline();

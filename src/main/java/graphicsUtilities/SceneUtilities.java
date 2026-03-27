@@ -64,10 +64,11 @@ public class SceneUtilities {
             runService.addProcess(obj);
         }
 
-        mainGameFrame.getContainer().revalidate();
-        mainGameFrame.getContainer().repaint();
+
         newScene.requestFocusInWindow();
         newScene.onEnter();
+        mainGameFrame.getContainer().revalidate();
+        mainGameFrame.getContainer().repaint();
     }
 
     private static void exitScene() {

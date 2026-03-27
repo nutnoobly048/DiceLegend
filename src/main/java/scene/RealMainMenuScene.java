@@ -43,6 +43,7 @@ public class RealMainMenuScene extends Scene {
     private final JoinPopUp popUp = new JoinPopUp();
 
     public RealMainMenuScene() {
+        this.setSceneLoadoffTimesInMilisecond(1.2);
         this.setBackground(Color.BLACK);
         this.setOpaque(true);
     }

@@ -89,4 +89,13 @@ public class GameObject implements ProcessByRunService {
         this.currentScene = gameScene;
     }
 
+    public void setSprite(AnimatedSprite newSprite) {
+        this.sprite = newSprite;
+
+        if (this.sprite != null) {
+            this.sprite.posX = this.x;
+            this.sprite.posY = this.y;
+        }
+    }
+
 }

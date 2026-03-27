@@ -21,9 +21,11 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 public class LoadingScene extends Scene {
 
+
     private boolean isHost;
     private String lobbyName;
 
+    private final GameObject transition_left = new GameObject("transition_left", "TransitionArrow.png", 0,0);
     private final GameObject landingLoading = new GameObject("loading",
             new AnimatedSprite("dice-loading.png", 0, 0, 32, 30, true, false));
 
@@ -35,14 +37,19 @@ public class LoadingScene extends Scene {
 
     @Override
     public void onCreate() {
+        transition_left.z = 10;
+        spawnObjectAt(transition_left,0,0);
+
+        spawnObjectAt(landingLoading, 0, 0);
     }
 
     @Override
     public void onEnter() {
+        transition_left.x = 0;
+
+        new Tween(transition_left, TweenProperty.X, 0, -2400, 1).start();
 
         connectToNetwork();
-        spawnObjectAt(landingLoading, 0,0);
-
     }
 
     @Override
@@ -137,5 +144,12 @@ public class LoadingScene extends Scene {
                 SwingUtilities.invokeLater(() -> SceneUtilities.changeSceneTo(SceneList.mainMenu));
             }
         }, "NetworkThread").start();
+    }
+
+    public void paint(Graphics g) {
+        super.paint(g);
+        Graphics2D g2d = (Graphics2D) g;
+
+//        transition_left.getSprite().draw(g2d);
     }
 }
