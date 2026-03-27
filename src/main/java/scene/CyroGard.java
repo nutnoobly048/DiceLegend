@@ -38,6 +38,14 @@ public class CyroGard extends Scene {
     private GameObject diceBackground = new GameObject("diceBackground", "CyroDiceFrame.png", 1495, 27);
     private GameObject itemFrame    = new GameObject("itemFrame", "CyroItemFrame.png", 32, 27);
     private GameObject itemDes = new GameObject("itemDes", "CyroItemDes.png", 51, 514);
+    private GameObject dice = new GameObject("dice", "dice5.png", 1495, 27);
+    public static AnimatedSprite dice1 = new AnimatedSprite("dice1.png", 0, 0, 1, 1);
+    public static AnimatedSprite dice2 = new AnimatedSprite("dice2.png", 0, 0, 1, 1);
+    public static AnimatedSprite dice3 = new AnimatedSprite("dice3.png", 0, 0, 1, 1);
+    public static AnimatedSprite dice4 = new AnimatedSprite("dice4.png", 0, 0, 1, 1);
+    public static AnimatedSprite dice5 = new AnimatedSprite("dice5.png", 0, 0, 1, 1);
+    public static AnimatedSprite dice6 = new AnimatedSprite("dice6.png", 0, 0, 1, 1);
+    private GameObject diceAnimated = new GameObject("diceAnimated", new AnimatedSprite("diceAnimated.png", 1495, 27, 36, 13));
 
     GameButton targetSelectBtn;
 
@@ -97,14 +105,14 @@ public class CyroGard extends Scene {
     public void onCreate() {
         setupBoardAndUI();
         this.setFocusable(true);
-        this.addKeyListener(new KeyAdapter() {
-            @Override
-            public void keyPressed(KeyEvent e) {
-                if (e.getKeyCode() == KeyEvent.VK_SPACE) {
-                    CommandHandler.sentIntent("INTENT:SELF:ROLLEVENT");
-                }
-            }
-        });
+//        this.addKeyListener(new KeyAdapter() {
+//            @Override
+//            public void keyPressed(KeyEvent e) {
+//                if (e.getKeyCode() == KeyEvent.VK_SPACE) {
+//                    CommandHandler.sentIntent("INTENT:SELF:ROLLEVENT");
+//                }
+//            }
+//        });
     }
 
     @Override
@@ -144,6 +152,12 @@ public class CyroGard extends Scene {
 
         itemDes.z = -2;
         spawnObjectAt(itemDes);
+
+        dice.setVisible(false);
+        spawnObjectAt(dice);
+
+        diceAnimated.setVisible(true);
+        spawnObjectAt(diceAnimated, 1500, 30);
 
         spawnObjectAt(transition_left);
         spawnObjectAt(transition_right);
@@ -192,6 +206,7 @@ public class CyroGard extends Scene {
             }
 
         });
+
         targetSelectBtn.addMouseListener(new MouseAdapter() {
 
             private int getQaureand(MouseEvent e, GameButton b) {
@@ -219,7 +234,9 @@ public class CyroGard extends Scene {
 
             }
         });
+
         this.add(targetSelectBtn);
+
     }
 
     private void changeTurnHighlight(GameButton rollButton) {

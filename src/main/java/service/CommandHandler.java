@@ -3,10 +3,12 @@ package service;
 import Gameplay.GameState;
 import Gameplay.LobbyState;
 import OtherUtilities.RandomPosition;
+import graphicsUtilities.Scene;
 import graphicsUtilities.SceneUtilities;
 import misc.PawnCharacter;
 import misc.Player;
 import objectClass.Board;
+import scene.CyroGard;
 
 import static service.RunService.mqtt;
 /*
@@ -107,8 +109,11 @@ public class CommandHandler {
             //Game
             case "CONTINUE"    -> { if (GameState.currentGame != null) GameState.currentGame.handleEvent(GameState.TriggerEvent.PLAYER_READY, params); }
             case "DICE_ROLLED" -> {
+                if (GameState.currentGame != null) {
+                    GameState.currentGame.handleEvent(GameState.TriggerEvent.DICE_ROLL_EVENT, params);
 
-                if (GameState.currentGame != null) GameState.currentGame.handleEvent(GameState.TriggerEvent.DICE_ROLL_EVENT, params);
+                }
+
             }
             case "MOVETO" -> {
                 if (GameState.currentGame == null) return;
