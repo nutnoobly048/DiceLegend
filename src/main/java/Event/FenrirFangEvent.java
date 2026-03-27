@@ -9,7 +9,7 @@ public class FenrirFangEvent extends Event{
     }
     @Override
     public String getEventVisualName() {
-        return "Fenrir's Fang";
+        return "FenrirFang";
     }
 
     @Override

@@ -248,6 +248,9 @@ public class GameState {
                 changeStateTo(GamePhase.WAIT_FOR_ALL_CLIENTS);
 
                 Event selectedEvent = RandomEvents.resultRandomEvent(selectedMapId); //แทนที่ด้วย randomEvent() ในภายหลัง
+
+                CommandHandler.broadcastResult("UIEVENT", "EVENTPOPUP", selectedEvent.getEventVisualName());
+
                 System.out.println(selectedEvent.getEventVisualName());
                 Event.useEvent(selectedEvent, GameState.currentGame);
 
@@ -258,6 +261,7 @@ public class GameState {
             case ITEM_TILE -> {
 
                 Item selectedItem = RandomItems.resultRandomItem(selectedMapId); //แทนที่ด้วย randomItem() ในภายหลัง
+
 
                 CommandHandler.broadcastResult("UIEVENT", "ITEMPOPUP", selectedItem.getCardUIName());
 

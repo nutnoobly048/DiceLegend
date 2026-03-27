@@ -7,7 +7,7 @@ public class FogEvent extends Event {
     public FogEvent() { super(2); }
 
     @Override
-    public String getEventVisualName() { return "Blizzard"; }
+    public String getEventVisualName() { return "Fog"; }
 
     @Override
     public void doVisual(GameState game) {}

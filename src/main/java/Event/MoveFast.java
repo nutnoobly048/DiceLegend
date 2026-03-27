@@ -7,7 +7,7 @@ public class MoveFast extends Event{
         super(3);
     }
     public String getEventVisualName(){
-        return "Movefast";
+        return "Faster";
     };
 
     public void doVisual(GameState game){};
