@@ -9,6 +9,7 @@ import graphicsUtilities.ImagePreload;
 import graphicsUtilities.Scene;
 import graphicsUtilities.SceneUtilities;
 import misc.Player;
+import objectClass.AnimatedSprite;
 import objectClass.GameButton;
 import objectClass.GameObject;
 import service.CommandHandler;
@@ -23,6 +24,9 @@ public class LoadingScene extends Scene {
     private boolean isHost;
     private String lobbyName;
 
+    private final GameObject landingLoading = new GameObject("loading",
+            new AnimatedSprite("dice-loading.png", 0, 0, 32, 30, true, false));
+
     public LoadingScene(boolean isHost, String lobbyName) {
         this.isHost = isHost;
         this.lobbyName = lobbyName;
@@ -35,7 +39,10 @@ public class LoadingScene extends Scene {
 
     @Override
     public void onEnter() {
+
         connectToNetwork();
+        spawnObjectAt(landingLoading, 0,0);
+
     }
 
     @Override
