@@ -40,6 +40,7 @@ public class CyroGard extends Scene {
     private GameObject itemDes = new GameObject("itemDes", "CyroItemDes.png", 51, 514);
 
     public static ArrayList<Player> playerList = new ArrayList<>();
+    private ArrayList<GameObject> portraits = new ArrayList<>();
 
     private static final int PAWN_SPRITE_W  = 64;
     private static final int PAWN_SPRITE_H  = 96;
@@ -50,31 +51,39 @@ public class CyroGard extends Scene {
 
     public CyroGard() {
         setBackground(ImagePreload.get("CyroMainBackground.png"));
-
+        
         int count = 1;
-        GameButton one,two,tree,four;
-
-        two = new GameButton("2", "button.png", "button.png");
-        tree = new GameButton("3", "button.png", "button.png");
-        four = new GameButton("4", "button.png", "button.png");
 
         for (Player player: GameState.currentGame.allPlayers.values()) {
             playerList.add(player);
+            
             switch (count) {
-                case 1:
-                    one = new GameButton(playerList.get(0).getNetworkID(), "button.png", "button.png");
-                    one.setBounds(1540,730, 100, 40);
-                    add(one);
-                case 2:
-                    two.setBounds(1710,780, 100, 40);
-                    add(two);
-                case 3:
-                    tree.setBounds(1540,900, 100, 40);
-                    add(tree);
-                case  4:
-                    four.setBounds(1710,900, 100, 40);
-                    add(four);
+                case 1 -> {
+                    GameObject p = new GameObject(String.valueOf(count * 30), player.getLocalSpritePortraitName(), 1540, 730);
+                    p.z = 3;
+                    spawnObjectAt(p);
+                    portraits.add(p);
+                }
+                case 2 -> {
+                    GameObject p = new GameObject(String.valueOf(count * 30), player.getLocalSpritePortraitName(), 1700, 730);
+                    p.z = 3;
+                    spawnObjectAt(p);
+                    portraits.add(p);
+                }
+                case 3 -> {
+                    GameObject p = new GameObject(String.valueOf(count * 30), player.getLocalSpritePortraitName(), 1540, 890);
+                    p.z = 3;
+                    spawnObjectAt(p);
+                    portraits.add(p);
+                }
+                case 4 -> {
+                    GameObject p = new GameObject(String.valueOf(count * 30), player.getLocalSpritePortraitName(), 1700, 890);
+                    p.z = 3;
+                    spawnObjectAt(p);
+                    portraits.add(p);
+                }
             }
+
             count++;
         }
     }
@@ -266,9 +275,16 @@ public class CyroGard extends Scene {
     public void paint(Graphics g) {
         super.paint(g);
         Graphics2D g2d = (Graphics2D) g;
+        
         transition_left.getSprite().draw(g2d);
         transition_right.getSprite().draw(g2d);
         transition_up.getSprite().draw(g2d);
         transition_down.getSprite().draw(g2d);
+        
+        for (GameObject portrait : portraits) {
+            if (portrait.hasSprite()) {
+                portrait.getSprite().draw(g2d);
+            }
+        }
     }
 }
