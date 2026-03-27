@@ -80,7 +80,6 @@ public class LobbyState {
         player.changeSpriteName(sprite[0]);
         player.changeLocalSpritePortraitName(sprite[1]);
         allPlayers.putIfAbsent(id, player);
-        System.out.println("PLAYER JOINED: " + name + " [" + id + "]");
         for (Player p : allPlayers.values()) {
             System.out.println(p.getName());
         }

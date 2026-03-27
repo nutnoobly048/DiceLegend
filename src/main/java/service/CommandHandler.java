@@ -50,8 +50,8 @@ public class CommandHandler {
 
         switch (action) {
             case "JOIN_GAME" -> {
-                broadcastResult("PLAYER_JOINED", senderID, params[0]);
                 LobbyState.current.allPlayers.forEach((id, p) -> sendResultTo(senderID, "PLAYER_JOINED", id, p.getName()));
+                broadcastResult("PLAYER_JOINED", senderID, params[0]);
             }
             case "LEAVE_GAME" -> broadcastResult("PLAYER_LEFT", senderID);
 
