@@ -5,11 +5,13 @@ import Item.Item;
 import OtherUtilities.RandomEvents;
 import OtherUtilities.RandomItems;
 import OtherUtilities.RandomPosition;
+import graphicsUtilities.Scene;
 import graphicsUtilities.SceneUtilities;
 import misc.Player;
 import misc.PawnCharacter;
 import objectClass.Board;
 import objectClass.GameModal;
+import scene.CyroGard;
 import service.CommandHandler;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -173,6 +175,10 @@ public class GameState {
         int roll = Integer.parseInt(params[1]);
 
         allPlayers.get(playerId).setOpenForNetworkInput(false);
+
+        if (SceneUtilities.getCurrentGameScene().currentSceneObject.containsKey("dice")) {
+            SceneUtilities.getCurrentGameScene().currentSceneObject.get("dice").setSprite("dice" + roll + ".png");
+        }
 
         lastRollResult = roll;
         int rollValue = currentEvent != null ? currentEvent.modifyRollValue(lastRollResult) : lastRollResult;

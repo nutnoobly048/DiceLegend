@@ -16,7 +16,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 public abstract class Scene extends JPanel {
     protected Image background = ImagePreload.get("blank.png");
     protected CopyOnWriteArrayList<GameObject> drawList = new CopyOnWriteArrayList<>();
-    protected HashMap<String, GameObject> currentSceneObject = new HashMap<>();
+    public HashMap<String, GameObject> currentSceneObject = new HashMap<>();
 
     public int sceneLoadoffTimesInMilisecond = 500;
 
@@ -95,5 +95,9 @@ public abstract class Scene extends JPanel {
 
     public void setSceneLoadoffTimesInMilisecond(double second) {
         this.sceneLoadoffTimesInMilisecond = (int) (second * 1000);
+    }
+
+    public HashMap<String, GameObject> getCurrentSceneObject() {
+        return currentSceneObject;
     }
 }
