@@ -76,6 +76,10 @@ public class CommandHandler {
                 }
             }
             case "ROLLEVENT" -> {
+                Player player = GameState.currentGame.allPlayers.get(senderID);
+                if (!player.isOpenForNetworkInput()) { // !!!Test code
+                    return;
+                }
                 int roll = (int)(Math.random() * 6) + 1;
 //                int roll = 1;
                 broadcastResult("DICE_ROLLED", senderID, String.valueOf(roll));
