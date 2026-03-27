@@ -4,11 +4,13 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.TimerTask;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.Popup;
-import javax.swing.Timer;
+import java.util.Timer;
 
 import Gameplay.SceneList;
 import OtherUtilities.RandomUtilities;
@@ -74,14 +76,29 @@ public class RealMainMenuScene extends Scene {
     }
 
     private void setupButtons() {
+        AtomicBoolean isStartedClicked = new AtomicBoolean(false);
         createButton.setBounds(100, 280, createButton.getPreferredSize().width, createButton.getPreferredSize().height);
         createButton.setOnButtonClicked(() -> {
+
+            if (isStartedClicked.get()) return;
+            isStartedClicked.set(true);
+
             final String lobbyCode = String.valueOf(RandomUtilities.randomIntDigits(6));
             SceneUtilities.changeSceneTo(new LoadingScene(true, lobbyCode));
+            new Timer().schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    javax.swing.SwingUtilities.invokeLater(() -> {
+                        isStartedClicked.set(false);
+                    });
+                }
+            }, 5000);
         });
-
+        
         joinButton.setBounds(100, 450, joinButton.getPreferredSize().width, joinButton.getPreferredSize().height);
-        joinButton.setOnButtonClicked(() -> popUp.setVisible(true));
+        joinButton.setOnButtonClicked(() -> {
+            popUp.setVisible(true);
+        });
 
         creditButton.setBounds(100, 600, creditButton.getPreferredSize().width, creditButton.getPreferredSize().height);
 
@@ -159,8 +176,19 @@ class JoinPopUp extends JPanel {
 
         this.add(joinButton);
         joinButton.setBounds(50, 300, 401, 71);
+        AtomicBoolean isJoinedClicked = new AtomicBoolean(false);
         joinButton.setOnButtonClicked(() -> {
+            if (isJoinedClicked.get()) return;
+            isJoinedClicked.set(true);
             SceneUtilities.changeSceneTo(new LoadingScene(false, textField.getText()));
+            new Timer().schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    javax.swing.SwingUtilities.invokeLater(() -> {
+                        isJoinedClicked.set(false);
+                    });
+                }
+            }, 5000);
         });
 
         this.add(textField);
