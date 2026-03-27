@@ -12,7 +12,9 @@ public class MoveSlow extends Event{
 
     public void doVisual(GameState game){};
     //ทำงาน Event
-    public void onEventEntered(GameState game){};
+    public void onEventEntered(GameState game){
+        broadcastContinueForAll(game);
+    };
     //เมื่อ Event หมด
     public void onEventLeave(GameState game){};
 

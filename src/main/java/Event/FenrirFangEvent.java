@@ -24,7 +24,7 @@ public class FenrirFangEvent extends Event{
 
     @Override
     public void onEventEntered(GameState game) {
-
+        broadcastContinueForAll(game);
     }
 
     @Override
