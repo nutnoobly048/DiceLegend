@@ -39,6 +39,8 @@ public class CyroGard extends Scene {
     private GameObject itemFrame    = new GameObject("itemFrame", "CyroItemFrame.png", 32, 27);
     private GameObject itemDes = new GameObject("itemDes", "CyroItemDes.png", 51, 514);
 
+    GameButton targetSelectBtn;
+
     public static ArrayList<Player> playerList = new ArrayList<>();
     private ArrayList<GameObject> portraits = new ArrayList<>();
 
@@ -52,8 +54,8 @@ public class CyroGard extends Scene {
     public CyroGard() {
         setBackground(ImagePreload.get("CyroMainBackground.png"));
         
+        // spawn player portrait
         int count = 1;
-
         for (Player player: GameState.currentGame.allPlayers.values()) {
             playerList.add(player);
             
@@ -148,6 +150,8 @@ public class CyroGard extends Scene {
         this.add(rollBtn);
 
         GameButton targetSelectBtn = new GameButton("", "TargetSelectBtn.png", "TargetSelectBtn.png");
+        
+
         targetSelectBtn.setBounds(1524, 715, 342, 342);
         targetSelectBtn.addMouseMotionListener(new MouseMotionAdapter() {
             int btnW = targetSelectBtn.getWidth();
@@ -207,11 +211,12 @@ public class CyroGard extends Scene {
 
             }
         });
-
         this.add(targetSelectBtn);
     }
 
+    private void changeTurnHighlight(GameButton rollButton) {
 
+    }
 
     private void setupPortals() {
         int[][] destinations = GameState.currentGame.gameBoard.getDestinations();

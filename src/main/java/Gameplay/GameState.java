@@ -371,7 +371,7 @@ public class GameState {
             p.setOpenForNetworkInput(false);
         }
         player.setOpenForNetworkInput(true);
-
+        
         setAllPlayersUnreadyToContinue();
         CommandHandler.broadcastResult("UIEVENT", "WAITFOR", playerId);
 
