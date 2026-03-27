@@ -43,7 +43,7 @@ public class LobbyScene extends Scene {
     private GameButton riveraCard = new GameButton("", "rivera.png", "rivera.png");
     private GameButton sylviaCard = new GameButton("", "Sylvia.png", "Sylvia.png");
     
-    private int x_arrow;
+    private int x_arrow = 305;
 
     private double duration = 0.5;
 
