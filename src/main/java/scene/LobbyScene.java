@@ -27,10 +27,10 @@ public class LobbyScene extends Scene {
 
     // private final ChangeNamePopUp changeNamePopUp = new ChangeNamePopUp();
 
-    private GameObject transition_left  = new GameObject("transit_left",  "Transition.png", 0, 0);
+    private GameObject transition_left = new GameObject("transit_left", "Transition.png", 0, 0);
     private GameObject transition_right = new GameObject("transit_right", "Transition.png", 0, 0);
-    private GameObject transition_up    = new GameObject("transit_up",    "Transition.png", 0, 0);
-    private GameObject transition_down  = new GameObject("transit_down",  "Transition.png", 0, 0);
+    private GameObject transition_up = new GameObject("transit_up", "Transition.png", 0, 0);
+    private GameObject transition_down = new GameObject("transit_down", "Transition.png", 0, 0);
 
     private GameButton roomNumber = new GameButton("", "lobbyNumber.png", "lobbyNumber.png");
 
@@ -38,12 +38,13 @@ public class LobbyScene extends Scene {
     private GameButton startButton = new GameButton("", "Start.png", "start_onhover2.png");
     private GameButton mapButton = new GameButton("", "Map.png", "map_onhover.png");
     private GameButton arrowThis = new GameButton("", "Arrow.png", "Arrow.png");
-    // private GameButton changeCharactorButton = new GameButton("", "change-char.png", "change-char.png");
+    // private GameButton changeCharactorButton = new GameButton("",
+    // "change-char.png", "change-char.png");
     private GameButton kennethCard = new GameButton("", "kenneth.png", "kenneth.png");
     private GameButton vanceCard = new GameButton("", "vance.png", "vance.png");
     private GameButton riveraCard = new GameButton("", "rivera.png", "rivera.png");
     private GameButton sylviaCard = new GameButton("", "Sylvia.png", "Sylvia.png");
-    
+
     private int x_arrow = 305;
 
     private double duration = 0.5;
@@ -51,17 +52,18 @@ public class LobbyScene extends Scene {
     public LobbyScene() {
         setBackground(ImagePreload.get("Lobby_Background.png"));
     }
+
     @Override
     public void onCreate() {
 
-        initialXofArraw();
+        // initialXofArraw();
 
         spawnObjectAt(transition_left);
         spawnObjectAt(transition_right);
         spawnObjectAt(transition_up);
         spawnObjectAt(transition_down);
-        
-        roomNumber.setBounds(773,85,422,205);
+
+        roomNumber.setBounds(773, 85, 422, 205);
         backButton.setBounds(0, 34, 431, 221);
         startButton.setBounds(775, 920, 376, 138);
         mapButton.setBounds(560, 914, 159, 145);
@@ -69,7 +71,7 @@ public class LobbyScene extends Scene {
         vanceCard.setBounds(604, 345, 295, 395);
         riveraCard.setBounds(1026, 345, 295, 395);
         sylviaCard.setBounds(1440, 345, 295, 395);
-        arrowThis.setBounds(x_arrow, 760, 73,73);
+        arrowThis.setBounds(x_arrow, 760, 73, 73);
 
         // this.add(changeNamePopUp);
 
@@ -87,9 +89,16 @@ public class LobbyScene extends Scene {
         roomNumber.setText(LobbyState.current.lobbyName);
         RunService.mqtt.subscribe(topicRoomAmount, (t, msg) -> {
             try {
+                LobbyState snapshot = LobbyState.current;
+                if (snapshot == null)
+                    return;
                 int amount = Integer.parseInt(msg);
                 SwingUtilities.invokeLater(() -> {
+                    LobbyState snapInUI = LobbyState.current;
+                    if (snapInUI == null)
+                        return;
                     updatePlayerCards(amount);
+                    initialXofArraw(snapInUI);
                 });
 
             } catch (Exception e) {
@@ -107,32 +116,36 @@ public class LobbyScene extends Scene {
         this.add(mapButton);
         this.add(arrowThis);
 
-        if ( !LobbyState.current.isHost ){
+        if (!LobbyState.current.isHost) {
             startButton.setVisible(false);
         }
 
     }
+
     @Override
     public void onEnter() {
-        new Tween(transition_left,  TweenProperty.X, -960, -1920, duration).start();
-        new Tween(transition_right, TweenProperty.X,  960,  1920, duration).start();
-        new Tween(transition_up,    TweenProperty.Y, -540, -1080, duration).start();
-        new Tween(transition_down,  TweenProperty.Y,  540,  1080, duration).start();
+        new Tween(transition_left, TweenProperty.X, -960, -1920, duration).start();
+        new Tween(transition_right, TweenProperty.X, 960, 1920, duration).start();
+        new Tween(transition_up, TweenProperty.Y, -540, -1080, duration).start();
+        new Tween(transition_down, TweenProperty.Y, 540, 1080, duration).start();
     }
 
     @Override
     public void onExit() {
-        new Tween(transition_left,  TweenProperty.X, -1920, -960, duration).start();
-        new Tween(transition_right, TweenProperty.X,  1920,  960, duration).start();
-        new Tween(transition_up,    TweenProperty.Y, -1080, -540, duration).start();
-        new Tween(transition_down,  TweenProperty.Y,  1080,  540, duration).start();
+        new Tween(transition_left, TweenProperty.X, -1920, -960, duration).start();
+        new Tween(transition_right, TweenProperty.X, 1920, 960, duration).start();
+        new Tween(transition_up, TweenProperty.Y, -1080, -540, duration).start();
+        new Tween(transition_down, TweenProperty.Y, 1080, 540, duration).start();
     }
-    
-    private void initialXofArraw(){
-        
+
+    private void initialXofArraw(LobbyState state) {
+
+        if (LobbyState.current == null)
+            return;
+
         ArrayList<String> allPlayersID = new ArrayList<>();
 
-        for (Player value : LobbyState.current.allPlayers.values()) {
+        for (Player value : state.allPlayers.values()) {
             allPlayersID.add(value.getNetworkID());
         }
 
@@ -151,7 +164,9 @@ public class LobbyScene extends Scene {
                 x_arrow = 1546 + 2;
                 break;
         }
-
+        arrowThis.setBounds(x_arrow, 760, 73, 73); // ← อัปเดต position จริง
+        arrowThis.revalidate();
+        arrowThis.repaint();
     }
 
     private void updatePlayerCards(int amount) {
@@ -167,7 +182,8 @@ public class LobbyScene extends Scene {
         AtomicBoolean isBackClicked = new AtomicBoolean(false);
         AtomicBoolean isStartClicked = new AtomicBoolean(false);
         backButton.setOnButtonClicked(() -> {
-            if (isBackClicked.get()) return;
+            if (isBackClicked.get())
+                return;
             isBackClicked.set(true);
 
             if (RunService.mqtt.isConnected() && LobbyState.current.isHost) {
@@ -190,7 +206,8 @@ public class LobbyScene extends Scene {
 
         startButton.setOnButtonClicked(() -> {
 
-            if (isStartClicked.get()) return;
+            if (isStartClicked.get())
+                return;
             isStartClicked.set(true);
 
             String baseTopic = "DiceLegend/" + LobbyState.current.lobbyName;
@@ -209,7 +226,7 @@ public class LobbyScene extends Scene {
         });
 
         // changeNameButton.setOnButtonClicked(() -> {
-        //     changeNamePopUp.setVisible(true);
+        // changeNamePopUp.setVisible(true);
         // });
 
     }
@@ -222,7 +239,8 @@ public class LobbyScene extends Scene {
         String topicRoomAmount = "DiceLegend/" + LobbyState.current.lobbyName + "/room_amount";
 
         RunService.mqtt.subscribe(topicRoomAmount, (t, msg) -> {
-            if (!RunService.mqtt.isConnected()) return;
+            if (!RunService.mqtt.isConnected())
+                return;
             try {
                 if (!isMinus.getAndSet(true)) {
                     int addAmount = Math.max(0, Integer.parseInt(msg) - 1);
@@ -233,13 +251,15 @@ public class LobbyScene extends Scene {
                 e.printStackTrace();
             } finally {
                 SwingUtilities.invokeLater(() -> {
-                    if (RunService.mqtt.isConnected()) RunService.mqtt.disconnect();
+                    if (RunService.mqtt.isConnected())
+                        RunService.mqtt.disconnect();
                 });
             }
         });
         GameState.currentGame = null;
         LobbyState.destroy();
     }
+
     @Override
     public void paint(Graphics g) {
         super.paint(g);
@@ -253,54 +273,52 @@ public class LobbyScene extends Scene {
 }
 
 // class ChangeNamePopUp extends JPanel {
-//     private Image background = ImagePreload.get("mainMenu-join-popup.png");
-//     private final GameButton changeButton = new GameButton("", "mainMenu-popup-join.png", "mainMenu-popup-join-hover.png");
-//     private final GameButton closeButton = new GameButton("", "mainMenu-popup-close.png", "mainMenu-popup-close.png");
-//     private final JTextField textField = new JTextField();
+// private Image background = ImagePreload.get("mainMenu-join-popup.png");
+// private final GameButton changeButton = new GameButton("",
+// "mainMenu-popup-join.png", "mainMenu-popup-join-hover.png");
+// private final GameButton closeButton = new GameButton("",
+// "mainMenu-popup-close.png", "mainMenu-popup-close.png");
+// private final JTextField textField = new JTextField();
 
-//     public ChangeNamePopUp() {
-//         this.setBounds(960-background.getWidth(null)/2, 540-background.getHeight(null)/2, background.getWidth(null), background.getHeight(null));
-//         this.setBackground(null);
-//         this.setLayout(null);
-//         this.setVisible(false);
+// public ChangeNamePopUp() {
+// this.setBounds(960-background.getWidth(null)/2,
+// 540-background.getHeight(null)/2, background.getWidth(null),
+// background.getHeight(null));
+// this.setBackground(null);
+// this.setLayout(null);
+// this.setVisible(false);
 
-//         this.add(changeButton);
-//         changeButton.setBounds(50, 300, 401, 71);
-//         changeButton.setOnButtonClicked(() -> {
-//             Player.setLocalPlayerName(textField.getText());
-//             this.setVisible(false);
-//             System.out.println(Player.getLocalPlayerName() + " : Player name displayed");
-//         });
+// this.add(changeButton);
+// changeButton.setBounds(50, 300, 401, 71);
+// changeButton.setOnButtonClicked(() -> {
+// Player.setLocalPlayerName(textField.getText());
+// this.setVisible(false);
+// System.out.println(Player.getLocalPlayerName() + " : Player name displayed");
+// });
 
-//         this.add(textField);
-//         textField.setBackground(null);
-//         textField.setForeground(Color.white);
-//         textField.setFont(new Font("Arial", Font.PLAIN, 50));
-//         textField.setHorizontalAlignment(JTextField.CENTER);
-//         textField.setBounds(50, 160, 401, 100);
-//         textField.setBorder(null);
+// this.add(textField);
+// textField.setBackground(null);
+// textField.setForeground(Color.white);
+// textField.setFont(new Font("Arial", Font.PLAIN, 50));
+// textField.setHorizontalAlignment(JTextField.CENTER);
+// textField.setBounds(50, 160, 401, 100);
+// textField.setBorder(null);
 
-//         this.add(closeButton);
-//         closeButton.setBounds(background.getWidth(null) - 67, 0, 67, 67);
-//         closeButton.setOnButtonClicked(() -> {
-//             this.setVisible(false);
-//         });
-//     }
+// this.add(closeButton);
+// closeButton.setBounds(background.getWidth(null) - 67, 0, 67, 67);
+// closeButton.setOnButtonClicked(() -> {
+// this.setVisible(false);
+// });
+// }
 
+// @Override
+// protected void paintComponent(Graphics g) {
+// super.paintComponent(g);
+// Graphics2D g2d = (Graphics2D) g;
 
-
-//     @Override
-//     protected void paintComponent(Graphics g) {
-//         super.paintComponent(g);
-//         Graphics2D g2d = (Graphics2D) g;
-
-//         if (background != null) {
-//             g2d.drawImage(background, 0, 0, getWidth(), getHeight(), null);
-//         }
-//     }
-
-
-
-
+// if (background != null) {
+// g2d.drawImage(background, 0, 0, getWidth(), getHeight(), null);
+// }
+// }
 
 // }
