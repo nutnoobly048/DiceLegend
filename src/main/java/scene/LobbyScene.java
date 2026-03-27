@@ -25,13 +25,20 @@ public class LobbyScene extends Scene {
     private GameObject transition_up    = new GameObject("transit_up",    "Transition.png", 0, 0);
     private GameObject transition_down  = new GameObject("transit_down",  "Transition.png", 0, 0);
 
-    private GameButton backButton = new GameButton("BACK", "button.png", "buttonOnHover.png");
-    private GameButton startButton = new GameButton("START", "button.png", "buttonOnHover.png");
+    private GameButton backButton = new GameButton("", "Back.png", "back_onhover.png");
+    private GameButton startButton = new GameButton("", "Start.png", "start_onhover2.png");
+    private GameButton mapButton = new GameButton("", "Map.png", "map_onhover.png");
+    private GameButton changeNameButton = new GameButton("", "change-name.png", "change-name.png");
+    private GameButton changeCharactorButton = new GameButton("", "change-char.png", "change-char.png");
+    private GameButton kennethCard = new GameButton("", "kenneth.png", "kenneth.png");
+    private GameButton vanceCard = new GameButton("", "vance.png", "vance.png");
+    private GameButton riveraCard = new GameButton("", "rivera.png", "rivera.png");
+    private GameButton sylviaCard = new GameButton("", "Sylvia.png", "Sylvia.png");
 
     private double duration = 0.5;
 
     public LobbyScene() {
-        setBackground(ImagePreload.get("battle.png"));
+        setBackground(ImagePreload.get("Lobby_Background.png"));
     }
     @Override
     public void onCreate() {
@@ -40,13 +47,27 @@ public class LobbyScene extends Scene {
         spawnObjectAt(transition_up);
         spawnObjectAt(transition_down);
 
-        backButton.setBounds(200, 500, 500, 80);
-        startButton.setBounds(800, 500, 500, 80);
+        backButton.setBounds(0, 34, 431, 221);
+        startButton.setBounds(775, 920, 376, 138);
+        mapButton.setBounds(560, 914, 159, 145);
+        changeNameButton.setBounds(220, 760, 249, 69);
+        changeCharactorButton.setBounds(220, 836, 256, 70);
+        kennethCard.setBounds(197, 345, 295, 395);
+        vanceCard.setBounds(604, 345, 295, 395);
+        riveraCard.setBounds(1026, 345, 295, 395);
+        sylviaCard.setBounds(1440, 345, 295, 395);
 
         setupButtonLogic();
 
         this.add(backButton);
         this.add(startButton);
+        this.add(mapButton);
+        this.add(changeNameButton);
+        this.add(changeCharactorButton);
+        this.add(kennethCard);
+        this.add(vanceCard);
+        this.add(riveraCard);
+        this.add(sylviaCard);
     }
     @Override
     public void onEnter() {
