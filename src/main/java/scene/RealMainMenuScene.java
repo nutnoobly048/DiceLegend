@@ -91,7 +91,6 @@ public class RealMainMenuScene extends Scene {
         this.add(joinButton);
         this.add(creditButton);
         this.add(exitButton);
-        setupVolumeSlider();
     }
 
     private void setupVolumeSlider() {
