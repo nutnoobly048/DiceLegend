@@ -39,13 +39,6 @@ public class CyroGard extends Scene {
     private GameObject itemFrame    = new GameObject("itemFrame", "CyroItemFrame.png", 32, 27);
     private GameObject itemDes = new GameObject("itemDes", "CyroItemDes.png", 51, 514);
     private GameObject dice = new GameObject("dice", "dice5.png", 1495, 27);
-    public AnimatedSprite dice1 = new AnimatedSprite("dice1.png", 0, 0, 1, 1);
-    public AnimatedSprite dice2 = new AnimatedSprite("dice2.png", 0, 0, 1, 1);
-    public AnimatedSprite dice3 = new AnimatedSprite("dice3.png", 0, 0, 1, 1);
-    public AnimatedSprite dice4 = new AnimatedSprite("dice4.png", 0, 0, 1, 1);
-    public AnimatedSprite dice5 = new AnimatedSprite("dice5.png", 0, 0, 1, 1);
-    public AnimatedSprite dice6 = new AnimatedSprite("dice6.png", 0, 0, 1, 1);
-    private GameObject diceAnimated = new GameObject("diceAnimated", new AnimatedSprite("diceAnimated.png", 1495, 27, 36, 13));
 
     GameButton targetSelectBtn;
 
@@ -153,11 +146,7 @@ public class CyroGard extends Scene {
         itemDes.z = -2;
         spawnObjectAt(itemDes);
 
-        dice.setVisible(true);
         spawnObjectAt(dice);
-
-        diceAnimated.setVisible(false);
-        spawnObjectAt(diceAnimated, 1500, 30);
 
         spawnObjectAt(transition_left);
         spawnObjectAt(transition_right);
