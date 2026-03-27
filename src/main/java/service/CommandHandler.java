@@ -10,6 +10,8 @@ import misc.Player;
 import objectClass.Board;
 import scene.CyroGard;
 
+import javax.swing.Timer;
+
 import static service.RunService.mqtt;
 /*
  * วิธีการทำงานของ Network:
@@ -109,10 +111,14 @@ public class CommandHandler {
             //Game
             case "CONTINUE"    -> { if (GameState.currentGame != null) GameState.currentGame.handleEvent(GameState.TriggerEvent.PLAYER_READY, params); }
             case "DICE_ROLLED" -> {
-                if (GameState.currentGame != null) {
-                    GameState.currentGame.handleEvent(GameState.TriggerEvent.DICE_ROLL_EVENT, params);
-                }
-
+                broadcastResult("UIEVENT", "ANIMATEDROLL");
+                Timer delayTimer = new Timer(1500, e -> {
+                    if (GameState.currentGame != null) {
+                        GameState.currentGame.handleEvent(GameState.TriggerEvent.DICE_ROLL_EVENT, params);
+                    }
+                });
+                delayTimer.setRepeats(false);
+                delayTimer.start();
             }
             case "MOVETO" -> {
                 if (GameState.currentGame == null) return;
