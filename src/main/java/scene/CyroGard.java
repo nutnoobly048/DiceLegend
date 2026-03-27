@@ -17,6 +17,9 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
+import java.util.TimerTask;
+import java.util.Timer;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.swing.*;
 
@@ -157,10 +160,24 @@ public class CyroGard extends Scene {
         spawnObjectAt(transition_up);
         spawnObjectAt(transition_down);
 
+        AtomicBoolean isRolledClicked = new AtomicBoolean(false);
+
         GameButton rollBtn = new GameButton("", "CyroRoll.png", "CyroRollHover.png");
         rollBtn.setBounds(1555, 443, 289, 108);
         rollBtn.setOnButtonClicked(() -> {
+            if (isRolledClicked.get()) return;
+            isRolledClicked.set(true); 
             CommandHandler.sentIntent("INTENT:SELF:ROLLEVENT");
+
+            new Timer().schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    javax.swing.SwingUtilities.invokeLater(() -> {
+                        isRolledClicked.set(false);
+                    });
+                }
+            }, 5000);
+
         });
         this.add(rollBtn);
 

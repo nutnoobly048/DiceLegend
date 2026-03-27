@@ -16,6 +16,8 @@ import service.RunService;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.TimerTask;
+import java.util.Timer;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class LobbyScene extends Scene {
@@ -51,7 +53,7 @@ public class LobbyScene extends Scene {
         spawnObjectAt(transition_up);
         spawnObjectAt(transition_down);
         
-        roomNumber.setBounds(700,85,422,205);
+        roomNumber.setBounds(773,85,422,205);
         backButton.setBounds(0, 34, 431, 221);
         startButton.setBounds(775, 920, 376, 138);
         mapButton.setBounds(560, 914, 159, 145);
@@ -95,6 +97,10 @@ public class LobbyScene extends Scene {
         this.add(startButton);
         this.add(mapButton);
 
+        if ( !LobbyState.current.isHost ){
+            startButton.setVisible(false);
+        }
+
     }
     @Override
     public void onEnter() {
@@ -122,7 +128,12 @@ public class LobbyScene extends Scene {
     }
 
     private void setupButtonLogic() {
+        AtomicBoolean isBackClicked = new AtomicBoolean(false);
+        AtomicBoolean isStartClicked = new AtomicBoolean(false);
         backButton.setOnButtonClicked(() -> {
+            if (isBackClicked.get()) return;
+            isBackClicked.set(true);
+
             if (RunService.mqtt.isConnected() && LobbyState.current.isHost) {
                 CommandHandler.broadcastResult("CHANGESCENETO", "main_menu");
                 CommandHandler.broadcastResult("DISCONNECT");
@@ -130,12 +141,35 @@ public class LobbyScene extends Scene {
             } else if (RunService.mqtt.isConnected()) {
                 handleClientExit();
             }
+
+            new Timer().schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    javax.swing.SwingUtilities.invokeLater(() -> {
+                        isBackClicked.set(false);
+                    });
+                }
+            }, 5000);
         });
 
         startButton.setOnButtonClicked(() -> {
+
+            if (isStartClicked.get()) return;
+            isStartClicked.set(true);
+
             String baseTopic = "DiceLegend/" + LobbyState.current.lobbyName;
             RunService.mqtt.publishRetained(baseTopic + "/room_state", "GAME_STARTED");
             CommandHandler.sentIntent("INTENT:SELF:START_GAME");
+
+            new Timer().schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    javax.swing.SwingUtilities.invokeLater(() -> {
+                        isStartClicked.set(false);
+                    });
+                }
+            }, 5000);
+
         });
 
         // changeNameButton.setOnButtonClicked(() -> {
