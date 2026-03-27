@@ -15,14 +15,13 @@ import objectClass.GameObject;
 import service.CommandHandler;
 
 import java.awt.*;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseMotionAdapter;
+import java.awt.event.*;
+import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 
-import javax.swing.ImageIcon;
+import javax.swing.*;
 
 public class CyroGard extends Scene {
     private final int SCREEN_W = 1920;
@@ -40,6 +39,8 @@ public class CyroGard extends Scene {
     private GameObject itemFrame    = new GameObject("itemFrame", "CyroItemFrame.png", 32, 27);
     private GameObject itemDes = new GameObject("itemDes", "CyroItemDes.png", 51, 514);
 
+    public static ArrayList<Player> playerList = new ArrayList<>();
+
     private static final int PAWN_SPRITE_W  = 64;
     private static final int PAWN_SPRITE_H  = 96;
     private static final int PAWN_OFFSET_X  = -(PAWN_SPRITE_W  / 2);
@@ -49,6 +50,33 @@ public class CyroGard extends Scene {
 
     public CyroGard() {
         setBackground(ImagePreload.get("CyroMainBackground.png"));
+
+        int count = 1;
+        GameButton one,two,tree,four;
+
+        two = new GameButton("2", "button.png", "button.png");
+        tree = new GameButton("3", "button.png", "button.png");
+        four = new GameButton("4", "button.png", "button.png");
+
+        for (Player player: GameState.currentGame.allPlayers.values()) {
+            playerList.add(player);
+            switch (count) {
+                case 1:
+                    one = new GameButton(playerList.get(0).getNetworkID(), "button.png", "button.png");
+                    one.setBounds(1540,730, 100, 40);
+                    add(one);
+                case 2:
+                    two.setBounds(1710,780, 100, 40);
+                    add(two);
+                case 3:
+                    tree.setBounds(1540,900, 100, 40);
+                    add(tree);
+                case  4:
+                    four.setBounds(1710,900, 100, 40);
+                    add(four);
+            }
+            count++;
+        }
     }
 
     @Override
@@ -141,9 +169,40 @@ public class CyroGard extends Scene {
                     targetSelectBtn.setPressedIcon(defaultImg);
                 }
             }
+
         });
+        targetSelectBtn.addMouseListener(new MouseAdapter() {
+
+            private int getQaureand(MouseEvent e, GameButton b) {
+                if (e.getX() < b.getWidth() / 2) {
+                    return (e.getY() < b.getHeight() / 2) ? 1: 2;
+                } else {
+                    return (e.getY() < b.getHeight() / 2) ? 3: 4;
+                }
+            }
+
+            @Override
+            public void mouseClicked(MouseEvent e) {
+
+                GameButton b = (GameButton) e.getSource();
+
+                if (getQaureand(e, b) == 1) {
+                    CommandHandler.sentIntent("INTENT:SELF:SETTARGET:"+playerList.get(0).getNetworkID());
+                } else if (getQaureand(e, b) == 2) {
+                    CommandHandler.sentIntent("INTENT:SELF:SETTARGET:"+playerList.get(1).getNetworkID());
+                } else if (getQaureand(e, b) == 3) {
+                    CommandHandler.sentIntent("INTENT:SELF:SETTARGET:"+playerList.get(2).getNetworkID());
+                } else if (getQaureand(e, b) == 4) {
+                    CommandHandler.sentIntent("INTENT:SELF:SETTARGET:"+playerList.get(3).getNetworkID());
+                }
+
+            }
+        });
+
         this.add(targetSelectBtn);
     }
+
+
 
     private void setupPortals() {
         int[][] destinations = GameState.currentGame.gameBoard.getDestinations();
