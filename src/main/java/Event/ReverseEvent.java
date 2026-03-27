@@ -22,7 +22,7 @@ public class ReverseEvent extends Event {
     @Override
     public void onEventEntered(GameState game) {
         for (PawnCharacter character: game.spawnedCharacter.values()){
-            int move = 5;
+            int move = 3;
             int newIndex = Math.max(0, character.getCurrentTileIndex() - move);
             CommandHandler.broadcastResult("MOVETO", character.getNetworkId(), Integer.toString(newIndex));
         }

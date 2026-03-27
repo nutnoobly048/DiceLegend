@@ -299,16 +299,17 @@ public class CyroGard extends Scene {
         super.paint(g);
         Graphics2D g2d = (Graphics2D) g;
         
-        transition_left.getSprite().draw(g2d);
-        transition_right.getSprite().draw(g2d);
-        transition_up.getSprite().draw(g2d);
-        transition_down.getSprite().draw(g2d);
-        
         for (GameObject portrait : portraits) {
             if (portrait.hasSprite()) {
                 portrait.getSprite().draw(g2d);
             }
         }
+
+        transition_left.getSprite().draw(g2d);
+        transition_right.getSprite().draw(g2d);
+        transition_up.getSprite().draw(g2d);
+        transition_down.getSprite().draw(g2d);
+
     }
     
     public void updateTargetSelectBtnForTurn(String playerId) {
