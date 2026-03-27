@@ -14,10 +14,10 @@ public class RandomPosition {
     public static String resultEventPositionString = "";
 
     static {
-
-        resultAllPosition();
         banPosition.add(0);
         banPosition.add(99);
+        resultAllPosition();
+
 
     }
 

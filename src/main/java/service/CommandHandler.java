@@ -72,8 +72,8 @@ public class CommandHandler {
                 }
             }
             case "ROLLEVENT" -> {
-//                int roll = (int)(Math.random() * 6) + 1;
-                int roll = 1;
+                int roll = (int)(Math.random() * 6) + 1;
+//                int roll = 1;
                 broadcastResult("DICE_ROLLED", senderID, String.valueOf(roll));
             }
 
