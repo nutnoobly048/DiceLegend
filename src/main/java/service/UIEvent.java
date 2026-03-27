@@ -32,7 +32,7 @@ public class UIEvent {
 
                 Timer delayTimer = new Timer(6000, e -> {
                     if (GameState.currentGame != null) {
-                        CyroGard.popupSequence.setVisible(false);
+                        CyroGard.popupSequence.setSprite("blank.png");
                     }
                 });
                 delayTimer.setRepeats(false);
