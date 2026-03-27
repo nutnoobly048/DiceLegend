@@ -17,14 +17,12 @@ import service.CommandHandler;
 import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.util.Comparator;
 import java.util.List;
 
 public class CyroGard extends Scene {
     private final int SCREEN_W = 1920;
     private final int SCREEN_H = 1080;
-
     private final double TRANSITION_DURATION = 0.4;
 
     private GameObject transition_left  = new GameObject("transit_left",  "Transition.png", 0, 0);
@@ -32,43 +30,52 @@ public class CyroGard extends Scene {
     private GameObject transition_up    = new GameObject("transit_up",    "Transition.png", 0, 0);
     private GameObject transition_down  = new GameObject("transit_down",  "Transition.png", 0, 0);
 
-    private GameObject boardFrame=  new GameObject("boardFrame", "CyroBoardFrame.png", SCREEN_W/2, SCREEN_H/2);
+    private GameObject boardFrame   = new GameObject("boardFrame", "CyroBoardFrame.png", SCREEN_W/2, SCREEN_H/2);
     private GameObject boardTexture = new GameObject("board", "CyroGardBoard.png", SCREEN_W / 2, SCREEN_H / 2);
     private GameObject diceBackground = new GameObject("diceBackground", "CyroDiceFrame.png", 1495, 27);
-    private GameObject itemFrame = new GameObject("itemFrame", "CyroItemFrame.png", 32, 27);
+    private GameObject itemFrame    = new GameObject("itemFrame", "CyroItemFrame.png", 32, 27);
 
     private static final int PAWN_SPRITE_W  = 64;
     private static final int PAWN_SPRITE_H  = 96;
     private static final int PAWN_OFFSET_X  = -(PAWN_SPRITE_W  / 2);
     private static final int PAWN_OFFSET_Y  = -PAWN_SPRITE_H;
-
-    private static final int START_TILE_X = 500 ; //-10 510-500
-    private static final int START_TILE_Y = 990; //+10 980->990
-
+    private static final int START_TILE_X   = 500;
+    private static final int START_TILE_Y   = 990;
 
     public CyroGard() {
         setBackground(ImagePreload.get("CyroMainBackground.png"));
-        setupObjects();
-        setOnSceneEnter(() -> {
-            playEnterTransition();
-            spawnAllPawns();
-            CommandHandler.sentIntent("INTENT:SELF:CONTINUE");
-        });
+    }
 
-        addKeyListener(new KeyAdapter() {
+    @Override
+    public void onCreate() {
+        setupBoardAndUI();
+
+        setupPortals();
+
+        this.setFocusable(true);
+        this.addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
-                int key = e.getKeyCode();
-                if (key == 32) {
+                if (e.getKeyCode() == KeyEvent.VK_SPACE) {
                     CommandHandler.sentIntent("INTENT:SELF:ROLLEVENT");
                 }
             }
         });
-
-
     }
 
-    private void setupObjects() {
+    @Override
+    public void onEnter() {
+        playEnterTransition();
+        spawnAllPawns();
+        CommandHandler.sentIntent("INTENT:SELF:CONTINUE");
+    }
+
+    @Override
+    public void onExit() {
+        playExitTransition();
+    }
+
+    private void setupBoardAndUI() {
         boardFrame.getSprite().offsetY = -513;
         boardFrame.getSprite().offsetX = -513;
         boardFrame.z = -2;
@@ -95,46 +102,24 @@ public class CyroGard extends Scene {
         rollBtn.setOnButtonClicked(() -> {
             CommandHandler.sentIntent("INTENT:SELF:ROLLEVENT");
         });
-        add(rollBtn);
+        this.add(rollBtn);
+    }
 
+    private void setupPortals() {
         for (int i = 0; i < Board.destinationCyroGard.length; i++) {
+            int portalInIndex = Board.destinationCyroGard[i][0];
+            int[] posIn = GameState.currentGame.gameBoard.getPositionFromIndex(portalInIndex);
 
-            int portalInIndex;
-            int[] portalInPosition;
-            int portalInX;
-            int portalInY;
+            AnimatedSprite inSprite = new AnimatedSprite("PortalIn.png", posIn[0], posIn[1], 6, 2);
+            inSprite.offsetX = -40; inSprite.offsetY = -50;
+            spawnObjectAt(new GameObject("pIn" + i, inSprite, posIn[0], posIn[1]));
 
-            int portalOutIndex;
-            int[] portalOutPosition;
-            int portalOutX;
-            int portalOutY;
+            int portalOutIndex = Board.destinationCyroGard[i][1];
+            int[] posOut = GameState.currentGame.gameBoard.getPositionFromIndex(portalOutIndex);
 
-            portalInIndex = Board.destinationCyroGard[i][0];
-            portalInPosition = GameState.currentGame.gameBoard.getPositionFromIndex(portalInIndex);
-            portalInX = portalInPosition[0];
-            portalInY = portalInPosition[1];
-
-            AnimatedSprite portalInSprite = new AnimatedSprite("PortalIn.png", portalInX, portalInY, 6, 2);
-            portalInSprite.offsetX = -40;
-            portalInSprite.offsetY = -50;
-
-
-            portalOutIndex = Board.destinationCyroGard[i][1];
-            portalOutPosition = GameState.currentGame.gameBoard.getPositionFromIndex(portalOutIndex);
-            portalOutX = portalOutPosition[0];
-            portalOutY = portalOutPosition[1];
-
-            AnimatedSprite portalOutSprite = new AnimatedSprite("PortalOut.png", portalOutX, portalOutY, 6, 2);
-            portalOutSprite.offsetX = -40;
-            portalOutSprite.offsetY = -50;
-
-            GameObject portalIn = new GameObject(Integer.toString(i), portalInSprite, portalInX, portalInY);
-
-            GameObject portalOut = new GameObject(Integer.toString(i + 20), portalOutSprite, portalOutX, portalOutY);
-
-            spawnObjectAt(portalIn);
-            spawnObjectAt(portalOut);
-
+            AnimatedSprite outSprite = new AnimatedSprite("PortalOut.png", posOut[0], posOut[1], 6, 2);
+            outSprite.offsetX = -40; outSprite.offsetY = -50;
+            spawnObjectAt(new GameObject("pOut" + i, outSprite, posOut[0], posOut[1]));
         }
     }
 
@@ -144,23 +129,20 @@ public class CyroGard extends Scene {
                 .sorted(Comparator.comparing(Player::getNetworkID))
                 .toList();
 
-        for (int slotIndex = 0; slotIndex < players.size(); slotIndex++) {
-            Player player = players.get(slotIndex);
-            int[] slot = PawnCharacter.SLOT_OFFSETS[slotIndex];
+        for (int i = 0; i < players.size(); i++) {
+            Player p = players.get(i);
+            int[] slot = PawnCharacter.SLOT_OFFSETS[i];
 
-            int spawnX = START_TILE_X;
-            int spawnY = START_TILE_Y;
-
-            PawnCharacter pawn = new PawnCharacter(player.getNetworkID(),
-                    new AnimatedSprite(player.getSpriteName(), 0, 0, 2, 2), spawnX, spawnY);
+            PawnCharacter pawn = new PawnCharacter(p.getNetworkID(),
+                    new AnimatedSprite(p.getSpriteName(), 0, 0, 2, 2), START_TILE_X, START_TILE_Y);
 
             pawn.getSprite().offsetX = PAWN_OFFSET_X + slot[0];
             pawn.getSprite().offsetY = PAWN_OFFSET_Y + slot[1];
-            pawn.slotIndex = slotIndex;
-            pawn.z = slotIndex;
+            pawn.slotIndex = i;
+            pawn.z = i;
 
-            spawnObjectAt(pawn, spawnX, spawnY);
-            GameState.currentGame.spawnedCharacter.put(player.getNetworkID(), pawn);
+            spawnObjectAt(pawn, START_TILE_X, START_TILE_Y);
+            GameState.currentGame.spawnedCharacter.put(p.getNetworkID(), pawn);
         }
     }
 
@@ -171,16 +153,11 @@ public class CyroGard extends Scene {
         new Tween(transition_down,  TweenProperty.Y,  1000,  SCREEN_H, TRANSITION_DURATION).start();
     }
 
-    @Override
-    public void requestExit(Runnable onExitComplete) {
-        playExitTransition(onExitComplete);
-    }
-
-    private void playExitTransition(Runnable onDone) {
+    private void playExitTransition() {
         new Tween(transition_left,  TweenProperty.X, -SCREEN_W, 0, TRANSITION_DURATION).start();
         new Tween(transition_right, TweenProperty.X,  SCREEN_W, 0, TRANSITION_DURATION).start();
         new Tween(transition_up,    TweenProperty.Y, -SCREEN_H, 0, TRANSITION_DURATION).start();
-        new Tween(transition_down,  TweenProperty.Y,  SCREEN_H, 0, TRANSITION_DURATION).OnComplete(onDone).start();
+        new Tween(transition_down,  TweenProperty.Y,  SCREEN_H, 0, TRANSITION_DURATION).start();
     }
 
     @Override

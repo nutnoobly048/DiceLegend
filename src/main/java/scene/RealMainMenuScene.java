@@ -10,7 +10,10 @@ import javax.swing.JTextField;
 import javax.swing.Popup;
 import javax.swing.Timer;
 
+import Gameplay.SceneList;
 import OtherUtilities.RandomUtilities;
+import animation.Tween;
+import animation.TweenProperty;
 import graphicsUtilities.ImagePreload;
 import graphicsUtilities.Scene;
 import graphicsUtilities.SceneUtilities;
@@ -24,8 +27,10 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.plaf.basic.BasicSliderUI;
 
+
 public class RealMainMenuScene extends Scene {
 
+    private final GameObject transition_left = new GameObject("transit_left", "TransitionArrow.png", -2400,0);
     private final GameButton createButton = new GameButton("", "mainMenu-create.png", "mainMenu-create-hover.png");
     private final GameButton joinButton = new GameButton("", "mainMenu-join.png", "mainMenu-join-hover.png");
     private final GameButton creditButton = new GameButton("", "mainMenu-credit.png", "mainMenu-credit-hover.png");
@@ -38,51 +43,56 @@ public class RealMainMenuScene extends Scene {
 
     public RealMainMenuScene() {
         this.setBackground(Color.BLACK);
+        this.setOpaque(true);
+    }
+
+    @Override
+    public void onCreate() {
+        this.sceneLoadoffTimesInMilisecond = 1000;
+        spawnObjectAt(transition_left);
+        spawnObjectAt(gameLogo, 0, 0);
         setupButtons();
-        setupLogo();
+        setupVolumeSlider();
         this.add(popUp);
-
-
     }
 
-    public void setupLogo() {
-        gameLogo.getSprite().setOnComplete(() -> {
-            System.out.println("RUN");
-        });
-        this.spawnObjectAt(gameLogo, 0, 0);
+    @Override
+    public void onEnter() {
+        new Tween(transition_left, TweenProperty.X, 0, -2400, 1).start();
     }
 
-    public void setupButtons() {
+    @Override
+    public void onExit() {
+        playExitTransition();
+    }
+
+    private void setupButtons() {
         createButton.setBounds(100, 280, createButton.getPreferredSize().width, createButton.getPreferredSize().height);
         createButton.setOnButtonClicked(() -> {
             final String lobbyCode = String.valueOf(RandomUtilities.randomIntDigits(6));
-            System.out.println("Lobby code: " + lobbyCode);
             SceneUtilities.changeSceneTo(new LoadingScene(true, lobbyCode));
         });
 
         joinButton.setBounds(100, 450, joinButton.getPreferredSize().width, joinButton.getPreferredSize().height);
-        joinButton.setOnButtonClicked(() -> {
-            popUp.setVisible(true);
-        });
+        joinButton.setOnButtonClicked(() -> popUp.setVisible(true));
 
         creditButton.setBounds(100, 600, creditButton.getPreferredSize().width, creditButton.getPreferredSize().height);
 
         exitButton.setBounds(100, 750, exitButton.getPreferredSize().width, exitButton.getPreferredSize().height);
-        exitButton.setOnButtonClicked(() -> {
-            System.exit(0);
-        });
+        exitButton.setOnButtonClicked(() -> System.exit(0));
 
         this.add(createButton);
         this.add(joinButton);
         this.add(creditButton);
         this.add(exitButton);
-        setupVolumeSlider();
     }
 
-    public void setupVolumeSlider() {
+    private void setupVolumeSlider() {
         JSlider volumeSlider = new JSlider(JSlider.HORIZONTAL, 0, 100, 30);
         volumeSlider.setFocusable(false);
         volumeSlider.setRequestFocusEnabled(false);
+        volumeSlider.setOpaque(false);
+        volumeSlider.setBounds(64, 1016, 200, 50);
 
         volumeSlider.setUI(new BasicSliderUI(volumeSlider) {
             @Override
@@ -91,7 +101,6 @@ public class RealMainMenuScene extends Scene {
                 g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
                 Image diceMover = ImagePreload.get("DiceThumb.png");
                 g2d.drawImage(diceMover, thumbRect.x, thumbRect.y, thumbRect.width, thumbRect.height, null);
-
             }
 
             @Override
@@ -108,22 +117,24 @@ public class RealMainMenuScene extends Scene {
             }
         });
 
-        volumeSlider.setBounds(64, 1016, 200, 50);
-        volumeSlider.setOpaque(false);
-
-        volumeSlider.addChangeListener(new ChangeListener() {
-            public void stateChanged(ChangeEvent e) {
-                float volume = volumeSlider.getValue() / 100f;
-
-                AudioService.getInstance().setMasterVolume(volume);
-
-                if (AudioService.getInstance().getCurrentMusic() != null) {
-                    AudioService.getInstance().getCurrentMusic().setVolume(volume);
-                }
+        volumeSlider.addChangeListener(e -> {
+            float volume = volumeSlider.getValue() / 100f;
+            AudioService.getInstance().setMasterVolume(volume);
+            if (AudioService.getInstance().getCurrentMusic() != null) {
+                AudioService.getInstance().getCurrentMusic().setVolume(volume);
             }
         });
 
         this.add(volumeSlider);
+    }
+    private void playExitTransition() {
+        new Tween(transition_left, TweenProperty.X, -2400, 0, 1).start();
+    }
+    @Override
+    public void paint(Graphics g) {
+        super.paint(g);
+        Graphics2D g2d = (Graphics2D) g;
+        transition_left.getSprite().draw(g2d);
     }
 }
 
@@ -160,6 +171,8 @@ class JoinPopUp extends JPanel {
         });
     }
 
+
+
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
@@ -169,6 +182,9 @@ class JoinPopUp extends JPanel {
             g2d.drawImage(background, 0, 0, getWidth(), getHeight(), null);
         }
     }
+
+
+
 
 
 }

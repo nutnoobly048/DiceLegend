@@ -31,66 +31,47 @@ public class LobbyScene extends Scene {
     private double duration = 0.5;
 
     public LobbyScene() {
-        setupObjects();
-        setupButtons();
-        setupTransitions();
         setBackground(ImagePreload.get("battle.png"));
     }
-
-
-    private void setupObjects() {
+    @Override
+    public void onCreate() {
         spawnObjectAt(transition_left);
         spawnObjectAt(transition_right);
         spawnObjectAt(transition_up);
         spawnObjectAt(transition_down);
 
         backButton.setBounds(200, 500, 500, 80);
-        add(backButton);
+        startButton.setBounds(800, 500, 500, 80);
 
-        startButton.setBounds(800, 500, 500,80);
-        add(startButton);
+        setupButtonLogic();
+
+        this.add(backButton);
+        this.add(startButton);
+    }
+    @Override
+    public void onEnter() {
+        new Tween(transition_left,  TweenProperty.X, -960, -1920, duration).start();
+        new Tween(transition_right, TweenProperty.X,  960,  1920, duration).start();
+        new Tween(transition_up,    TweenProperty.Y, -540, -1080, duration).start();
+        new Tween(transition_down,  TweenProperty.Y,  540,  1080, duration).start();
     }
 
-    private void setupButtons() {
+    @Override
+    public void onExit() {
+        new Tween(transition_left,  TweenProperty.X, -1920, -960, duration).start();
+        new Tween(transition_right, TweenProperty.X,  1920,  960, duration).start();
+        new Tween(transition_up,    TweenProperty.Y, -1080, -540, duration).start();
+        new Tween(transition_down,  TweenProperty.Y,  1080,  540, duration).start();
+    }
+
+    private void setupButtonLogic() {
         backButton.setOnButtonClicked(() -> {
             if (RunService.mqtt.isConnected() && LobbyState.current.isHost) {
                 CommandHandler.broadcastResult("CHANGESCENETO", "main_menu");
                 CommandHandler.broadcastResult("DISCONNECT");
                 RunService.mqtt.clearRetained("DiceLegend/" + LobbyState.current.lobbyName + "/room_state");
-            }
-            else if (RunService.mqtt.isConnected()) {
-                AtomicBoolean isMinus = new AtomicBoolean(false);
-                SceneUtilities.changeSceneTo(SceneList.mainMenu);
-                CommandHandler.broadcastResult("PLAYER_LEFT", Player.localPlayer.getNetworkID());
-                String topicRoomAmount = "DiceLegend/" + LobbyState.current.lobbyName + "/room_amount";
-                RunService.mqtt.subscribe(topicRoomAmount, (t, msg) -> {
-
-                    if (!RunService.mqtt.isConnected()) return; 
-
-                    try {
-                        
-                        if (!isMinus.getAndSet(true)){
-                            int addAmount = Integer.parseInt(msg) - 1;
-
-                            if (addAmount < 0) addAmount = 0; 
-
-                            RunService.mqtt.publishRetained(topicRoomAmount, String.valueOf(addAmount));
-                            RunService.mqtt.unsubscribe(topicRoomAmount);
-                        }
-                        
-                        
-                    } catch (Exception e) {
-                        System.err.println("ไม่สามารถอัปเดตยอดคนได้ เนื่องจาก: " + e.getMessage());
-                    } finally {
-                        SwingUtilities.invokeLater(() -> {
-                            if (RunService.mqtt.isConnected()) {
-                                RunService.mqtt.disconnect();
-                            }
-                        });
-                    }
-                });
-                GameState.currentGame = null;
-                LobbyState.destroy();
+            } else if (RunService.mqtt.isConnected()) {
+                handleClientExit();
             }
         });
 
@@ -101,39 +82,40 @@ public class LobbyScene extends Scene {
         });
     }
 
-    private void setupTransitions() {
-        setOnSceneEnter(this::playEnterTransition);
+    private void handleClientExit() {
+        AtomicBoolean isMinus = new AtomicBoolean(false);
+        SceneUtilities.changeSceneTo(SceneList.mainMenu);
 
-    }
+        CommandHandler.broadcastResult("PLAYER_LEFT", Player.localPlayer.getNetworkID());
+        String topicRoomAmount = "DiceLegend/" + LobbyState.current.lobbyName + "/room_amount";
 
-
-    private void playEnterTransition() {
-        new Tween(transition_left,  TweenProperty.X, -960, -1920, duration).start();
-        new Tween(transition_right, TweenProperty.X,  960,  1920, duration).start();
-        new Tween(transition_up,    TweenProperty.Y, -540, -1080, duration).start();
-        new Tween(transition_down,  TweenProperty.Y,  540,  1080, duration).start();
-    }
-
-    @Override
-    public void requestExit(Runnable onExitComplete) {
-        playExitTransition(() -> {
-            onExitComplete.run();
+        RunService.mqtt.subscribe(topicRoomAmount, (t, msg) -> {
+            if (!RunService.mqtt.isConnected()) return;
+            try {
+                if (!isMinus.getAndSet(true)) {
+                    int addAmount = Math.max(0, Integer.parseInt(msg) - 1);
+                    RunService.mqtt.publishRetained(topicRoomAmount, String.valueOf(addAmount));
+                    RunService.mqtt.unsubscribe(topicRoomAmount);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                SwingUtilities.invokeLater(() -> {
+                    if (RunService.mqtt.isConnected()) RunService.mqtt.disconnect();
+                });
+            }
         });
+        GameState.currentGame = null;
+        LobbyState.destroy();
     }
-    private void playExitTransition(Runnable onDone) {
-        new Tween(transition_left,  TweenProperty.X, -1920, -960, duration).start();
-        new Tween(transition_right, TweenProperty.X,  1920,  960, duration).start();
-        new Tween(transition_up,    TweenProperty.Y, -1080, -540, duration).start();
-        new Tween(transition_down,  TweenProperty.Y,  1080,  540, duration).OnComplete(onDone).start();
-    }
-
     @Override
     public void paint(Graphics g) {
         super.paint(g);
-        transition_left.getSprite().draw((Graphics2D) g);
-        transition_right.getSprite().draw((Graphics2D) g);
-        transition_up.getSprite().draw((Graphics2D) g);
-        transition_down.getSprite().draw((Graphics2D) g);
-    }
+        Graphics2D g2d = (Graphics2D) g;
 
+        transition_left.getSprite().draw(g2d);
+        transition_right.getSprite().draw(g2d);
+        transition_up.getSprite().draw(g2d);
+        transition_down.getSprite().draw(g2d);
+    }
 }

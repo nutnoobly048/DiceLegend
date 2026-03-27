@@ -7,6 +7,8 @@ import scene.MysteriousJungleScene;
 import service.MainGame;
 import service.RunService;
 
+import javax.swing.*;
+
 public class SceneUtilities {
     private static MainGame mainGameFrame;
     private static Scene currentGameScene;
@@ -34,36 +36,38 @@ public class SceneUtilities {
 
     public static void changeSceneTo(Scene newScene) {
         if (currentGameScene != null) {
-            currentGameScene.requestExit(() -> {
-                performSwitch(newScene);
-            });
+            currentGameScene.onExit();
+
+            Timer timer = new Timer(currentGameScene.getSceneLoadoffTimesInMilisecond(), e -> performSwitch(newScene));
+            timer.setRepeats(false);
+            timer.start();
         } else {
             performSwitch(newScene);
         }
     }
 
     private static void performSwitch(Scene newScene) {
-        if (currentGameScene  != null) {
-            exitScene();
+        RunService runService = RunService.GetService();
+
+        if (currentGameScene != null) {
+            for (GameObject obj : currentGameScene.getAllSceneObject().values()) {
+                runService.removeProcess(obj);
+            }
             mainGameFrame.getContainer().removeAll();
         }
 
-
-        newScene.setFocusable(true);
+        newScene.onCreate();
         currentGameScene = newScene;
         mainGameFrame.getContainer().add(newScene);
 
-        startScene();
-        refreshScene();
-        currentGameScene.onSceneEntered();
-    }
+        for (GameObject obj : newScene.getAllSceneObject().values()) {
+            runService.addProcess(obj);
+        }
 
-    private static void refreshScene() {
-        mainGameFrame.revalidate();
         mainGameFrame.getContainer().revalidate();
         mainGameFrame.getContainer().repaint();
-        currentGameScene.requestFocusInWindow();
-
+        newScene.requestFocusInWindow();
+        newScene.onEnter();
     }
 
     private static void exitScene() {

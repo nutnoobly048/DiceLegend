@@ -5,7 +5,6 @@ import service.RunService;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -14,45 +13,23 @@ import java.util.concurrent.CopyOnWriteArrayList;
 //มีระบบ spawnObjectAt เพื่อวางสิ่งของลงในพิกัดที่ต้องการ
 //จัดการเรื่องการวาด (Paint) วัตถุทั้งหมดที่อยู่ในฉากนั้นๆ
 //ยังสามารถพัฒนาเพิ่มได้อีกเยอะ
-public class Scene extends JPanel {
+public abstract class Scene extends JPanel {
+    protected Image background = ImagePreload.get("blank.png");
+    protected CopyOnWriteArrayList<GameObject> drawList = new CopyOnWriteArrayList<>();
+    protected HashMap<String, GameObject> currentSceneObject = new HashMap<>();
 
-    // Default background
-    private Image background = ImagePreload.get("blank.png");
-    private CopyOnWriteArrayList<GameObject>            drawList     = new CopyOnWriteArrayList<>();
-    private HashMap<String, GameObject> currentSceneObject = new HashMap<>();
-
-    private Runnable onEnterMethod = () -> {};
-    private Runnable onExitedMethod = () -> {};
+    public int sceneLoadoffTimesInMilisecond = 500;
 
     public Scene() {
         this.setPreferredSize(new Dimension(1920, 1080));
         this.setLayout(null);
+        this.setOpaque(false);
     }
 
 
-    public void setOnSceneExited(Runnable onExitedMethod) {
-        this.onExitedMethod = onExitedMethod;
-    }
-
-    public void setOnSceneEnter(Runnable onEnterMethod) {
-        this.onEnterMethod = onEnterMethod;
-    }
-
-    public void onSceneEntered() {
-        onEnterMethod.run();
-    }
-
-    public void onSceneExited() {
-        onExitedMethod.run();
-    }
-
-    public void requestExit(Runnable onExitComplete) {
-        if (onExitedMethod != null) {
-            onExitedMethod.run();
-        }
-
-        onExitComplete.run();
-    }
+    public abstract void onCreate();
+    public abstract void onEnter();
+    public abstract void onExit();
 
     @Override
     protected void paintComponent(Graphics g) {
@@ -115,5 +92,13 @@ public class Scene extends JPanel {
 
     public HashMap<String, GameObject> getAllSceneObject() {
         return this.currentSceneObject;
+    }
+
+    public int getSceneLoadoffTimesInMilisecond() {
+        return sceneLoadoffTimesInMilisecond;
+    }
+
+    public void setSceneLoadoffTimesInMilisecond(double second) {
+        this.sceneLoadoffTimesInMilisecond = (int) (second * 1000);
     }
 }

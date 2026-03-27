@@ -5,7 +5,6 @@ import misc.PawnCharacter;
 import misc.Player;
 import scene.LoadingScene;
 import scene.LobbyScene;
-import scene.MainMenuScene;
 import scene.MysteriousJungleScene;
 import scene.RealMainMenuScene;
 
