@@ -111,7 +111,6 @@ public class CommandHandler {
             case "DICE_ROLLED" -> {
                 if (GameState.currentGame != null) {
                     GameState.currentGame.handleEvent(GameState.TriggerEvent.DICE_ROLL_EVENT, params);
-
                 }
 
             }

@@ -19,6 +19,11 @@ public class UIEvent {
                 }
             }
             case "CARDPOPUP" -> {}
+            case "ROLLRESULT" -> {
+                if (SceneUtilities.getCurrentGameScene().currentSceneObject.containsKey("dice")) {
+                    SceneUtilities.getCurrentGameScene().currentSceneObject.get("dice").setSprite("dice" + args[1] + ".png");
+                }
+            }
         }
     }
 }
