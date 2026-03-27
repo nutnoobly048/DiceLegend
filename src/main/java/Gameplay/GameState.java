@@ -18,6 +18,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import Event.Event;
+import service.UIEvent;
 
 import javax.swing.*;
 
@@ -176,9 +177,7 @@ public class GameState {
 
         allPlayers.get(playerId).setOpenForNetworkInput(false);
 
-        if (SceneUtilities.getCurrentGameScene().currentSceneObject.containsKey("dice")) {
-            SceneUtilities.getCurrentGameScene().currentSceneObject.get("dice").setSprite("dice" + roll + ".png");
-        }
+        CommandHandler.broadcastResult("UIEVENT", "ROLLRESULT", String.valueOf(roll));
 
         lastRollResult = roll;
         int rollValue = currentEvent != null ? currentEvent.modifyRollValue(lastRollResult) : lastRollResult;
