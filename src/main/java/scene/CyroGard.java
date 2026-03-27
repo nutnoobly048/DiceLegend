@@ -38,7 +38,7 @@ public class CyroGard extends Scene {
     private GameObject diceBackground = new GameObject("diceBackground", "CyroDiceFrame.png", 1495, 27);
     private GameObject itemFrame    = new GameObject("itemFrame", "CyroItemFrame.png", 32, 27);
     private GameObject itemDes = new GameObject("itemDes", "CyroItemDes.png", 51, 514);
-    private GameObject dice = new GameObject("dice", "dice5.png", 1495, 27);
+    private GameObject dice = new GameObject("dice", "dice5.png", 1550, 40);
     public static GameModal popupItem = new GameModal(1312, 756, "DestinyDices.png");
 
     GameButton targetSelectBtn;
@@ -59,7 +59,7 @@ public class CyroGard extends Scene {
         playerList.clear();
         playerList.addAll(GameState.currentGame.allPlayers.values());
 
-        playerList.sort(Comparator.comparing(Player::getNetworkID));
+//        playerList.sort(Comparator.comparing(Player::getNetworkID));
 
         int count = 1;
 
