@@ -5,6 +5,7 @@ import Gameplay.LobbyState;
 import Gameplay.SceneList;
 import animation.Tween;
 import animation.TweenProperty;
+import graphicsUtilities.FontLoader;
 import graphicsUtilities.ImagePreload;
 import graphicsUtilities.Scene;
 import graphicsUtilities.SceneUtilities;
@@ -90,7 +91,7 @@ public class LobbyScene extends Scene {
 
         setupButtonLogic();
         roomNumber.setForeground(Color.BLACK);
-        roomNumber.setFont(new Font("Arial", Font.BOLD, 26));
+        roomNumber.setFont(FontLoader.getFont(60).deriveFont(Font.BOLD));
         this.add(roomNumber);
 
         this.add(backButton);

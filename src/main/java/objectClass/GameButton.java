@@ -1,5 +1,6 @@
 package objectClass;
 
+import graphicsUtilities.FontLoader;
 import graphicsUtilities.ImagePreload;
 
 import javax.swing.*;
@@ -33,7 +34,7 @@ public class GameButton extends JButton {
         this.setPressedIcon(iconHover);
 
         this.setForeground(Color.WHITE);
-        this.setFont(new Font("Arial", Font.BOLD, 18));
+        this.setFont(FontLoader.getFont(18));
         this.setHorizontalTextPosition(JButton.CENTER);
         this.setVerticalTextPosition(JButton.CENTER);
 

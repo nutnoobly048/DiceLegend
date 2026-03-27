@@ -1,6 +1,9 @@
 package scene;
 
 import javax.swing.*;
+
+import graphicsUtilities.FontLoader;
+
 import java.awt.*;
 import java.util.function.Consumer;
 
@@ -35,7 +38,7 @@ public class Joindialog extends JDialog {
 
         //Title
         JLabel title = new JLabel("ENTER CODE", SwingConstants.CENTER);
-        title.setFont(new Font("Courier New", Font.BOLD, 28));
+        title.setFont(FontLoader.getFont(28));
         title.setForeground(new Color(255, 200 ,30));
         title.setBounds(30, 40, 460, 40);
         root.add(title);
@@ -57,7 +60,7 @@ public class Joindialog extends JDialog {
                 super.paintComponent(g);
             }
         };
-        codeField.setFont(new Font("Courier New", Font.BOLD, 32));
+        codeField.setFont(FontLoader.getFont(32));
         codeField.setForeground(new Color(160, 160, 180));
         codeField.setCaretColor(new Color(200, 150, 50));
         codeField.setHorizontalAlignment(JTextField.CENTER);
@@ -78,7 +81,7 @@ public class Joindialog extends JDialog {
                         : new Color(50, 65, 130);
                 g2.setColor(bg);
                 g2.fillRoundRect(0, 0, getWidth(), getHeight(), 8, 8);
-                g2.setFont(new Font("Courier New", Font.BOLD, 22));
+                g2.setFont(FontLoader.getFont(22));
                 FontMetrics fm = g2.getFontMetrics();
                 g2.drawString(getText(), (getWidth() - fm.stringWidth(getText())) / 2,
                         (getHeight() + fm.getAscent() - fm.getDescent()) / 2);
@@ -105,7 +108,7 @@ public class Joindialog extends JDialog {
                 g2.setColor(getModel().isRollover() ? new Color(200, 30, 30) : new Color(180, 20, 20));
                 g2.fillRoundRect(0, 0, getWidth(), getHeight(), 6, 6);
                 g2.setColor(Color.WHITE);
-                g2.setFont(new Font("Arial", Font.BOLD, 20));
+                g2.setFont(FontLoader.getFont(20));
                 FontMetrics fm = g2.getFontMetrics();
                 g2.drawString("×", (getWidth() - fm.stringWidth("×")) / 2, (getHeight() + fm.getAscent() - fm.getDescent()) / 2);
 

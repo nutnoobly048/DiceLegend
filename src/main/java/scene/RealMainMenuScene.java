@@ -16,6 +16,7 @@ import Gameplay.SceneList;
 import OtherUtilities.RandomUtilities;
 import animation.Tween;
 import animation.TweenProperty;
+import graphicsUtilities.FontLoader;
 import graphicsUtilities.ImagePreload;
 import graphicsUtilities.Scene;
 import graphicsUtilities.SceneUtilities;
@@ -194,7 +195,7 @@ class JoinPopUp extends JPanel {
         this.add(textField);
         textField.setBackground(null);
         textField.setForeground(Color.white);
-        textField.setFont(new Font("Arial", Font.PLAIN, 50));
+        textField.setFont(FontLoader.getFont(50));
         textField.setHorizontalAlignment(JTextField.CENTER);
         textField.setBounds(50, 160, 401, 100);
         textField.setBorder(null);
