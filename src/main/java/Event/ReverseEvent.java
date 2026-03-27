@@ -29,7 +29,7 @@ public class ReverseEvent extends Event {
     }
     @Override
     public void onEventTriggered(GameState game) {
-
+        broadcastContinueForAll(game);
     }
 
 

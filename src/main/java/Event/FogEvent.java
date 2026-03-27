@@ -3,8 +3,8 @@ package Event;
 
 import Gameplay.GameState;
 
-public class BlizzardEvent extends Event {
-    public BlizzardEvent() { super(2); }
+public class FogEvent extends Event {
+    public FogEvent() { super(2); }
 
     @Override
     public String getEventVisualName() { return "Blizzard"; }
@@ -21,7 +21,7 @@ public class BlizzardEvent extends Event {
     public void onEventLeave(GameState game) {}
 
     @Override
-    public void onEventTriggered(GameState game) {}
+    public void onEventTriggered(GameState game) {broadcastContinueForAll(game);}
 
     @Override
     public int modifyRollValue(int rollValue) {

@@ -5,8 +5,8 @@ import Gameplay.GameState;
 import misc.PawnCharacter;
 import service.CommandHandler;
 
-public class EarthquakeEvent extends Event {
-    public EarthquakeEvent() { super(1); }
+public class StormEvent extends Event {
+    public StormEvent() { super(1); }
 
     @Override
     public String getEventVisualName() { return "Earthquake"; }
@@ -30,5 +30,7 @@ public class EarthquakeEvent extends Event {
     public void onEventLeave(GameState game) {}
 
     @Override
-    public void onEventTriggered(GameState game) {}
+    public void onEventTriggered(GameState game) {
+        broadcastContinueForAll(game);
+    }
 }

@@ -23,7 +23,6 @@ public class RandomItems {
         // เพิ่ม Item ที่มีทุกด่านตรงนี้
         // list.add(new Item());
         list.add(new DoubleDiceItem());
-        list.add(new SwapItem());
         list.add(new PullItem());
         return list;
 

@@ -45,9 +45,10 @@ public abstract class Event {
 
     //ให้เรียกใช้ทุกครั้งใน onEventEntered ถ้า Event นั้นไม่มีการขยับตัวละคร
     protected void broadcastContinueForAll(GameState state) {
-        for (Player p : state.allPlayers.values()) {
-            CommandHandler.broadcastResult("CONTINUE", p.getNetworkID());
-            System.out.println(p.getNetworkID() + " SHOUlD CONTINUE SINCE THIS IS NOT MOVING EVENT");
-        }
+        CommandHandler.broadcastResult("FORCE_CONTINUE");
+//        for (Player p : state.allPlayers.values()) {
+//            CommandHandler.broadcastResult("CONTINUE", p.getNetworkID());
+//            System.out.println(p.getNetworkID() + " SHOUlD CONTINUE SINCE THIS IS NOT MOVING EVENT");
+//        }
     }
 }

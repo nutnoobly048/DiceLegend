@@ -4,6 +4,8 @@ import Gameplay.GameState;
 import misc.Player;
 import service.CommandHandler;
 
+import javax.smartcardio.CommandAPDU;
+
 public abstract class Item {
 
 
@@ -38,9 +40,6 @@ public abstract class Item {
 
     //ให้เรียกใช้ทุกครั้งใน broadcastResult ถ้า Item นั้นไม่มีการขยับตัวละคร
     protected void broadcastContinueForAll(GameState state) {
-        for (Player p : state.allPlayers.values()) {
-            CommandHandler.broadcastResult("CONTINUE", p.getNetworkID());
-            System.out.println(p.getNetworkID() + " SHOUlD CONTINUE SINCE THIS IS NOT MOVING ITEM");
-        }
+        CommandHandler.broadcastResult("FORCE_CONTINUE");
     }
 }

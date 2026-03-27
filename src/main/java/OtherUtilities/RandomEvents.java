@@ -24,7 +24,7 @@ public class RandomEvents {
         list.add(new ReverseEvent());
         list.add(new MoveFast());
         list.add(new MoveSlow());
-        list.add(new EarthquakeEvent());
+        list.add(new StormEvent());
         list.add(new BrokenDiceEvent());
         return list;
 
@@ -44,7 +44,7 @@ public class RandomEvents {
         ArrayList<Event> list = new ArrayList<>(base);
 
         list.add(new FenrirFangEvent());
-        list.add(new BlizzardEvent());
+        list.add(new FogEvent());
         return list;
 
     }

@@ -114,6 +114,7 @@ public class CommandHandler {
                 PawnCharacter pawn = GameState.currentGame.spawnedCharacter.get(params[0]);
                 if (pawn != null) pawn.moveToTileIndex(Integer.parseInt(params[1]));
             }
+            case "FORCE_CONTINUE" -> CommandHandler.sentIntent("INTENT:SELF:CONTINUE");
 
             case "CHANGESCENETO" -> SceneUtilities.changeSceneTo(params[0]);
             case "UIEVENT"       -> UIEvent.HandleUIEvent(params);

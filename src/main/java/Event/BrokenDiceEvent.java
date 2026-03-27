@@ -20,7 +20,9 @@ public class BrokenDiceEvent extends Event {
     public void onEventLeave(GameState game) {}
 
     @Override
-    public void onEventTriggered(GameState game) {}
+    public void onEventTriggered(GameState game) {
+        broadcastContinueForAll(game);
+    }
 
     @Override
     public int modifyRollValue(int rollValue) {
