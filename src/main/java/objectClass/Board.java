@@ -1,7 +1,7 @@
 package objectClass;
 
 import Gameplay.Cell;
-import OtherUtilities.RandomPortalPosition;
+import OtherUtilities.RandomPosition;
 import ServiceInterface.CellAttribute;
 
 public class Board {
@@ -25,7 +25,7 @@ public class Board {
     public static int[] itemTileMysteriousJungle = {49,50,51,52,53,54,55,56,57,58,59,60}; //mock data
     public static int[] eventTileMysteriousJungle = {}; //mock data
 
-    public static int[][] destinationCyroGard = RandomPortalPosition.resultRandomPortalPosition();
+    public static int[][] destinationCyroGard = {};
     public static int[] itemTileCyroGard = {};
     public static int[] eventTileCyroGard = {};
 

@@ -3,8 +3,7 @@ package service;
 import Gameplay.GameState;
 import Gameplay.LobbyState;
 import Gameplay.SceneList;
-import OtherUtilities.RandomPortalPosition;
-import graphicsUtilities.Scene;
+import OtherUtilities.RandomPosition;
 import graphicsUtilities.*;
 
 import javax.swing.*;
@@ -27,6 +26,9 @@ public class MainGame extends JFrame {
             MainGame mainGame = new MainGame();
             mainGame.setVisible(true);
         });
+        System.out.println(RandomPosition.resultEventPositionString);
+        System.out.println(RandomPosition.resultItemPositionString);
+        System.out.println(RandomPosition.resultPortalPositionString);
     }
 
     public MainGame() {
@@ -63,10 +65,10 @@ public class MainGame extends JFrame {
         startContainerPanel();
 
         SceneUtilities.changeSceneTo(SceneList.mainMenu);
-         if (gd.isFullScreenSupported()) {
-         this.setUndecorated(true);
-         gd.setFullScreenWindow(this);
-         }
+        if (gd.isFullScreenSupported()) {
+            this.setUndecorated(true);
+            gd.setFullScreenWindow(this);
+        }
 
          AudioService.getInstance().playMusic("Forsaken.wav");
     }
