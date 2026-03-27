@@ -109,6 +109,11 @@ public class CyroGard extends Scene {
         setupPortals();
         playEnterTransition();
         spawnAllPawns();
+        
+        if (GameState.currentGame != null && !GameState.currentGame.currentPlayerTurnId.isEmpty()) {
+            updateTargetSelectBtnForTurn(GameState.currentGame.currentPlayerTurnId);
+        }
+        
         CommandHandler.sentIntent("INTENT:SELF:CONTINUE");
     }
 
@@ -149,7 +154,7 @@ public class CyroGard extends Scene {
         });
         this.add(rollBtn);
 
-        GameButton targetSelectBtn = new GameButton("", "TargetSelectBtn.png", "TargetSelectBtn.png");
+        targetSelectBtn = new GameButton("", "TargetSelectBtn.png", "TargetSelectBtn.png");
         
 
         targetSelectBtn.setBounds(1524, 715, 342, 342);
@@ -291,5 +296,30 @@ public class CyroGard extends Scene {
                 portrait.getSprite().draw(g2d);
             }
         }
+    }
+    
+    public void updateTargetSelectBtnForTurn(String playerId) {
+        if (targetSelectBtn == null) {
+            System.out.println("updateTargetSelectBtnForTurn: targetSelectBtn is null");
+            return;
+        }
+        
+        int playerIndex = -1;
+        for (int i = 0; i < playerList.size(); i++) {
+            if (playerList.get(i).getNetworkID().equals(playerId)) {
+                playerIndex = i;
+                break;
+            }
+        }
+        
+        System.out.println("updateTargetSelectBtnForTurn: playerId=" + playerId + ", playerIndex=" + playerIndex + ", playerList.size=" + playerList.size());
+        
+        if (playerIndex == -1) return;
+        
+        String imageName = "select-turn-" + (playerIndex + 1) + ".png";
+        System.out.println("Loading image: " + imageName);
+        ImageIcon turnIcon = new ImageIcon(ImagePreload.get(imageName));
+        targetSelectBtn.setIcon(turnIcon);
+        targetSelectBtn.setPressedIcon(turnIcon);
     }
 }
