@@ -9,7 +9,7 @@ public class StormEvent extends Event {
     public StormEvent() { super(1); }
 
     @Override
-    public String getEventVisualName() { return "Earthquake"; }
+    public String getEventVisualName() { return "Storm"; }
 
     @Override
     public void doVisual(GameState game) {}
@@ -19,7 +19,7 @@ public class StormEvent extends Event {
         int boardSize = game.gameBoard.getBoardSize() - 1;
 
         for (PawnCharacter pawn : game.spawnedCharacter.values()) {
-            int randomTile = (int)(Math.random() * (boardSize - 1)) + 1;
+            int randomTile = (int)(Math.random() * 66) + 10;
             CommandHandler.broadcastResult("MOVETO", pawn.getNetworkId(), String.valueOf(randomTile));
         }
 

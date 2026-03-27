@@ -21,6 +21,6 @@ public class MoveFast extends Event{
     public void onEventTriggered(GameState game){broadcastContinueForAll(game);};
 
     public int modifyRollValue(int rollValue) {
-        return rollValue + 3;
+        return rollValue + 2;
     }
 }

@@ -21,9 +21,9 @@ public class MoveSlow extends Event{
     public void onEventTriggered(GameState game){broadcastContinueForAll(game);};
 
     public int modifyRollValue(int rollValue) {
-      if (rollValue <= 3) {
-            rollValue = 3;
+      if (rollValue <= 2) {
+            rollValue = 2;
         }
-        return rollValue - 3;
+        return rollValue - 2;
     }
 }
