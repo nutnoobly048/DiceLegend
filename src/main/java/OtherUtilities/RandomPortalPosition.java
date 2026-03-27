@@ -19,9 +19,9 @@ public class RandomPortalPosition {
 
     }
 
-    public static int[][] resultRandomPortalPosition(){
-        
-        int[][] result = new int[7][2];
+    public static String resultRandomPortalPosition(){
+
+        String resultString = "";
         int head;
         int tail;
         for ( int j = 0; j < 7; j++ ){
@@ -34,11 +34,27 @@ public class RandomPortalPosition {
                 tail = RandomUtilities.randomInt(100);
             }while(head == tail || banPosition.contains(tail));
 
-            result[j][0] = head;
-            result[j][1] = tail;
-
+            resultString += (String.valueOf(head) + "," + String.valueOf(tail) + ",");
+            
         }
-        System.out.println("First Portal : " + result[0][0] + "," + result[0][1]);
+        resultString = resultString.replaceAll(",$", "");
+        System.out.println(resultString);
+        return resultString;
+
+    }
+
+    public static int[][] convertToArrayInt(String resultString){
+
+        String[] parts = resultString.split(",");
+
+        int pairCount = parts.length / 2;
+        int[][] result = new int[pairCount][2];
+
+        for (int i = 0; i < pairCount; i++) {
+            result[i][0] = Integer.parseInt(parts[i * 2]);
+            result[i][1] = Integer.parseInt(parts[i * 2 + 1]);
+        }
+
         return result;
 
     }
