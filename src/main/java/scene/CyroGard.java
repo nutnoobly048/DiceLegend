@@ -8,10 +8,7 @@ import graphicsUtilities.ImagePreload;
 import graphicsUtilities.Scene;
 import misc.PawnCharacter;
 import misc.Player;
-import objectClass.AnimatedSprite;
-import objectClass.Board;
-import objectClass.GameButton;
-import objectClass.GameObject;
+import objectClass.*;
 import service.CommandHandler;
 
 import java.awt.*;
@@ -39,6 +36,7 @@ public class CyroGard extends Scene {
     private GameObject itemFrame    = new GameObject("itemFrame", "CyroItemFrame.png", 32, 27);
     private GameObject itemDes = new GameObject("itemDes", "CyroItemDes.png", 51, 514);
     private GameObject dice = new GameObject("dice", "dice5.png", 1495, 27);
+    public static GameModal popupItem = new GameModal(1312, 756, "DestinyDices.png");
 
     GameButton targetSelectBtn;
 
@@ -147,6 +145,11 @@ public class CyroGard extends Scene {
         spawnObjectAt(itemDes);
 
         spawnObjectAt(dice);
+
+        popupItem.setVisible(false);
+        add(popupItem);
+        popupItem.setBounds(960 - popupItem.getPreferredSize().width / 2, 540 - popupItem.getPreferredSize().height/2,
+                popupItem.getPreferredSize().width, popupItem.getPreferredSize().height);
 
         spawnObjectAt(transition_left);
         spawnObjectAt(transition_right);
@@ -331,5 +334,9 @@ public class CyroGard extends Scene {
         ImageIcon turnIcon = new ImageIcon(ImagePreload.get(imageName));
         targetSelectBtn.setIcon(turnIcon);
         targetSelectBtn.setPressedIcon(turnIcon);
+    }
+
+    public GameModal getPopupItem() {
+        return popupItem;
     }
 }

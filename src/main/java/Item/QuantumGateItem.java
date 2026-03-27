@@ -39,6 +39,6 @@ public class QuantumGateItem extends Item{
 
     @Override
     public String getCardUIName() {
-        return "Quantum Dis-Gate";
+        return "QuantumGate";
     }
 }

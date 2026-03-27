@@ -20,6 +20,6 @@ public class DoubleDiceItem extends Item {
 
     @Override
     public String getCardUIName() {
-        return "Double Dice";
+        return "DestinyDices";
     }
 }

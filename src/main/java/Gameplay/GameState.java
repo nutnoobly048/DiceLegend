@@ -256,7 +256,10 @@ public class GameState {
 
             }
             case ITEM_TILE -> {
+
                 Item selectedItem = RandomItems.resultRandomItem(selectedMapId); //แทนที่ด้วย randomItem() ในภายหลัง
+
+                CommandHandler.broadcastResult("UIEVENT", "ITEMPOPUP", selectedItem.getCardUIName());
 
                 System.out.println(selectedItem.getCardUIName());
                 if (selectedItem.isRequireTarget()) {
