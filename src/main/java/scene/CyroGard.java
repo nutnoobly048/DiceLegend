@@ -56,6 +56,8 @@ public class CyroGard extends Scene {
         
         // spawn player portrait
         int count = 1;
+
+
         for (Player player: GameState.currentGame.allPlayers.values()) {
             playerList.add(player);
             
