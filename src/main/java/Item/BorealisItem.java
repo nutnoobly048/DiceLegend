@@ -36,6 +36,6 @@ public class BorealisItem extends Item{
 
     @Override
     public String getCardUIName() {
-        return "Borealis";
+        return "BorealisItem";
     }
 }

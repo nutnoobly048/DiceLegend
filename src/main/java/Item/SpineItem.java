@@ -22,6 +22,6 @@ public class SpineItem extends Item{
 
     @Override
     public String getCardUIName() {
-        return "Spine Item";
+        return "SpineItem";
     }
 }

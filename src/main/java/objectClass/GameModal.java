@@ -40,4 +40,10 @@ public class GameModal extends JPanel {
     public int getHeight() {
         return height;
     }
+
+    public void setImageBackgound(String backgound) {
+        this.background = ImagePreload.get(backgound + ".png");
+        this.repaint();
+    }
+
 }
