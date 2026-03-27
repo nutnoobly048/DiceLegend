@@ -49,9 +49,6 @@ public class CyroGard extends Scene {
     @Override
     public void onCreate() {
         setupBoardAndUI();
-
-        setupPortals();
-
         this.setFocusable(true);
         this.addKeyListener(new KeyAdapter() {
             @Override
@@ -65,6 +62,7 @@ public class CyroGard extends Scene {
 
     @Override
     public void onEnter() {
+        setupPortals();
         playEnterTransition();
         spawnAllPawns();
         CommandHandler.sentIntent("INTENT:SELF:CONTINUE");
@@ -106,21 +104,24 @@ public class CyroGard extends Scene {
     }
 
     private void setupPortals() {
-        for (int i = 0; i < Board.destinationCyroGard.length; i++) {
-            int portalInIndex = Board.destinationCyroGard[i][0];
+        int[][] destinations = GameState.currentGame.gameBoard.getDestinations();
+
+        for (int i = 0; i < destinations.length; i++) {
+            int portalInIndex = destinations[i][0];
             int[] posIn = GameState.currentGame.gameBoard.getPositionFromIndex(portalInIndex);
 
             AnimatedSprite inSprite = new AnimatedSprite("PortalIn.png", posIn[0], posIn[1], 6, 2);
             inSprite.offsetX = -40; inSprite.offsetY = -50;
             spawnObjectAt(new GameObject("pIn" + i, inSprite, posIn[0], posIn[1]));
 
-            int portalOutIndex = Board.destinationCyroGard[i][1];
+            int portalOutIndex = destinations[i][1];
             int[] posOut = GameState.currentGame.gameBoard.getPositionFromIndex(portalOutIndex);
 
             AnimatedSprite outSprite = new AnimatedSprite("PortalOut.png", posOut[0], posOut[1], 6, 2);
             outSprite.offsetX = -40; outSprite.offsetY = -50;
             spawnObjectAt(new GameObject("pOut" + i, outSprite, posOut[0], posOut[1]));
         }
+
     }
 
     private void spawnAllPawns() {

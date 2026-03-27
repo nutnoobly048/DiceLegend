@@ -2,10 +2,11 @@ package service;
 
 import Gameplay.GameState;
 import Gameplay.LobbyState;
-import Gameplay.SceneList;
+import OtherUtilities.RandomPosition;
 import graphicsUtilities.SceneUtilities;
 import misc.PawnCharacter;
 import misc.Player;
+import objectClass.Board;
 
 import static service.RunService.mqtt;
 /*
@@ -99,6 +100,7 @@ public class CommandHandler {
             case "GAME_STARTED" -> {
                 LobbyState.current.createMatch();
                 GameState.currentGame.handleEvent(GameState.TriggerEvent.GAME_START, null);
+
             }
 
             //Game
@@ -121,6 +123,18 @@ public class CommandHandler {
             }
             case "CHANGEMUSIC" -> AudioService.getInstance().playMusic(params[0]);
             case "PLAYSFX" -> AudioService.getInstance().playSFX(params[0]).play();
+
+            case "BOARD_CONFIG" -> {
+                if (GameState.currentGame == null) return;
+                if (GameState.currentGame.isHost) return;
+
+                int[][] portals    = RandomPosition.convertToArray2DInt(params[0]);
+                int[]   itemTiles  = RandomPosition.convertToArray1DInt(params[1]);
+                int[]   eventTiles = RandomPosition.convertToArray1DInt(params[2]);
+
+                GameState.currentGame.gameBoard = new Board(
+                        Board.defaultPosition, portals, itemTiles, eventTiles);
+            }
         }
     }
 

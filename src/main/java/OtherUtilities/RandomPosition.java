@@ -16,11 +16,6 @@ public class RandomPosition {
     static {
 
         resultAllPosition();
-
-        int[] banPositionList = Board.itemTileMysteriousJungle;
-        for (int i = 0; i < banPositionList.length; i++ ){
-            banPosition.add(banPositionList[i]);
-        }
         banPosition.add(0);
         banPosition.add(99);
 

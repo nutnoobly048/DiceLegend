@@ -1,7 +1,6 @@
 package objectClass;
 
 import Gameplay.Cell;
-import OtherUtilities.RandomPosition;
 import ServiceInterface.CellAttribute;
 
 public class Board {
@@ -21,13 +20,10 @@ public class Board {
 
     //Board number - 1 = Array Index Number
     //{3, 58} => เมื่อเหยียบ 4 จะพาไป 59
-    public static int[][] destinationMysteriousJungle = {{1,49}, {2,49}, {3, 49}, {4,49}, {5,49}, {6,49}, {7, 49}};
-    public static int[] itemTileMysteriousJungle = {49,50,51,52,53,54,55,56,57,58,59,60}; //mock data
-    public static int[] eventTileMysteriousJungle = {}; //mock data
 
-    public static int[][] destinationCyroGard = {};
-    public static int[] itemTileCyroGard = {};
-    public static int[] eventTileCyroGard = {};
+    private int[][] destinations;
+    private int[] itemsTile = {};
+    private int[] eventTile = {};
 
 
 
@@ -37,6 +33,7 @@ public class Board {
     public Board(int[][] coordinateSource, int[][] destinations, int[] itemTiles, int[] eventTiles) {
         int totalCells = coordinateSource.length;
         this.cells = new Cell[totalCells];
+        this.destinations = destinations;
 
         for (int i = 0; i < totalCells; i++) {
             int x = coordinateSource[i][0];
@@ -101,7 +98,17 @@ public class Board {
         return cells[index].destinationIndex;
     }
 
+    public int[] getItemTiles() {
+        return itemsTile;
+    }
 
+    public int[] getEventTileMysteriousJungle() {
+        return eventTile;
+    }
+
+    public int[][] getDestinations() {
+        return destinations;
+    }
 
     //Mock method
     public int getNearestIndexWithAttribute(CellAttribute att, int startIndex) {

@@ -30,6 +30,7 @@ import javax.swing.plaf.basic.BasicSliderUI;
 
 public class RealMainMenuScene extends Scene {
 
+    private boolean isInitialized = false;
     private final GameObject transition_left = new GameObject("transit_left", "TransitionArrow.png", -2400,0);
     private final GameButton createButton = new GameButton("", "mainMenu-create.png", "mainMenu-create-hover.png");
     private final GameButton joinButton = new GameButton("", "mainMenu-join.png", "mainMenu-join-hover.png");
@@ -48,12 +49,17 @@ public class RealMainMenuScene extends Scene {
 
     @Override
     public void onCreate() {
-        this.sceneLoadoffTimesInMilisecond = 1000;
-        spawnObjectAt(transition_left);
-        spawnObjectAt(gameLogo, 0, 0);
-        setupButtons();
-        setupVolumeSlider();
-        this.add(popUp);
+        if (!isInitialized) {
+            spawnObjectAt(gameLogo, 0, 0);
+            spawnObjectAt(transition_left);
+            setupButtons();
+            setupVolumeSlider();
+            this.add(popUp);
+
+            isInitialized = true;
+        }
+        transition_left.x = -2400;
+        this.requestFocusInWindow();
     }
 
     @Override
@@ -85,6 +91,7 @@ public class RealMainMenuScene extends Scene {
         this.add(joinButton);
         this.add(creditButton);
         this.add(exitButton);
+        setupVolumeSlider();
     }
 
     private void setupVolumeSlider() {

@@ -4,6 +4,7 @@ package Gameplay;
 import Item.Item;
 import OtherUtilities.RandomEvents;
 import OtherUtilities.RandomItems;
+import OtherUtilities.RandomPosition;
 import misc.Player;
 import misc.PawnCharacter;
 import objectClass.Board;
@@ -105,25 +106,28 @@ public class GameState {
             case PLAYER_JOINED -> onPlayerJoined(params);
             case PLAYER_LEFT -> onPlayerLeft(params);
             case GAME_START -> {
-                CommandHandler.sentIntent("INTENT:SELF:CHANGESCENETO:" + selectedMapId);
-                switch (selectedMapId) {
-                    case "mysteriousJungle" -> gameBoard = new Board(
-                            Board.defaultPosition,
-                            Board.destinationMysteriousJungle,
-                            Board.itemTileMysteriousJungle,
-                            Board.eventTileMysteriousJungle);
+                if (isHost) {
+                    String portals    = RandomPosition.resultPortalPositionString;
+                    String   itemTiles  = RandomPosition.resultItemPositionString;
+                    String   eventTiles = RandomPosition.resultEventPositionString;
 
-                    case "cryoGard" -> gameBoard = new Board(
-                            Board.defaultPosition,
-                            Board.destinationCyroGard,
-                            Board.itemTileCyroGard,
-                            Board.eventTileCyroGard);
-                    case "goldenSeason" -> {}
+                    int[][] portalDecoded  = RandomPosition.convertToArray2DInt(portals);
+                    int[] itemDecoded = RandomPosition.convertToArray1DInt(itemTiles);
+                    int[] eventDecoded = RandomPosition.convertToArray1DInt(eventTiles);
+
+                    gameBoard = new Board(
+                            Board.defaultPosition, portalDecoded, itemDecoded, eventDecoded);
+                    if (gameBoard != null) System.out.println(gameBoard);
+
+                    CommandHandler.broadcastResult("BOARD_CONFIG", portals, itemTiles, eventTiles);
                 }
+                CommandHandler.sentIntent("INTENT:SELF:CHANGESCENETO:" + selectedMapId);
+
                 setAllPlayersUnreadyToContinue();
                 onAllClientsReady = () -> changeStateTo(GamePhase.TURN_START);
                 changeStateTo(GamePhase.WAIT_FOR_ALL_CLIENTS);
             }
+
             case PLAYER_SPRITE_CHANGE -> {
                 allPlayers.get(params[0]).changeSpriteName(params[1]);
             }
