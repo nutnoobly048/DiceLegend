@@ -27,7 +27,7 @@ public class RandomPosition {
         int head;
         int tail;
 
-        for ( int j = 0; j < 7; j++ ){
+        for ( int j = 0; j < 10; j++ ){
 
             do{
                 head = RandomUtilities.randomInt(100);
