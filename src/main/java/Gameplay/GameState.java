@@ -5,6 +5,7 @@ import Item.Item;
 import OtherUtilities.RandomEvents;
 import OtherUtilities.RandomItems;
 import OtherUtilities.RandomPosition;
+import graphicsUtilities.SceneUtilities;
 import misc.Player;
 import misc.PawnCharacter;
 import objectClass.Board;
@@ -175,7 +176,6 @@ public class GameState {
 
         lastRollResult = roll;
         int rollValue = currentEvent != null ? currentEvent.modifyRollValue(lastRollResult) : lastRollResult;
-
 
         PawnCharacter pawn = spawnedCharacter.get(playerId);
         int currentIndex = pawn.getCurrentTileIndex();

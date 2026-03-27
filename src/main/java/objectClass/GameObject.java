@@ -1,11 +1,13 @@
 package objectClass;
 
 import ServiceInterface.ProcessByRunService;
+import graphicsUtilities.ImagePreload;
 import graphicsUtilities.Scene;
 import graphicsUtilities.SceneUtilities;
 import service.RunService;
 
 import javax.swing.*;
+import java.awt.*;
 
 //หัวใจหลักของวัตถุในเกม
 //เป็น Base Class สำหรับทุกอย่างที่อยู่ในเกม ไม่ว่าจะเป็นผู้เล่น ศัตรู
@@ -90,6 +92,15 @@ public class GameObject implements ProcessByRunService {
     }
 
     public void setSprite(AnimatedSprite newSprite) {
+        this.sprite = newSprite;
+
+        if (this.sprite != null) {
+            this.sprite.posX = this.x;
+            this.sprite.posY = this.y;
+        }
+    }
+    public void setSprite(String imgFileName) {
+        AnimatedSprite newSprite = new AnimatedSprite(imgFileName,0,0,1,1 );
         this.sprite = newSprite;
 
         if (this.sprite != null) {
