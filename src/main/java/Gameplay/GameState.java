@@ -107,6 +107,7 @@ public class GameState {
             case PLAYER_LEFT -> onPlayerLeft(params);
             case GAME_START -> {
                 if (isHost) {
+                    RandomPosition.resultAllPosition();
                     String portals    = RandomPosition.resultPortalPositionString;
                     String   itemTiles  = RandomPosition.resultItemPositionString;
                     String   eventTiles = RandomPosition.resultEventPositionString;

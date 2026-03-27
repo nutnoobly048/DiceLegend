@@ -16,12 +16,13 @@ public class RandomPosition {
     static {
         banPosition.add(0);
         banPosition.add(99);
-        resultAllPosition();
-
-
     }
 
     public static void resultAllPosition(){
+
+        resultPortalPositionString = "";
+        resultItemPositionString = "";
+        resultEventPositionString = "";
 
         // ArrayList<Integer> portalArrayList = new ArrayList<>();
         // ArrayList<Integer> itemArrayList = new ArrayList<>();
