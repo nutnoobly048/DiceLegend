@@ -53,14 +53,19 @@ public class CyroGard extends Scene {
 
     public CyroGard() {
         setBackground(ImagePreload.get("CyroMainBackground.png"));
-        
-        // spawn player portrait
-        int count = 1;
+
 
 
         for (Player player: GameState.currentGame.allPlayers.values()) {
             playerList.add(player);
-            
+        }
+
+        playerList.stream().sorted(Comparator.comparing(Player::getNetworkID)).toList();
+
+        int count = 1;
+
+        for (Player player: playerList) {
+
             switch (count) {
                 case 1 -> {
                     GameObject p = new GameObject(String.valueOf(count * 30), player.getLocalSpritePortraitName(), 1540, 730);
@@ -87,9 +92,9 @@ public class CyroGard extends Scene {
                     portraits.add(p);
                 }
             }
-
             count++;
         }
+
     }
 
     @Override
