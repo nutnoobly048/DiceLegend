@@ -238,15 +238,17 @@ public class GameState {
             }
 
             case EVENT_TILE -> {
+                setAllPlayersUnreadyToContinue();
+                onAllClientsReady = this::advanceToNextPlayer;
+                changeStateTo(GamePhase.WAIT_FOR_ALL_CLIENTS);
+
                 Event selectedEvent = RandomEvents.resultRandomEvent(selectedMapId); //แทนที่ด้วย randomEvent() ในภายหลัง
                 System.out.println(selectedEvent.getEventVisualName());
                 Event.useEvent(selectedEvent, GameState.currentGame);
 
                 currentEvent = selectedEvent;
 
-                setAllPlayersUnreadyToContinue();
-                onAllClientsReady = this::advanceToNextPlayer;
-                changeStateTo(GamePhase.WAIT_FOR_ALL_CLIENTS);
+
             }
             case ITEM_TILE -> {
                 Item selectedItem = RandomItems.resultRandomItem(selectedMapId); //แทนที่ด้วย randomItem() ในภายหลัง
@@ -259,11 +261,13 @@ public class GameState {
                 } else {
                     Player user = allPlayers.get(currentPlayerTurnId);
 
-                    Item.useItem(selectedItem, user, user, this);
-
                     setAllPlayersUnreadyToContinue();
                     onAllClientsReady = this::advanceToNextPlayer;
                     changeStateTo(GamePhase.WAIT_FOR_ALL_CLIENTS);
+
+                    Item.useItem(selectedItem, user, user, this);
+
+
                 }
             }
             case WATER_TILE -> {}
