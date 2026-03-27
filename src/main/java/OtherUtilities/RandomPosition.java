@@ -6,7 +6,7 @@ import java.util.HashSet;
 import objectClass.Board;
 
 public class RandomPosition {
-    
+
     public static HashSet<Integer> banPosition = new HashSet<>();
 
     public static String resultPortalPositionString = "";
@@ -24,9 +24,6 @@ public class RandomPosition {
         resultItemPositionString = "";
         resultEventPositionString = "";
 
-        // ArrayList<Integer> portalArrayList = new ArrayList<>();
-        // ArrayList<Integer> itemArrayList = new ArrayList<>();
-
         int head;
         int tail;
 
@@ -36,14 +33,19 @@ public class RandomPosition {
                 head = RandomUtilities.randomInt(100);
             }while(banPosition.contains(head));
 
-            do{
-                tail = RandomUtilities.randomPlusMinus(head, 20);
-            }while(head == tail || banPosition.contains(tail));
+            // old: tail could be anywhere ±20, no direction guarantee
+            // do{
+            //     tail = RandomUtilities.randomPlusMinus(head, 20);
+            // }while(head == tail || banPosition.contains(tail));
+            boolean isLadder = RandomUtilities.R.nextBoolean();
+            do {
+                tail = isLadder ? randomLadderTail(head) : randomSnakeTail(head);
+            } while (head == tail || banPosition.contains(tail));
 
             banPosition.add(head); banPosition.add(tail);
 
             resultPortalPositionString += (String.valueOf(head) + "," + String.valueOf(tail) + ",");
-            
+
         }
         resultPortalPositionString = resultPortalPositionString.replaceAll(",$", "");
 
@@ -52,13 +54,15 @@ public class RandomPosition {
         for ( int j = 0; j < 10; j++ ){
 
             do{
-                positionItems = RandomUtilities.randomInt(100);
+                // old: full board 0-99, items could land in early or late game
+                // positionItems = RandomUtilities.randomInt(100);
+                positionItems = RandomUtilities.randomInt(70) + 10;
             }while(banPosition.contains(positionItems));
 
             banPosition.add(positionItems);
 
             resultItemPositionString += (String.valueOf(positionItems) + ",");
-            
+
         }
 
         resultItemPositionString = resultItemPositionString.replaceAll(",$", "");
@@ -68,7 +72,9 @@ public class RandomPosition {
         for ( int j = 0; j < 10; j++ ){
 
             do{
-                positionEvents = RandomUtilities.randomInt(100);
+                // old: full board 0-99, events could land in early or late game
+                // positionEvents = RandomUtilities.randomInt(100);
+                positionEvents = RandomUtilities.randomInt(70) + 10;
             }while(banPosition.contains(positionEvents));
 
             resultEventPositionString += (String.valueOf(positionEvents) + ",");
@@ -76,6 +82,16 @@ public class RandomPosition {
         }
         resultEventPositionString = resultEventPositionString.replaceAll(",$", "");
 
+    }
+
+    private static int randomLadderTail(int head) {
+        int jump = RandomUtilities.R.nextInt(21) + 10;
+        return Math.min(98, head + jump);
+    }
+
+    private static int randomSnakeTail(int head) {
+        int drop = RandomUtilities.R.nextInt(26) + 10;
+        return Math.max(1, head - drop);
     }
 
     public static int[][] convertToArray2DInt(String resultString){

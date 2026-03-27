@@ -38,8 +38,10 @@ public class CyroGard extends Scene {
     private GameObject diceBackground = new GameObject("diceBackground", "CyroDiceFrame.png", 1495, 27);
     private GameObject itemFrame    = new GameObject("itemFrame", "CyroItemFrame.png", 32, 27);
     private GameObject itemDes = new GameObject("itemDes", "CyroItemDes.png", 51, 514);
-    private GameObject dice = new GameObject("dice", "dice5.png", 1495, 27);
+    private GameObject dice = new GameObject("dice", "dice5.png", 1550, 40);
     public static GameModal popupItem = new GameModal(1312, 756, "DestinyDices.png");
+
+    public static GameObject popupSequence = new GameObject("popupSequence", "blank.png", 1920 / 2, 1080 / 2);
 
     GameButton targetSelectBtn;
 
@@ -59,7 +61,7 @@ public class CyroGard extends Scene {
         playerList.clear();
         playerList.addAll(GameState.currentGame.allPlayers.values());
 
-        playerList.sort(Comparator.comparing(Player::getNetworkID));
+//        playerList.sort(Comparator.comparing(Player::getNetworkID));
 
         int count = 1;
 
@@ -150,10 +152,13 @@ public class CyroGard extends Scene {
 
         spawnObjectAt(dice);
 
-        popupItem.setVisible(false);
-        add(popupItem);
-        popupItem.setBounds(960 - popupItem.getPreferredSize().width / 2, 540 - popupItem.getPreferredSize().height/2,
-                popupItem.getPreferredSize().width, popupItem.getPreferredSize().height);
+//        popupItem.setVisible(false);
+//        add(popupItem);
+//        popupItem.setBounds(960 - popupItem.getPreferredSize().width / 2, 540 - popupItem.getPreferredSize().height/2,
+//                popupItem.getPreferredSize().width, popupItem.getPreferredSize().height);
+        popupSequence.setVisible(false);
+        popupSequence.z = 100;
+        spawnObjectAt(popupSequence);
 
         spawnObjectAt(transition_left);
         spawnObjectAt(transition_right);
@@ -325,6 +330,7 @@ public class CyroGard extends Scene {
                 portrait.getSprite().draw(g2d);
             }
         }
+        popupSequence.getSprite().draw(g2d);
 
         transition_left.getSprite().draw(g2d);
         transition_right.getSprite().draw(g2d);

@@ -6,7 +6,7 @@ public class BrokenDiceEvent extends Event {
     public BrokenDiceEvent() { super(3); }
 
     @Override
-    public String getEventVisualName() { return "Cursed Dice"; }
+    public String getEventVisualName() { return "BrokenDiceEvent"; }
 
     @Override
     public void doVisual(GameState game) {}

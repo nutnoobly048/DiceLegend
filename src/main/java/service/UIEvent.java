@@ -1,6 +1,7 @@
 package service;
 
 import Gameplay.GameState;
+import graphicsUtilities.ImagePreload;
 import graphicsUtilities.SceneUtilities;
 import objectClass.AnimatedSprite;
 import objectClass.GameModal;
@@ -24,16 +25,45 @@ public class UIEvent {
                 }
             }
             case "ITEMPOPUP" -> {
-                CyroGard.popupItem.setImageBackgound(args[1]);
-                CyroGard.popupItem.setVisible(true);
-                Timer delayTimer = new Timer(4000, e -> {
+                CyroGard.popupSequence.setSprite(args[1] + ".png");
+                CyroGard.popupSequence.getSprite().offsetX = -ImagePreload.get(args[1] + ".png").getWidth(null) / 2;
+                CyroGard.popupSequence.getSprite().offsetY = -ImagePreload.get(args[1] + ".png").getHeight(null) / 2;
+                CyroGard.popupSequence.setVisible(true);
+
+                Timer delayTimer = new Timer(6000, e -> {
                     if (GameState.currentGame != null) {
-                        CyroGard.popupItem.setVisible(false);
+                        CyroGard.popupSequence.setSprite("blank.png");
                     }
                 });
                 delayTimer.setRepeats(false);
                 delayTimer.start();
 
+//                CyroGard.popupItem.setImageBackgound(args[1]);
+//
+//                CyroGard.popupItem.setVisible(true);
+//                Timer delayTimer = new Timer(4000, e -> {
+//                    if (GameState.currentGame != null) {
+//                        CyroGard.popupItem.setVisible(false);
+//                    }
+//                });
+//                delayTimer.setRepeats(false);
+//                delayTimer.start();
+
+            }
+
+            case "EVENTPOPUP" -> {
+                CyroGard.popupSequence.setSprite(args[1] + ".png");
+                CyroGard.popupSequence.getSprite().offsetX = -ImagePreload.get(args[1] + ".png").getWidth(null) / 2;
+                CyroGard.popupSequence.getSprite().offsetY = -ImagePreload.get(args[1]+ ".png").getHeight(null) / 2;
+                CyroGard.popupSequence.setVisible(true);
+
+                Timer delayTimer = new Timer(6000, e -> {
+                    if (GameState.currentGame != null) {
+                        CyroGard.popupSequence.setSprite("blank.png");
+                    }
+                });
+                delayTimer.setRepeats(false);
+                delayTimer.start();
             }
             case "ROLLRESULT" -> {
                 if (SceneUtilities.getCurrentGameScene().currentSceneObject.containsKey("dice")) {
