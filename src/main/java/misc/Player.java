@@ -5,7 +5,7 @@ public class Player {
     private String networkID;
     private String name;
     private String localSpriteName = "BlackCharacter.png"; //A sprite they choose on their machine
-    private String localSpritePortraitName = "YellowFace.png";
+    private String localSpritePortraitName = "BlackFace.png";
 
     private boolean isReadyToPlay;
     private boolean isReadyToContinue;
