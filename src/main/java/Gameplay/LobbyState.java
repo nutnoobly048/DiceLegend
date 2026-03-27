@@ -2,9 +2,8 @@ package Gameplay;
 
 import misc.Player;
 
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.lang.reflect.Array;
+import java.util.*;
 
 public class LobbyState {
 
@@ -21,6 +20,8 @@ public class LobbyState {
     public enum TriggerEvent {
         PLAYER_JOINED, PLAYER_LEFT, PLAYER_SPRITE_CHANGE
     }
+
+    private ArrayList<String> spriteOrder = new ArrayList<String>(Arrays.asList("YELLOW", "BLACK", "BLUE", "GREEN"));
 
     public static final HashMap<String, String[]> spriteEntries = new HashMap<>(Map.ofEntries(
             Map.entry("YELLOW", new String[]{"YellowCharacter.png", "YellowFace.png"}),
@@ -61,13 +62,24 @@ public class LobbyState {
         }
     }
 
+    int count = 0;
+
     private void onPlayerJoined(String[] params) {
         if (params == null || params.length < 2) return;
 
         String id   = params[0];
         String name = params[1];
 
-        allPlayers.putIfAbsent(id, new Player(id, name));
+        if (allPlayers.containsKey(id)) {
+            return;
+        }
+        String spriteKey = spriteOrder.get(allPlayers.size());
+        String[] sprite = spriteEntries.get(spriteKey);
+
+        Player player = new Player(id, name);
+        player.changeSpriteName(sprite[0]);
+        player.changeLocalSpritePortraitName(sprite[1]);
+        allPlayers.putIfAbsent(id, player);
         System.out.println("PLAYER JOINED: " + name + " [" + id + "]");
         for (Player p : allPlayers.values()) {
             System.out.println(p.getName());
