@@ -37,7 +37,7 @@ public class RandomPosition {
             }while(banPosition.contains(head));
 
             do{
-                tail = RandomUtilities.randomInt(100);
+                tail = RandomUtilities.randomPlusMinus(head, 20);
             }while(head == tail || banPosition.contains(tail));
 
             banPosition.add(head); banPosition.add(tail);
