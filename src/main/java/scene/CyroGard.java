@@ -53,6 +53,7 @@ public class CyroGard extends Scene {
     public CyroGard() {
         setBackground(ImagePreload.get("CyroMainBackground.png"));
 
+        playerList.clear();
         playerList.addAll(GameState.currentGame.allPlayers.values());
 
         playerList.sort(Comparator.comparing(Player::getNetworkID));
