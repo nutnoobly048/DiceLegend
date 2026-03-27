@@ -177,12 +177,11 @@ public class GameState {
         allPlayers.get(playerId).setOpenForNetworkInput(false);
 
         if (SceneUtilities.getCurrentGameScene().currentSceneObject.containsKey("dice")) {
-            if ()
-            SceneUtilities.getCurrentGameScene().currentSceneObject.get("dice").setSprite(CyroGard.dice1);
+            SceneUtilities.getCurrentGameScene().currentSceneObject.get("dice").setSprite("dice" + roll + ".png");
         }
+
         lastRollResult = roll;
         int rollValue = currentEvent != null ? currentEvent.modifyRollValue(lastRollResult) : lastRollResult;
-
 
         PawnCharacter pawn = spawnedCharacter.get(playerId);
         int currentIndex = pawn.getCurrentTileIndex();
