@@ -17,6 +17,8 @@ import service.CommandHandler;
 import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionAdapter;
 import java.util.Comparator;
 import java.util.List;
 
@@ -34,6 +36,7 @@ public class CyroGard extends Scene {
     private GameObject boardTexture = new GameObject("board", "CyroGardBoard.png", SCREEN_W / 2, SCREEN_H / 2);
     private GameObject diceBackground = new GameObject("diceBackground", "CyroDiceFrame.png", 1495, 27);
     private GameObject itemFrame    = new GameObject("itemFrame", "CyroItemFrame.png", 32, 27);
+    private GameObject itemDes = new GameObject("itemDes", "CyroItemDes.png", 51, 514);
 
     private static final int PAWN_SPRITE_W  = 64;
     private static final int PAWN_SPRITE_H  = 96;
@@ -90,17 +93,44 @@ public class CyroGard extends Scene {
         itemFrame.z = -2;
         spawnObjectAt(itemFrame);
 
+        itemDes.z = -2;
+        spawnObjectAt(itemDes);
+
         spawnObjectAt(transition_left);
         spawnObjectAt(transition_right);
         spawnObjectAt(transition_up);
         spawnObjectAt(transition_down);
 
         GameButton rollBtn = new GameButton("", "CyroRoll.png", "CyroRollHover.png");
-        rollBtn.setBounds(70, 70, 289, 108);
+        rollBtn.setBounds(1555, 443, 289, 108);
         rollBtn.setOnButtonClicked(() -> {
             CommandHandler.sentIntent("INTENT:SELF:ROLLEVENT");
         });
         this.add(rollBtn);
+
+        GameButton targetSelectBtn = new GameButton("", "TargetSelectBtn.png", "TargetSelectBtn.png");
+        targetSelectBtn.setBounds(1524, 715, 342, 342);
+        targetSelectBtn.addMouseMotionListener(new MouseMotionAdapter() {
+            int btnW = targetSelectBtn.getWidth();
+            int btnH = targetSelectBtn.getHeight();
+            @Override
+            public void mouseMoved(MouseEvent e) {
+                int x = e.getX();
+                int y = e.getY();
+                if (x < btnW / 2 && y > btnH / 2) { // top left
+
+                } else if (x > btnW / 2 && y > btnH / 2) {  // top right
+                    
+                } else if (x < btnW / 2 && y < btnH / 2) { // bottom left
+
+                } else if (x > btnW / 2 && y < btnH / 2){ // bottom right
+
+                } else {  // set to default
+
+                }
+            }
+        });
+        this.add(targetSelectBtn);
     }
 
     private void setupPortals() {
