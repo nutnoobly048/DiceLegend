@@ -20,10 +20,14 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 public class LobbyScene extends Scene {
 
+    private final ChangeNamePopUp changeNamePopUp = new ChangeNamePopUp();
+
     private GameObject transition_left  = new GameObject("transit_left",  "Transition.png", 0, 0);
     private GameObject transition_right = new GameObject("transit_right", "Transition.png", 0, 0);
     private GameObject transition_up    = new GameObject("transit_up",    "Transition.png", 0, 0);
     private GameObject transition_down  = new GameObject("transit_down",  "Transition.png", 0, 0);
+
+    private GameButton roomNumber = new GameButton("", "button.png", "button.png");
 
     private GameButton backButton = new GameButton("", "Back.png", "back_onhover.png");
     private GameButton startButton = new GameButton("", "Start.png", "start_onhover2.png");
@@ -35,6 +39,7 @@ public class LobbyScene extends Scene {
     private GameButton riveraCard = new GameButton("", "rivera.png", "rivera.png");
     private GameButton sylviaCard = new GameButton("", "Sylvia.png", "Sylvia.png");
 
+    private boolean isPositionSet = false;
     private double duration = 0.5;
 
     public LobbyScene() {
@@ -46,7 +51,8 @@ public class LobbyScene extends Scene {
         spawnObjectAt(transition_right);
         spawnObjectAt(transition_up);
         spawnObjectAt(transition_down);
-
+        
+        roomNumber.setBounds(700,85,500,80);
         backButton.setBounds(0, 34, 431, 221);
         startButton.setBounds(775, 920, 376, 138);
         mapButton.setBounds(560, 914, 159, 145);
@@ -56,6 +62,8 @@ public class LobbyScene extends Scene {
         vanceCard.setBounds(604, 345, 295, 395);
         riveraCard.setBounds(1026, 345, 295, 395);
         sylviaCard.setBounds(1440, 345, 295, 395);
+
+        this.add(changeNamePopUp);
 
         this.add(kennethCard);
         this.add(vanceCard);
@@ -68,11 +76,23 @@ public class LobbyScene extends Scene {
         sylviaCard.setVisible(false);
 
         String topicRoomAmount = "DiceLegend/" + LobbyState.current.lobbyName + "/room_amount";
-
+        roomNumber.setText(LobbyState.current.lobbyName);
         RunService.mqtt.subscribe(topicRoomAmount, (t, msg) -> {
             try {
                 int amount = Integer.parseInt(msg);
-
+                if (!isPositionSet) {
+                    isPositionSet = true;
+                    if ( amount == 2 ){
+                        changeNameButton.setBounds(623, 760, 249, 69);
+                        changeCharactorButton.setBounds(623, 836, 256, 70);
+                    } else if ( amount == 3 ){
+                        changeNameButton.setBounds(1046, 760, 249, 69);
+                        changeCharactorButton.setBounds(1046, 836, 256, 70);
+                    } else if ( amount == 4 ){
+                        changeNameButton.setBounds(1459, 760, 249, 69);
+                        changeCharactorButton.setBounds(1459, 836, 256, 70);
+                    }
+                }
                 SwingUtilities.invokeLater(() -> {
                     updatePlayerCards(amount);
                 });
@@ -83,6 +103,8 @@ public class LobbyScene extends Scene {
         });
 
         setupButtonLogic();
+
+        this.add(roomNumber);
 
         this.add(backButton);
         this.add(startButton);
@@ -132,6 +154,11 @@ public class LobbyScene extends Scene {
             RunService.mqtt.publishRetained(baseTopic + "/room_state", "GAME_STARTED");
             CommandHandler.sentIntent("INTENT:SELF:START_GAME");
         });
+
+        changeNameButton.setOnButtonClicked(() -> {
+            changeNamePopUp.setVisible(true);
+        });
+
     }
 
     private void handleClientExit() {
@@ -170,4 +197,57 @@ public class LobbyScene extends Scene {
         transition_up.getSprite().draw(g2d);
         transition_down.getSprite().draw(g2d);
     }
+}
+
+class ChangeNamePopUp extends JPanel {
+    private Image background = ImagePreload.get("mainMenu-join-popup.png");
+    private final GameButton changeButton = new GameButton("", "mainMenu-popup-join.png", "mainMenu-popup-join-hover.png");
+    private final GameButton closeButton = new GameButton("", "mainMenu-popup-close.png", "mainMenu-popup-close.png");
+    private final JTextField textField = new JTextField();
+
+    public ChangeNamePopUp() {
+        this.setBounds(960-background.getWidth(null)/2, 540-background.getHeight(null)/2, background.getWidth(null), background.getHeight(null));
+        this.setBackground(null);
+        this.setLayout(null);
+        this.setVisible(false);
+
+        this.add(changeButton);
+        changeButton.setBounds(50, 300, 401, 71);
+        changeButton.setOnButtonClicked(() -> {
+            Player.setLocalPlayerName(textField.getText());
+            this.setVisible(false);
+            System.out.println(Player.getLocalPlayerName() + " : Player name displayed");
+        });
+
+        this.add(textField);
+        textField.setBackground(null);
+        textField.setForeground(Color.white);
+        textField.setFont(new Font("Arial", Font.PLAIN, 50));
+        textField.setHorizontalAlignment(JTextField.CENTER);
+        textField.setBounds(50, 160, 401, 100);
+        textField.setBorder(null);
+
+        this.add(closeButton);
+        closeButton.setBounds(background.getWidth(null) - 67, 0, 67, 67);
+        closeButton.setOnButtonClicked(() -> {
+            this.setVisible(false);
+        });
+    }
+
+
+
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        Graphics2D g2d = (Graphics2D) g;
+
+        if (background != null) {
+            g2d.drawImage(background, 0, 0, getWidth(), getHeight(), null);
+        }
+    }
+
+
+
+
+
 }
