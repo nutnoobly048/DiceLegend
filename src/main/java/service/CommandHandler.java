@@ -116,7 +116,7 @@ public class CommandHandler {
             case "CONTINUE"    -> { if (GameState.currentGame != null) GameState.currentGame.handleEvent(GameState.TriggerEvent.PLAYER_READY, params); }
             case "DICE_ROLLED" -> {
                 broadcastResult("UIEVENT", "ANIMATEDROLL");
-                Timer delayTimer = new Timer(1500, e -> {
+                Timer delayTimer = new Timer(1200, e -> {
                     if (GameState.currentGame != null) {
                         GameState.currentGame.handleEvent(GameState.TriggerEvent.DICE_ROLL_EVENT, params);
                     }

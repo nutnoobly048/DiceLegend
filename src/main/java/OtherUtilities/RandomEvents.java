@@ -26,6 +26,7 @@ public class RandomEvents {
         list.add(new MoveSlow());
         list.add(new StormEvent());
         list.add(new BrokenDiceEvent());
+        list.add(new FogEvent());
         return list;
 
     }

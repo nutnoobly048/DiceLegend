@@ -95,8 +95,6 @@ public class GameState {
             case WAIT_FOR_ROLL -> handleWaitForRoll(event, params);
             case CHECK_TILE -> handleCheckTile(event, params);
             case WAIT_FOR_TARGET -> handleWaitForTarget(event, params); // รอเป้าหมายจาก currentPlayerTurnID
-            case TURN_END -> {}
-            case GAME_END -> {}
             default -> System.out.println("Unhandled phase: " + currentPhase);
         }
     }

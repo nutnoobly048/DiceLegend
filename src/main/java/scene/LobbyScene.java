@@ -118,6 +118,8 @@ public class LobbyScene extends Scene {
 
         if (!LobbyState.current.isHost) {
             startButton.setVisible(false);
+        } else {
+            startButton.setVisible(true);
         }
 
     }
@@ -174,7 +176,6 @@ public class LobbyScene extends Scene {
         vanceCard.setVisible(amount >= 2);
         riveraCard.setVisible(amount >= 3);
         sylviaCard.setVisible(amount >= 4);
-
         this.repaint();
     }
 

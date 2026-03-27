@@ -16,11 +16,31 @@ public class StormEvent extends Event {
 
     @Override
     public void onEventEntered(GameState game) {
-        int boardSize = game.gameBoard.getBoardSize() - 1;
-
         for (PawnCharacter pawn : game.spawnedCharacter.values()) {
-            int randomTile = (int)(Math.random() * 66) + 10;
-            CommandHandler.broadcastResult("MOVETO", pawn.getNetworkId(), String.valueOf(randomTile));
+            int currentPos = pawn.getCurrentTileIndex();
+            int min;
+            int max;
+
+            if (currentPos < 10) {
+                min = 0;
+                max = 20;
+            } else if (currentPos < 30) {
+                min = 10;
+                max = 50;
+            } else if (currentPos < 50) {
+                min = 30;
+                max = 70;
+            } else if (currentPos <= 70) {
+                min = 40;
+                max = 70;
+            } else {
+                min = 70;
+                max = 95;
+            }
+
+            int newTile = (int) (Math.random() * ((max - min) + 1)) + min;
+
+            CommandHandler.broadcastResult("MOVETO", pawn.getNetworkId(), String.valueOf(newTile));
         }
 
         broadcastContinueForAll(game);

@@ -37,17 +37,7 @@ public class UIEvent {
                 });
                 delayTimer.setRepeats(false);
                 delayTimer.start();
-
-//                CyroGard.popupItem.setImageBackgound(args[1]);
-//
-//                CyroGard.popupItem.setVisible(true);
-//                Timer delayTimer = new Timer(4000, e -> {
-//                    if (GameState.currentGame != null) {
-//                        CyroGard.popupItem.setVisible(false);
-//                    }
-//                });
-//                delayTimer.setRepeats(false);
-//                delayTimer.start();
+                //avoid green underbar in on EVENTPOPUP
 
             }
 
