@@ -17,8 +17,10 @@ import service.RunService;
 import javax.swing.*;
 import java.awt.*;
 import java.util.TimerTask;
+import java.util.ArrayList;
 import java.util.Timer;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.ArrayList;
 
 public class LobbyScene extends Scene {
 
@@ -34,12 +36,14 @@ public class LobbyScene extends Scene {
     private GameButton backButton = new GameButton("", "Back.png", "back_onhover.png");
     private GameButton startButton = new GameButton("", "Start.png", "start_onhover2.png");
     private GameButton mapButton = new GameButton("", "Map.png", "map_onhover.png");
-    // private GameButton changeNameButton = new GameButton("", "change-name.png", "change-name.png");
+    private GameButton arrowThis = new GameButton("", "Arrow.png", "Arrow.png");
     // private GameButton changeCharactorButton = new GameButton("", "change-char.png", "change-char.png");
     private GameButton kennethCard = new GameButton("", "kenneth.png", "kenneth.png");
     private GameButton vanceCard = new GameButton("", "vance.png", "vance.png");
     private GameButton riveraCard = new GameButton("", "rivera.png", "rivera.png");
     private GameButton sylviaCard = new GameButton("", "Sylvia.png", "Sylvia.png");
+    
+    private int x_arrow;
 
     private double duration = 0.5;
 
@@ -48,6 +52,9 @@ public class LobbyScene extends Scene {
     }
     @Override
     public void onCreate() {
+
+        initialXofArraw();
+
         spawnObjectAt(transition_left);
         spawnObjectAt(transition_right);
         spawnObjectAt(transition_up);
@@ -61,6 +68,7 @@ public class LobbyScene extends Scene {
         vanceCard.setBounds(604, 345, 295, 395);
         riveraCard.setBounds(1026, 345, 295, 395);
         sylviaCard.setBounds(1440, 345, 295, 395);
+        arrowThis.setBounds(x_arrow, 760, 73,73);
 
         // this.add(changeNamePopUp);
 
@@ -96,6 +104,7 @@ public class LobbyScene extends Scene {
         this.add(backButton);
         this.add(startButton);
         this.add(mapButton);
+        this.add(arrowThis);
 
         if ( !LobbyState.current.isHost ){
             startButton.setVisible(false);
@@ -118,6 +127,32 @@ public class LobbyScene extends Scene {
         new Tween(transition_down,  TweenProperty.Y,  1080,  540, duration).start();
     }
     
+    private void initialXofArraw(){
+        
+        ArrayList<String> allPlayersID = new ArrayList<>();
+
+        for (Player value : LobbyState.current.allPlayers.values()) {
+            allPlayersID.add(value.getNetworkID());
+        }
+
+        int index = allPlayersID.indexOf(Player.getLocalPlayerId());
+        switch (index) {
+            case 0:
+                x_arrow = 303 + 2;
+                break;
+            case 1:
+                x_arrow = 710 + 2;
+                break;
+            case 2:
+                x_arrow = 1133 + 2;
+                break;
+            case 3:
+                x_arrow = 1546 + 2;
+                break;
+        }
+
+    }
+
     private void updatePlayerCards(int amount) {
         kennethCard.setVisible(amount >= 1);
         vanceCard.setVisible(amount >= 2);
