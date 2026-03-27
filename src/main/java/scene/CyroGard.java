@@ -22,6 +22,8 @@ import java.awt.event.MouseMotionAdapter;
 import java.util.Comparator;
 import java.util.List;
 
+import javax.swing.ImageIcon;
+
 public class CyroGard extends Scene {
     private final int SCREEN_W = 1920;
     private final int SCREEN_H = 1080;
@@ -117,16 +119,26 @@ public class CyroGard extends Scene {
             public void mouseMoved(MouseEvent e) {
                 int x = e.getX();
                 int y = e.getY();
-                if (x < btnW / 2 && y > btnH / 2) { // top left
-
-                } else if (x > btnW / 2 && y > btnH / 2) {  // top right
-                    
-                } else if (x < btnW / 2 && y < btnH / 2) { // bottom left
-
-                } else if (x > btnW / 2 && y < btnH / 2){ // bottom right
-
+                if (x < btnW / 2 && y < btnH / 2) { // top left
+                    ImageIcon hoverImg = new ImageIcon(ImagePreload.get("select-hover-1.png"));
+                    targetSelectBtn.setRolloverIcon(hoverImg);
+                    targetSelectBtn.setPressedIcon(hoverImg);
+                } else if (x > btnW / 2 && y < btnH / 2) {  // top right
+                    ImageIcon hoverImg = new ImageIcon(ImagePreload.get("select-hover-2.png"));
+                    targetSelectBtn.setRolloverIcon(hoverImg);
+                    targetSelectBtn.setPressedIcon(hoverImg);
+                } else if (x < btnW / 2 && y > btnH / 2) { // bottom left
+                    ImageIcon hoverImg = new ImageIcon(ImagePreload.get("select-hover-3.png"));
+                    targetSelectBtn.setRolloverIcon(hoverImg);
+                    targetSelectBtn.setPressedIcon(hoverImg);
+                } else if (x > btnW / 2 && y > btnH / 2){ // bottom right
+                    ImageIcon hoverImg = new ImageIcon(ImagePreload.get("select-hover-4.png"));
+                    targetSelectBtn.setRolloverIcon(hoverImg);
+                    targetSelectBtn.setPressedIcon(hoverImg);
                 } else {  // set to default
-
+                    ImageIcon defaultImg = new ImageIcon(ImagePreload.get("TargetSelectBtn.png"));
+                    targetSelectBtn.setRolloverIcon(defaultImg);
+                    targetSelectBtn.setPressedIcon(defaultImg);
                 }
             }
         });
