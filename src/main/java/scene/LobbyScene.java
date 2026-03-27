@@ -57,6 +57,31 @@ public class LobbyScene extends Scene {
         riveraCard.setBounds(1026, 345, 295, 395);
         sylviaCard.setBounds(1440, 345, 295, 395);
 
+        this.add(kennethCard);
+        this.add(vanceCard);
+        this.add(riveraCard);
+        this.add(sylviaCard);
+
+        kennethCard.setVisible(false);
+        vanceCard.setVisible(false);
+        riveraCard.setVisible(false);
+        sylviaCard.setVisible(false);
+
+        String topicRoomAmount = "DiceLegend/" + LobbyState.current.lobbyName + "/room_amount";
+
+        RunService.mqtt.subscribe(topicRoomAmount, (t, msg) -> {
+            try {
+                int amount = Integer.parseInt(msg);
+
+                SwingUtilities.invokeLater(() -> {
+                    updatePlayerCards(amount);
+                });
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
+
         setupButtonLogic();
 
         this.add(backButton);
@@ -64,10 +89,7 @@ public class LobbyScene extends Scene {
         this.add(mapButton);
         this.add(changeNameButton);
         this.add(changeCharactorButton);
-        this.add(kennethCard);
-        this.add(vanceCard);
-        this.add(riveraCard);
-        this.add(sylviaCard);
+
     }
     @Override
     public void onEnter() {
@@ -83,6 +105,15 @@ public class LobbyScene extends Scene {
         new Tween(transition_right, TweenProperty.X,  1920,  960, duration).start();
         new Tween(transition_up,    TweenProperty.Y, -1080, -540, duration).start();
         new Tween(transition_down,  TweenProperty.Y,  1080,  540, duration).start();
+    }
+    
+    private void updatePlayerCards(int amount) {
+        kennethCard.setVisible(amount >= 1);
+        vanceCard.setVisible(amount >= 2);
+        riveraCard.setVisible(amount >= 3);
+        sylviaCard.setVisible(amount >= 4);
+
+        this.repaint();
     }
 
     private void setupButtonLogic() {
