@@ -54,18 +54,14 @@ public class CyroGard extends Scene {
     public CyroGard() {
         setBackground(ImagePreload.get("CyroMainBackground.png"));
 
+        playerList.addAll(GameState.currentGame.allPlayers.values());
 
-
-        for (Player player: GameState.currentGame.allPlayers.values()) {
-            playerList.add(player);
-        }
-
-        playerList.stream().sorted(Comparator.comparing(Player::getNetworkID)).toList();
+        playerList.sort(Comparator.comparing(Player::getNetworkID));
 
         int count = 1;
 
         for (Player player: playerList) {
-
+            System.out.println(player.getNetworkID() + " " + count);
             switch (count) {
                 case 1 -> {
                     GameObject p = new GameObject(String.valueOf(count * 30), player.getLocalSpritePortraitName(), 1540, 730);
@@ -213,9 +209,9 @@ public class CyroGard extends Scene {
 
                 if (getQaureand(e, b) == 1) {
                     CommandHandler.sentIntent("INTENT:SELF:SETTARGET:"+playerList.get(0).getNetworkID());
-                } else if (getQaureand(e, b) == 2) {
-                    CommandHandler.sentIntent("INTENT:SELF:SETTARGET:"+playerList.get(1).getNetworkID());
                 } else if (getQaureand(e, b) == 3) {
+                    CommandHandler.sentIntent("INTENT:SELF:SETTARGET:"+playerList.get(1).getNetworkID());
+                } else if (getQaureand(e, b) == 2) {
                     CommandHandler.sentIntent("INTENT:SELF:SETTARGET:"+playerList.get(2).getNetworkID());
                 } else if (getQaureand(e, b) == 4) {
                     CommandHandler.sentIntent("INTENT:SELF:SETTARGET:"+playerList.get(3).getNetworkID());
