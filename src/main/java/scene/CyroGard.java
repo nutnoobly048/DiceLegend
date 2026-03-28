@@ -265,6 +265,7 @@ public final class CyroGard extends Scene {
         chatTextArea.setFont(FontLoader.getFont(30));
         chatTextArea.setLineWrap(true);
         chatTextArea.setWrapStyleWord(true);
+        chatTextArea.setFocusable(false);
 
         add(chatTextField);
         chatTextField.setBounds(70, 985, 250, 50);

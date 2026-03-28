@@ -38,7 +38,7 @@ public class CommandHandler {
             Player sender = LobbyState.current.allPlayers.get(senderID);
            if (sender == null) return;
 
-          if (!sender.isOpenForNetworkInput()) {
+          if (!sender.isOpenForNetworkInput() && !action.equals("CHAT")) {
                 System.out.println(senderID + " is locked. Blocking: " + action);
                 return;
             }
