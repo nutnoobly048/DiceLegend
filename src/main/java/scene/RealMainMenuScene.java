@@ -43,6 +43,11 @@ public class RealMainMenuScene extends Scene {
     private final GameObject gameLogo = new GameObject("logo",
             new AnimatedSprite("mainMenu-logo-animation.png", 0, 0, 32, 14, true, false));
 
+    private final GameObject gameBg = new GameObject("bg", "mainMenu-bg.png", 0, 0);
+    private final GameObject bgAnimation = new GameObject("bg-animation",
+            new AnimatedSprite("mainMenu-bg-animation.png", 0, 0, 64, 16, false, false));
+
+
     private final JoinPopUp popUp = new JoinPopUp(nameTextField);
 
     public RealMainMenuScene() {
@@ -54,7 +59,6 @@ public class RealMainMenuScene extends Scene {
     @Override
     public void onCreate() {
         if (!isInitialized) {
-            spawnObjectAt(gameLogo, 0, 0);
             spawnObjectAt(transition_left);
             setupButtons();
             setupVolumeSlider();
@@ -68,8 +72,19 @@ public class RealMainMenuScene extends Scene {
 
     @Override
     public void onEnter() {
+        spawnObjectAt(bgAnimation, 0, 0);
+        bgAnimation.getSprite().setOnComplete(() -> {
+            bgAnimation.setVisible(false);
+            spawnObjectAt(gameBg);
+            spawnObjectAt(gameLogo);
+            nameTextField.setVisible(true);
+            createButton.setVisible(true);
+            joinButton.setVisible(true);
+            creditButton.setVisible(true);
+            exitButton.setVisible(true);
+        });
         AudioService.getInstance().playMusic("8-Bit Hero.wav");
-        new Tween(transition_left, TweenProperty.X, 0, -2400, 1).start();
+        // new Tween(transition_left, TweenProperty.X, 0, -2400, 1).start();
     }
 
     @Override
@@ -87,7 +102,7 @@ public class RealMainMenuScene extends Scene {
         nameTextField.setForeground(Color.GRAY);
         nameTextField.setBorder(BorderFactory.createMatteBorder(0, 0, 5, 0, Color.white));
         nameTextField.setHorizontalAlignment(JTextField.CENTER);
-
+        nameTextField.setVisible(false);
         // place holder
         nameTextField.setFocusable(false);
         nameTextField.addMouseListener(new MouseAdapter() {
@@ -119,7 +134,7 @@ public class RealMainMenuScene extends Scene {
             }
         });
 
-        createButton.setBounds(100, 280, createButton.getPreferredSize().width, createButton.getPreferredSize().height);
+        createButton.setBounds(122, 469, createButton.getPreferredSize().width, createButton.getPreferredSize().height);
         createButton.setOnButtonClicked(() -> {
             AudioService.getInstance().playSFX("ButtonPressed.wav");
             if (isStartedClicked.get()) return;
@@ -138,20 +153,25 @@ public class RealMainMenuScene extends Scene {
                 }
             }, 5000);
         });
+        createButton.setVisible(false);
         
-        joinButton.setBounds(100, 450, joinButton.getPreferredSize().width, joinButton.getPreferredSize().height);
+        joinButton.setBounds(122, 607, joinButton.getPreferredSize().width, joinButton.getPreferredSize().height);
         joinButton.setOnButtonClicked(() -> {
             AudioService.getInstance().playSFX("ButtonPressed.wav");
             popUp.setVisible(true);
         });
+        joinButton.setVisible(false);
 
-        creditButton.setBounds(100, 600, creditButton.getPreferredSize().width, creditButton.getPreferredSize().height);
+        creditButton.setBounds(122, 726, creditButton.getPreferredSize().width, creditButton.getPreferredSize().height);
         creditButton.setOnButtonClicked(() -> {
             AudioService.getInstance().playSFX("ButtonPressed.wav");
+            SceneUtilities.changeSceneTo(new CreditScene());
         });
+        creditButton.setVisible(false);
 
-        exitButton.setBounds(100, 750, exitButton.getPreferredSize().width, exitButton.getPreferredSize().height);
+        exitButton.setBounds(126, 854, exitButton.getPreferredSize().width, exitButton.getPreferredSize().height);
         exitButton.setOnButtonClicked(() -> System.exit(0));
+        exitButton.setVisible(false);
 
         this.add(nameTextField);
         this.add(createButton);

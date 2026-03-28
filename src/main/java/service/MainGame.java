@@ -4,6 +4,7 @@ import Gameplay.GameState;
 import Gameplay.LobbyState;
 import OtherUtilities.RandomPosition;
 import graphicsUtilities.*;
+import scene.InitialScene;
 
 import javax.swing.*;
 import java.awt.*;
@@ -61,7 +62,7 @@ public class MainGame extends JFrame {
         startRunService();
         startContainerPanel();
 
-        SceneUtilities.changeSceneTo(SceneUtilities.mainMenu);
+        SceneUtilities.changeSceneTo(new InitialScene());
         if (gd.isFullScreenSupported()) {
             this.setUndecorated(true);
             gd.setFullScreenWindow(this);
