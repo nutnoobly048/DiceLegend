@@ -40,6 +40,11 @@ public class LobbyScene extends Scene {
     private GameButton riveraCard = new GameButton("", "rivera.png", "rivera.png");
     private GameButton sylviaCard = new GameButton("", "Sylvia.png", "Sylvia.png");
 
+    // private JLabel player1Name = new JLabel();
+    // private JLabel player2Name = new JLabel();
+    // private JLabel player3Name = new JLabel();
+    // private JLabel player4Name = new JLabel();
+
     private int x_arrow = 305;
 
     private double duration = 1;
@@ -138,8 +143,23 @@ public class LobbyScene extends Scene {
 
         ArrayList<String> allPlayersID = new ArrayList<>();
 
+        int count = 1;
         for (Player value : state.allPlayers.values()) {
             allPlayersID.add(value.getNetworkID());
+
+            // display player name
+            JLabel playerNameLabel = new JLabel(value.getName());
+            playerNameLabel.setFont(FontLoader.getFont(40).deriveFont(Font.BOLD));
+            playerNameLabel.setHorizontalAlignment(JLabel.CENTER);
+            this.add(playerNameLabel);
+            this.setComponentZOrder(playerNameLabel, 0);
+            switch (count) {
+                case 1 -> playerNameLabel.setBounds(344-245/2, 668-playerNameLabel.getPreferredSize().height/2, 245, playerNameLabel.getPreferredSize().height);
+                case 2 -> playerNameLabel.setBounds(751-245/2, 668-playerNameLabel.getPreferredSize().height/2, 245, playerNameLabel.getPreferredSize().height);
+                case 3 -> playerNameLabel.setBounds(1158-245/2, 668-playerNameLabel.getPreferredSize().height/2, 245, playerNameLabel.getPreferredSize().height);
+                case 4 -> playerNameLabel.setBounds(1565-245/2, 668-playerNameLabel.getPreferredSize().height/2, 245, playerNameLabel.getPreferredSize().height);
+            }
+            count++;
         }
 
         int index = allPlayersID.indexOf(Player.getLocalPlayerId());
