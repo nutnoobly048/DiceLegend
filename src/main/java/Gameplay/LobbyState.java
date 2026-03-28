@@ -17,6 +17,8 @@ public class LobbyState {
 
     public final HashMap<String, Player> allPlayers = new LinkedHashMap<>();
 
+    private Runnable onPlayerListChanged;
+
     public enum TriggerEvent {
         PLAYER_JOINED, PLAYER_LEFT, PLAYER_SPRITE_CHANGE
     }
@@ -43,6 +45,16 @@ public class LobbyState {
 
     public static void destroy() {
         current = null;
+    }
+
+    public void setOnPlayerListChanged(Runnable callback) {
+        this.onPlayerListChanged = callback;
+    }
+
+    private void notifyPlayerListChanged() {
+        if (onPlayerListChanged != null) {
+            onPlayerListChanged.run();
+        }
     }
 
     public void handleEvent(TriggerEvent event, String[] params) {
@@ -83,6 +95,10 @@ public class LobbyState {
         for (Player p : allPlayers.values()) {
             System.out.println(p.getName());
         }
+
+        notifyPlayerListChanged();
+
+
     }
 
     private void onPlayerLeft(String[] params) {
@@ -91,6 +107,8 @@ public class LobbyState {
         String id = params[0];
         allPlayers.remove(id);
         System.out.println("PLAYER LEFT: " + id);
+
+        notifyPlayerListChanged();
     }
 
     public String getSelectedMapId() {

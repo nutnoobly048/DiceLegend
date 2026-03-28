@@ -58,7 +58,10 @@ public class LobbyScene extends Scene {
 
     @Override
     public void onCreate() {
-
+        
+        LobbyState.current.setOnPlayerListChanged(() -> {
+            initialXofArraw(LobbyState.current);
+        });
         // initialXofArraw(LobbyState.current);
 
         spawnObjectAt(transition_left);
