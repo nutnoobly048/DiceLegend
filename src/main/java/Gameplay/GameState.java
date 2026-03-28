@@ -264,13 +264,13 @@ public class GameState {
 
                 CommandHandler.broadcastResult("UIEVENT", "EVENTPOPUP", selectedEvent.getEventVisualName());
                 CommandHandler.broadcastResult("UIEVENT", "EVENTICON", selectedEvent.getEventVisualName());
+                CommandHandler.broadcastResult("PLAYSFX", "pickupItem.wav");
                 CommandHandler.broadcastResult("CHAT", "New Event Happening ", selectedEvent.getEventName());
 
                 System.out.println(selectedEvent.getEventVisualName());
                 Event.useEvent(selectedEvent, GameState.currentGame);
 
                 currentEvent = selectedEvent;
-
 
             }
             case ITEM_TILE -> {
@@ -279,6 +279,7 @@ public class GameState {
 
 
                 CommandHandler.broadcastResult("UIEVENT", "ITEMPOPUP", selectedItem.getCardUIName());
+                CommandHandler.broadcastResult("PLAYSFX", "pickupItem.wav");
 
                 System.out.println(selectedItem.getCardUIName());
                 if (selectedItem.isRequireTarget()) {
