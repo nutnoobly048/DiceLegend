@@ -30,7 +30,7 @@ import javax.swing.JSlider;
 import javax.swing.plaf.basic.BasicSliderUI;
 
 
-public class RealMainMenuScene extends Scene {
+public final class RealMainMenuScene extends Scene {
 
     private boolean isInitialized = false;
     private final GameObject transition_left = new GameObject("transit_left", "TransitionArrow.png", -2400,0);

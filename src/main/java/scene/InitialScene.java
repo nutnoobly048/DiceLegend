@@ -16,8 +16,8 @@ import objectClass.AnimatedSprite;
 import objectClass.GameObject;
 import service.AudioService;
 
-public class InitialScene extends Scene {
-    private JLabel label = new JLabel("<<CLick anywhere to begin>>");
+public final class InitialScene extends Scene {
+    private JLabel label = new JLabel("CLick anywhere to continue.");
     private GameObject bg = new GameObject("ini-game-bg", "initial-bg.png", 0, 0);
     private final GameObject gameLogo = new GameObject("logo",
             new AnimatedSprite("mainMenu-logo-animation.png", 0, 0, 32, 14, true, false));

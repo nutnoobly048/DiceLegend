@@ -22,7 +22,7 @@ import java.util.ArrayList;
 import java.util.Timer;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-public class LobbyScene extends Scene {
+public final class LobbyScene extends Scene {
 
     // private final ChangeNamePopUp changeNamePopUp = new ChangeNamePopUp();
 
