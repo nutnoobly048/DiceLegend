@@ -12,6 +12,7 @@ import misc.PawnCharacter;
 import objectClass.Board;
 import objectClass.GameModal;
 import scene.CyroGard;
+import service.AudioService;
 import service.CommandHandler;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -223,6 +224,8 @@ public class GameState {
                     player.setOpenForNetworkInput(false);
 
                 }
+                AudioService.getInstance().stopMusic();
+                AudioService.getInstance().playSFX("VictoryTF2.wav");
 
                 GameModal winAlert = new GameModal(100, 100, "licoCake.png");
                 winAlert.setVisible(true);

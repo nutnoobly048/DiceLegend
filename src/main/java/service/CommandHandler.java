@@ -88,6 +88,7 @@ public class CommandHandler {
                 GameState.currentGame.handleEvent(GameState.TriggerEvent.SET_TARGET, params);
             }   
             case "CHAT" -> {
+                CommandHandler.broadcastResult("PLAYSFX","chat2.wav" );
                 String playerName = LobbyState.current.allPlayers.get(senderID).getName();
                 broadcastResult("CHAT", playerName, params[0]);
             }
@@ -119,7 +120,7 @@ public class CommandHandler {
             case "CONTINUE"    -> { if (GameState.currentGame != null) GameState.currentGame.handleEvent(GameState.TriggerEvent.PLAYER_READY, params); }
             case "DICE_ROLLED" -> {
                 broadcastResult("UIEVENT", "ANIMATEDROLL");
-                Timer delayTimer = new Timer(1200, e -> {
+                Timer delayTimer = new Timer(1700, e -> {
                     if (GameState.currentGame != null) {
                         GameState.currentGame.handleEvent(GameState.TriggerEvent.DICE_ROLL_EVENT, params);
                     }
@@ -142,7 +143,7 @@ public class CommandHandler {
                 LobbyState.destroy();
             }
             case "CHANGEMUSIC" -> AudioService.getInstance().playMusic(params[0]);
-            case "PLAYSFX" -> AudioService.getInstance().playSFX(params[0]).play();
+            case "PLAYSFX" -> AudioService.getInstance().playSFX(params[0]);
 
             case "BOARD_CONFIG" -> {
                 if (GameState.currentGame == null) return;
@@ -157,6 +158,7 @@ public class CommandHandler {
             }
 
             case "CHAT" -> {
+
                 CyroGard.chatTextArea.append(params[0] + ": " + params[1] + "\n");
                 CyroGard.chatTextArea.setCaretPosition(CyroGard.chatTextArea.getText().length());
             }

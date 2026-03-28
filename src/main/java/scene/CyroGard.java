@@ -10,6 +10,7 @@ import graphicsUtilities.Scene;
 import misc.PawnCharacter;
 import misc.Player;
 import objectClass.*;
+import service.AudioService;
 import service.CommandHandler;
 
 import java.awt.*;
@@ -117,6 +118,7 @@ public final class CyroGard extends Scene {
 
     @Override
     public void onEnter() {
+        AudioService.getInstance().playMusic("Winterbliss.wav");
         setupPortals();
         playEnterTransition();
         spawnAllPawns();
@@ -130,6 +132,7 @@ public final class CyroGard extends Scene {
 
     @Override
     public void onExit() {
+        AudioService.getInstance().playSFX("TransitionOff.wav");
         playExitTransition();
     }
 
@@ -184,7 +187,7 @@ public final class CyroGard extends Scene {
                         isRolledClicked.set(false);
                     });
                 }
-            }, 5000);
+            }, 3000);
 
         });
         this.add(rollBtn);

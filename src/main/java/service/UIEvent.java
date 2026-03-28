@@ -61,6 +61,7 @@ public class UIEvent {
                 }
             }
             case "ANIMATEDROLL" -> {
+                AudioService.getInstance().playSFX("Roll.wav");
                 AnimatedSprite diceAnimated = new AnimatedSprite("diceAnimated.png", 1495, 27, 36, 29);
                 if (SceneUtilities.getCurrentGameScene().currentSceneObject.containsKey("dice")) {
                     SceneUtilities.getCurrentGameScene().currentSceneObject.get("dice").setSprite(diceAnimated);

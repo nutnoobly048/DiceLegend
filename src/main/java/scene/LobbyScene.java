@@ -11,6 +11,7 @@ import graphicsUtilities.SceneUtilities;
 import misc.Player;
 import objectClass.GameButton;
 import objectClass.GameObject;
+import service.AudioService;
 import service.CommandHandler;
 import service.RunService;
 
@@ -120,6 +121,7 @@ public class LobbyScene extends Scene {
 
     @Override
     public void onEnter() {
+        AudioService.getInstance().playMusic("LucidDream.wav");
         new Tween(transition_left, TweenProperty.X, 0, -2400, duration).OnComplete(() -> {
             System.out.println("ds");
         }).start();
@@ -127,6 +129,7 @@ public class LobbyScene extends Scene {
 
     @Override
     public void onExit() {
+        AudioService.getInstance().playSFX("TransitionOff.wav");
         new Tween(transition_left, TweenProperty.X, -2400, 0, duration).start();
 
     }
