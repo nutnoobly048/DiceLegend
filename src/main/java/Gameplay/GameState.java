@@ -28,7 +28,7 @@ import javax.swing.*;
 public class GameState {
 
     public static GameState currentGame;
-    public String selectedMapId = "mysteriousJungle";
+    public String selectedMapId = "cryoGard";
 
     public final boolean isHost;
     public final String lobbyName;
@@ -112,6 +112,7 @@ public class GameState {
             case PLAYER_JOINED -> onPlayerJoined(params);
             case PLAYER_LEFT -> onPlayerLeft(params);
             case GAME_START -> {
+                System.out.println("[DEBUG] GAME_START phase handler, isHost=" + isHost);
                 if (isHost) {
                     RandomPosition.resultAllPosition();
                     String portals    = RandomPosition.resultPortalPositionString;
@@ -125,9 +126,11 @@ public class GameState {
                     gameBoard = new Board(
                             Board.defaultPosition, portalDecoded, itemDecoded, eventDecoded);
                     if (gameBoard != null) System.out.println(gameBoard);
-
+                    System.out.println("[DEBUG] broadcasting BOARD_CONFIG");
                     CommandHandler.broadcastResult("BOARD_CONFIG", portals, itemTiles, eventTiles);
                 }
+                System.out.println("[DEBUG] sending CHANGESCENETO intent");
+                CommandHandler.sentIntent("INTENT:SELF:CHANGESCENETO:" + selectedMapId);
                 CommandHandler.sentIntent("INTENT:SELF:CHANGESCENETO:" + selectedMapId);
 
                 setAllPlayersUnreadyToContinue();
@@ -224,8 +227,11 @@ public class GameState {
                     player.setOpenForNetworkInput(false);
 
                 }
+
                 AudioService.getInstance().stopMusic();
-                AudioService.getInstance().playSFX("VictoryTF2.wav");
+                CommandHandler.broadcastResult("STOPMUSIC");
+                CommandHandler.broadcastResult("PLAYSFX", "VictoryTF2.wav");
+
 
                 GameModal winAlert = new GameModal(100, 100, "licoCake.png");
                 winAlert.setVisible(true);

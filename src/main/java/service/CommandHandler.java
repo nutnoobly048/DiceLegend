@@ -71,8 +71,9 @@ public class CommandHandler {
                 broadcastResult("PLAYER_SPRITE_CHANGED", senderID,params[0]);
             }
             case "CHANGESCENETO" -> {
+                System.out.println("[DEBUG] CHANGESCENETO intent received, isFromHost=" + isFromHost + " params[0]=" + params[0]);
                 if (isFromHost) {
-                    broadcastResult("CHANGESCENETO", params);
+                    broadcastResult("CHANGESCENETO", params[0]);
                 }
             }
             case "ROLLEVENT" -> {
@@ -111,9 +112,11 @@ public class CommandHandler {
 
             // Transition
             case "GAME_STARTED" -> {
+                System.out.println("[DEBUG] GAME_STARTED received");
                 LobbyState.current.createMatch();
+                System.out.println("[DEBUG] createMatch done, currentGame=" + GameState.currentGame);
                 GameState.currentGame.handleEvent(GameState.TriggerEvent.GAME_START, null);
-
+                System.out.println("[DEBUG] handleEvent GAME_START done");
             }
 
             //Game
@@ -144,8 +147,11 @@ public class CommandHandler {
             }
             case "CHANGEMUSIC" -> AudioService.getInstance().playMusic(params[0]);
             case "PLAYSFX" -> AudioService.getInstance().playSFX(params[0]);
+            case "STOPMUSIC" -> AudioService.getInstance().stopMusic();
 
             case "BOARD_CONFIG" -> {
+                System.out.println("[DEBUG] BOARD_CONFIG received, isHost=" + GameState.currentGame.isHost);
+                System.out.println("[DEBUG] params[0]='" + params[0] + "' params[1]='" + params[1] + "' params[2]='" + params[2] + "'");
                 if (GameState.currentGame == null) return;
                 if (GameState.currentGame.isHost) return;
 
