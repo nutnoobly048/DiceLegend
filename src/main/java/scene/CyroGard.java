@@ -117,6 +117,9 @@ public final class CyroGard extends Scene {
 
     @Override
     public void onEnter() {
+        popupSequence.setSprite("blank.png");
+        cardIcon.setSprite("blank.png");
+
         AudioService.getInstance().playMusic("Winterbliss.wav");
         setupPortals();
         playEnterTransition();
