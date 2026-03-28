@@ -66,6 +66,12 @@ public class UIEvent {
                     SceneUtilities.getCurrentGameScene().currentSceneObject.get("dice").setSprite(diceAnimated);
                 }
             }
+            case "EVENTICON" -> {
+                CyroGard.cardIcon.setSprite(args[1] + ".png");
+                CyroGard.cardIcon.getSprite().offsetX = -ImagePreload.get(args[1] + ".png").getWidth(null) / 2;
+                CyroGard.cardIcon.getSprite().offsetY = -ImagePreload.get(args[1]+ ".png").getHeight(null) / 2;
+                CyroGard.cardIcon.getSprite().scaleImageByPercentage(0.2);
+            }
         }
     }
 }

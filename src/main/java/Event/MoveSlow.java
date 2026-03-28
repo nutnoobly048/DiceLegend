@@ -1,6 +1,7 @@
 package Event;
 
 import Gameplay.GameState;
+import service.CommandHandler;
 
 public class MoveSlow extends Event{
     public MoveSlow(){
@@ -24,7 +25,9 @@ public class MoveSlow extends Event{
         broadcastContinueForAll(game);
     };
     //เมื่อ Event หมด
-    public void onEventLeave(GameState game){};
+    public void onEventLeave(GameState game){
+        CommandHandler.broadcastResult("UIEVENT", "EVENTICON", "blank");
+    };
 
     public void onEventTriggered(GameState game){broadcastContinueForAll(game);};
 

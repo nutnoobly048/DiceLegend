@@ -40,7 +40,5 @@ public class ReverseEvent extends Event {
 
 
     @Override
-    public void onEventLeave(GameState game) {
-
-    }
+    public void onEventLeave(GameState game) { CommandHandler.broadcastResult("UIEVENT", "EVENTICON", "blank"); }
 }

@@ -248,6 +248,7 @@ public class GameState {
                 Event selectedEvent = RandomEvents.resultRandomEvent(selectedMapId); //แทนที่ด้วย randomEvent() ในภายหลัง
 
                 CommandHandler.broadcastResult("UIEVENT", "EVENTPOPUP", selectedEvent.getEventVisualName());
+                CommandHandler.broadcastResult("UIEVENT", "EVENTICON", selectedEvent.getEventVisualName());
 
                 System.out.println(selectedEvent.getEventVisualName());
                 Event.useEvent(selectedEvent, GameState.currentGame);

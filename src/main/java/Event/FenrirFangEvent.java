@@ -1,6 +1,7 @@
 package Event;
 
 import Gameplay.GameState;
+import service.CommandHandler;
 
 public class FenrirFangEvent extends Event{
 
@@ -35,7 +36,7 @@ public class FenrirFangEvent extends Event{
 
     @Override
     public void onEventLeave(GameState game) {
-
+        CommandHandler.broadcastResult("UIEVENT", "EVENTICON", "blank");
     }
 
     @Override

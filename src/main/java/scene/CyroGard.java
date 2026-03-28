@@ -45,7 +45,7 @@ public final class CyroGard extends Scene {
     private JScrollPane chatScrollPane = new JScrollPane(chatTextArea);
 
     private GameObject dice = new GameObject("dice", "dice5.png", 1550, 40);
-
+    public static GameObject cardIcon = new GameObject("cardEvent", "blank.png", 230, 270);
     public static GameObject popupSequence = new GameObject("popupSequence", "blank.png", 1920 / 2, 1080 / 2);
 
     GameButton targetSelectBtn;
@@ -155,6 +155,9 @@ public final class CyroGard extends Scene {
         setUpChat();
 
         spawnObjectAt(dice);
+
+        cardIcon.z = 99;
+        spawnObjectAt(cardIcon);
 
         popupSequence.setVisible(false);
         popupSequence.z = 100;
