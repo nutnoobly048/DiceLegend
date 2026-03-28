@@ -15,6 +15,9 @@ public class RandomPosition {
 
     public static void resultAllPosition() {
 
+        resultPortalPositionString = "";
+        resultItemPositionString = "";
+        resultEventPositionString = "";
 
         banPosition.clear();
         banPosition.add(0);

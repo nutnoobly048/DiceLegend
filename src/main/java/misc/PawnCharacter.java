@@ -83,6 +83,7 @@ public class PawnCharacter extends GameObject {
         } else {
             // เจองู / บันได -> กระโดด
             animateDirectJump(targetIndex);
+            CommandHandler.broadcastResult("PLAYSFX, portal-in.wav");
         }
     }
     

@@ -15,7 +15,7 @@ public class ReverseEvent extends Event {
 
     @Override
     public String getEventName() {
-        return "Move Back!";
+        return "Moonwalk back by 3 steps!";
     }
 
 
@@ -40,7 +40,5 @@ public class ReverseEvent extends Event {
 
 
     @Override
-    public void onEventLeave(GameState game) {
-
-    }
+    public void onEventLeave(GameState game) { CommandHandler.broadcastResult("UIEVENT", "EVENTICON", "blank"); }
 }

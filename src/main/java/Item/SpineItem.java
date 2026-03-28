@@ -3,6 +3,7 @@ package Item;
 import Gameplay.GameState;
 import misc.PawnCharacter;
 import misc.Player;
+import service.CommandHandler;
 
 public class SpineItem extends Item{
 
@@ -17,6 +18,7 @@ public class SpineItem extends Item{
 
     @Override
     public void broadcastResult(Player user, Player target, GameState state) {
+        CommandHandler.broadcastResult("CHAT", user.getName() + " Got Jailed For", " 2 Turn");
         broadcastContinueForAll(state);
     }
 

@@ -16,6 +16,9 @@ public class AnimatedSprite implements Drawable {
     public int offsetY;
     public int drawOrder;
 
+    private int relativeWidth;
+    private int relativeHeight;
+
     private Image spriteSheet;
     private int frameCount;       // จำนวนเฟรมทั้งหมดในรูป
     private int currentFrame = 0; // เฟรมปัจจุบันที่กำลังเล่นอยู่
@@ -37,6 +40,7 @@ public class AnimatedSprite implements Drawable {
     public AnimatedSprite(String imgFileName, int x, int y, int frameCount, double fps) {
         this.posX = x;
         this.posY = y;
+
         this.frameCount = frameCount;
 
         // ดึงรูปจาก ImagePreload
@@ -48,6 +52,8 @@ public class AnimatedSprite implements Drawable {
         // คำนวณขนาดของแต่ละ Frame
         this.frameWidth = this.spriteSheet.getWidth(null) / frameCount;
         this.frameHeight = this.spriteSheet.getHeight(null);
+        this.relativeWidth = this.spriteSheet.getWidth(null);
+        this.relativeHeight = this.spriteSheet.getHeight(null);
 
         setSpeed(fps);
     }
@@ -169,9 +175,21 @@ public class AnimatedSprite implements Drawable {
         int originalWidth = this.spriteSheet.getWidth(null);
         int originalHeight = this.spriteSheet.getHeight(null);
 
-        int newWidth = (int) (originalWidth * scaleFactor);
-        int newHeight = (int) (originalHeight * scaleFactor);
+        this.relativeWidth = (int) (originalWidth * scaleFactor);
+        this.relativeHeight = (int) (originalHeight * scaleFactor);
 
-        this.spriteSheet = this.spriteSheet.getScaledInstance(newWidth, newHeight, Image.SCALE_SMOOTH);
+        this.spriteSheet = this.spriteSheet.getScaledInstance(this.relativeWidth, this.relativeHeight, Image.SCALE_SMOOTH);
+
+        this.frameWidth = this.relativeWidth / this.frameCount;
+        this.frameHeight = this.relativeHeight;
+    }
+
+
+    public int getRelativeWidth() {
+        return relativeWidth;
+    }
+
+    public int getRelativeHeight() {
+        return relativeHeight;
     }
 }

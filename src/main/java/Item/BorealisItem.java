@@ -22,7 +22,6 @@ public class BorealisItem extends Item{
 
         targetIndex = currentPlayerIndex;
 
-
         target.increaseSkipTurns(1);
     }
 
@@ -31,6 +30,7 @@ public class BorealisItem extends Item{
         PawnCharacter targetPlayer = state.spawnedCharacter.get(target.getNetworkID());
 
         CommandHandler.broadcastResult("MOVETO", targetPlayer.getNetworkId(), Integer.toString(targetIndex));
+        CommandHandler.broadcastResult("CHAT", target.getName() + " Has Been Pulled And Locked by", " Borealis");
     }
 
     @Override

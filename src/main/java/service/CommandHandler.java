@@ -71,8 +71,9 @@ public class CommandHandler {
                 broadcastResult("PLAYER_SPRITE_CHANGED", senderID,params[0]);
             }
             case "CHANGESCENETO" -> {
+                System.out.println("[DEBUG] CHANGESCENETO intent received, isFromHost=" + isFromHost + " params[0]=" + params[0]);
                 if (isFromHost) {
-                    broadcastResult("CHANGESCENETO", params);
+                    broadcastResult("CHANGESCENETO", params[0]);
                 }
             }
             case "ROLLEVENT" -> {
@@ -80,14 +81,15 @@ public class CommandHandler {
                 if (!player.isOpenForNetworkInput()) { // !!!Test code
                     return;
                 }
-                int roll = (int)(Math.random() * 6) + 1;
-//                int roll = 1;
+//                int roll = (int)(Math.random() * 6) + 1;
+                int roll = 60;
                 broadcastResult("DICE_ROLLED", senderID, String.valueOf(roll));
             }
             case "SETTARGET" -> {
                 GameState.currentGame.handleEvent(GameState.TriggerEvent.SET_TARGET, params);
             }   
             case "CHAT" -> {
+                CommandHandler.broadcastResult("PLAYSFX","chat2.wav" );
                 String playerName = LobbyState.current.allPlayers.get(senderID).getName();
                 broadcastResult("CHAT", playerName, params[0]);
             }
@@ -110,16 +112,18 @@ public class CommandHandler {
 
             // Transition
             case "GAME_STARTED" -> {
+                System.out.println("[DEBUG] GAME_STARTED received");
                 LobbyState.current.createMatch();
+                System.out.println("[DEBUG] createMatch done, currentGame=" + GameState.currentGame);
                 GameState.currentGame.handleEvent(GameState.TriggerEvent.GAME_START, null);
-
+                System.out.println("[DEBUG] handleEvent GAME_START done");
             }
 
             //Game
             case "CONTINUE"    -> { if (GameState.currentGame != null) GameState.currentGame.handleEvent(GameState.TriggerEvent.PLAYER_READY, params); }
             case "DICE_ROLLED" -> {
                 broadcastResult("UIEVENT", "ANIMATEDROLL");
-                Timer delayTimer = new Timer(1200, e -> {
+                Timer delayTimer = new Timer(1700, e -> {
                     if (GameState.currentGame != null) {
                         GameState.currentGame.handleEvent(GameState.TriggerEvent.DICE_ROLL_EVENT, params);
                     }
@@ -142,9 +146,12 @@ public class CommandHandler {
                 LobbyState.destroy();
             }
             case "CHANGEMUSIC" -> AudioService.getInstance().playMusic(params[0]);
-            case "PLAYSFX" -> AudioService.getInstance().playSFX(params[0]).play();
+            case "PLAYSFX" -> AudioService.getInstance().playSFX(params[0]);
+            case "STOPMUSIC" -> AudioService.getInstance().stopMusic();
 
             case "BOARD_CONFIG" -> {
+                System.out.println("[DEBUG] BOARD_CONFIG received, isHost=" + GameState.currentGame.isHost);
+                System.out.println("[DEBUG] params[0]='" + params[0] + "' params[1]='" + params[1] + "' params[2]='" + params[2] + "'");
                 if (GameState.currentGame == null) return;
                 if (GameState.currentGame.isHost) return;
 
@@ -157,8 +164,14 @@ public class CommandHandler {
             }
 
             case "CHAT" -> {
+
                 CyroGard.chatTextArea.append(params[0] + ": " + params[1] + "\n");
                 CyroGard.chatTextArea.setCaretPosition(CyroGard.chatTextArea.getText().length());
+            }
+
+            case "NOTIFY" -> {
+                CyroGard.chatTextArea.append(params[0] + params[1] + "\n");
+                CyroGard.chatTextArea.setCaretPosition(CyroGard.chatTextArea.getDocument().getLength());
             }
         }
     }

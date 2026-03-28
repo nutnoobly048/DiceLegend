@@ -9,6 +9,7 @@ import graphicsUtilities.SceneUtilities;
 import misc.Player;
 import objectClass.AnimatedSprite;
 import objectClass.GameObject;
+import service.AudioService;
 import service.CommandHandler;
 import service.RunService;
 
@@ -42,6 +43,7 @@ public class LoadingScene extends Scene {
 
     @Override
     public void onEnter() {
+
         transition_left.x = 0;
 
         new Tween(transition_left, TweenProperty.X, 0, -2400, 1).start();
@@ -51,6 +53,7 @@ public class LoadingScene extends Scene {
 
     @Override
     public void onExit() {
+        AudioService.getInstance().playSFX("TransitionOff.wav");
     }
 
     private void connectToNetwork() {
@@ -67,7 +70,6 @@ public class LoadingScene extends Scene {
                     String topics = baseTopic + "/room_state";
 
                     RunService.mqtt.connectWithWill(baseTopic, "HOST_DISCONNECTED");
-
                     RunService.mqtt.subscribe(topics, (t, msg) -> {
                         if (msg.equals("ACTIVE") || msg.equals("GAME_STARTED")) {
                             roomTaken.set(true);

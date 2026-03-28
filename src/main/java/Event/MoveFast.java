@@ -1,6 +1,7 @@
 package Event;
 
 import Gameplay.GameState;
+import service.CommandHandler;
 
 public class MoveFast extends Event{
     public MoveFast(){
@@ -21,11 +22,14 @@ public class MoveFast extends Event{
         broadcastContinueForAll(game);
     };
     //เมื่อ Event หมด
-    public void onEventLeave(GameState game){};
+    public void onEventLeave(GameState game){
+        CommandHandler.broadcastResult("UIEVENT", "EVENTICON", "blank");
+    };
 
     public void onEventTriggered(GameState game){broadcastContinueForAll(game);};
 
     public int modifyRollValue(int rollValue) {
+        CommandHandler.broadcastResult("CHAT", "Due to event, the player moved by ", String.valueOf(rollValue + 2));
         return rollValue + 2;
     }
 }

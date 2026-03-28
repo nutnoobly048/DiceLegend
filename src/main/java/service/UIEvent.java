@@ -61,10 +61,22 @@ public class UIEvent {
                 }
             }
             case "ANIMATEDROLL" -> {
+                AudioService.getInstance().playSFX("Roll.wav");
                 AnimatedSprite diceAnimated = new AnimatedSprite("diceAnimated.png", 1495, 27, 36, 29);
                 if (SceneUtilities.getCurrentGameScene().currentSceneObject.containsKey("dice")) {
                     SceneUtilities.getCurrentGameScene().currentSceneObject.get("dice").setSprite(diceAnimated);
                 }
+            }
+            case "EVENTICON" -> {
+                String imgName = args[1] + ".png";
+                if (imgName.equals("blank.png")) {
+                    CyroGard.cardIcon.setSprite("blank.png");
+                    return;
+                }
+                CyroGard.cardIcon.setSprite(args[1] + ".png");
+                CyroGard.cardIcon.getSprite().scaleImageByPercentage(0.25);
+                CyroGard.cardIcon.getSprite().offsetX = -CyroGard.cardIcon.getSprite().getRelativeWidth() / 2;
+                CyroGard.cardIcon.getSprite().offsetY = -CyroGard.cardIcon.getSprite().getRelativeHeight() / 2;
             }
         }
     }
