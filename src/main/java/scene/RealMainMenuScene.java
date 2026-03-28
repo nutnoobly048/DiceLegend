@@ -86,7 +86,7 @@ public class RealMainMenuScene extends Scene {
             creditButton.setVisible(true);
             exitButton.setVisible(true);
         });
-        AudioService.getInstance().playMusic("8-Bit Hero.wav");
+        // AudioService.getInstance().playMusic("8-Bit Hero.wav");
         // new Tween(transition_left, TweenProperty.X, 0, -2400, 1).start();
     }
 

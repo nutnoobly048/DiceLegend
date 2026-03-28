@@ -12,13 +12,15 @@ import javax.swing.JLabel;
 import graphicsUtilities.FontLoader;
 import graphicsUtilities.Scene;
 import graphicsUtilities.SceneUtilities;
+import objectClass.AnimatedSprite;
 import objectClass.GameObject;
 import service.AudioService;
 
 public class InitialScene extends Scene {
-    private JLabel label = new JLabel("CLick anywhere to continue.");
+    private JLabel label = new JLabel("<<CLick anywhere to begin>>");
     private GameObject bg = new GameObject("ini-game-bg", "initial-bg.png", 0, 0);
-
+    private final GameObject gameLogo = new GameObject("logo",
+            new AnimatedSprite("mainMenu-logo-animation.png", 0, 0, 32, 14, true, false));
     @Override
     public void onCreate() {
         this.setBackground(Color.BLACK);
@@ -28,7 +30,7 @@ public class InitialScene extends Scene {
         spawnObjectAt(bg);
 
         label.setForeground(Color.white);
-        label.setFont(FontLoader.getFont(100));
+        label.setFont(FontLoader.getFont(80));
         
         int labelWidth = label.getPreferredSize().width;
         int labelHeight = label.getPreferredSize().height;
@@ -38,11 +40,13 @@ public class InitialScene extends Scene {
         int y = screenHeight - labelHeight - 50;
         
         label.setBounds(x, y, labelWidth, labelHeight);
-
+        spawnObjectAt(gameLogo);
+        AudioService.getInstance().playMusic("8-Bit Hero.wav");
         // add listener
         this.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
+                // AudioService.getInstance().stopMusic();
                 SceneUtilities.changeSceneTo(SceneUtilities.mainMenu);
                 AudioService.getInstance().playSFX("MainMenu.wav");
             }
