@@ -20,7 +20,6 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.TimerTask;
-import java.util.Timer;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.swing.*;
@@ -180,14 +179,22 @@ public final class CyroGard extends Scene {
             isRolledClicked.set(true); 
             CommandHandler.sentIntent("INTENT:SELF:ROLLEVENT");
 
-            new Timer().schedule(new TimerTask() {
-                @Override
-                public void run() {
-                    javax.swing.SwingUtilities.invokeLater(() -> {
-                        isRolledClicked.set(false);
-                    });
-                }
-            }, 3000);
+
+
+//            new Timer().schedule(new TimerTask() {
+//                @Override
+//                public void run() {
+//                    javax.swing.SwingUtilities.invokeLater(() -> {
+//                        isRolledClicked.set(false);
+//                    });
+//                }
+//            }, 3000);
+
+            Timer delayTimer = new javax.swing.Timer(3000, e -> {
+                isRolledClicked.set(false);
+            });
+            delayTimer.start();
+            delayTimer.setRepeats(false);
 
         });
         this.add(rollBtn);

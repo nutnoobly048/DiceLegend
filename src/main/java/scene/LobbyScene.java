@@ -17,9 +17,9 @@ import service.RunService;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.TimerTask;
+//import java.util.TimerTask;
 import java.util.ArrayList;
-import java.util.Timer;
+//import java.util.Timer;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public final class LobbyScene extends Scene {
@@ -220,14 +220,20 @@ public final class LobbyScene extends Scene {
                 handleClientExit();
             }
 
-            new Timer().schedule(new TimerTask() {
-                @Override
-                public void run() {
-                    javax.swing.SwingUtilities.invokeLater(() -> {
-                        isBackClicked.set(false);
-                    });
-                }
-            }, 5000);
+//            new Timer().schedule(new TimerTask() {
+//                @Override
+//                public void run() {
+//                    javax.swing.SwingUtilities.invokeLater(() -> {
+//                        isBackClicked.set(false);
+//                    });
+//                }
+//            }, 5000);
+
+            Timer delayTimer = new Timer(3000, e -> {
+                isBackClicked.set(false);
+            });
+            delayTimer.start();
+            delayTimer.setRepeats(false);
         });
 
         startButton.setOnButtonClicked(() -> {
@@ -240,14 +246,21 @@ public final class LobbyScene extends Scene {
             RunService.mqtt.publishRetained(baseTopic + "/room_state", "GAME_STARTED");
             CommandHandler.sentIntent("INTENT:SELF:START_GAME");
 
-            new Timer().schedule(new TimerTask() {
-                @Override
-                public void run() {
-                    javax.swing.SwingUtilities.invokeLater(() -> {
-                        isStartClicked.set(false);
-                    });
-                }
-            }, 5000);
+
+//            new Timer().schedule(new TimerTask() {
+//                @Override
+//                public void run() {
+//                    javax.swing.SwingUtilities.invokeLater(() -> {
+//                        isStartClicked.set(false);
+//                    });
+//                }
+//            }, 5000);
+            Timer delayTimer = new Timer(3000, e -> {
+                isBackClicked.set(false);
+            });
+            delayTimer.start();
+            delayTimer.setRepeats(false);
+
 
         });
 
