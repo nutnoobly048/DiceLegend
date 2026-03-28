@@ -177,7 +177,7 @@ public class GameState {
         String playerName = currentGame.allPlayers.get(playerId).getName();
         int roll = Integer.parseInt(params[1]);
 
-        CommandHandler.broadcastResult("NOTIFY", playerName + " Just Roll | ", String.valueOf(roll));
+        CommandHandler.broadcastResult("NOTIFY", playerName + " Just Roll | ", " " + roll);
 
         allPlayers.get(playerId).setOpenForNetworkInput(false);
 
