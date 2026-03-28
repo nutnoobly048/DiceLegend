@@ -8,6 +8,7 @@ import animation.Tween;
 import animation.TweenProperty;
 import objectClass.AnimatedSprite;
 import objectClass.GameObject;
+import service.AudioService;
 import service.CommandHandler;
 
 public class PawnCharacter extends GameObject {
@@ -73,6 +74,7 @@ public class PawnCharacter extends GameObject {
 
         isAnimating = true;
         int targetIndex = moveQueue.poll();
+        AudioService.getInstance().playSFX("Typewriter.wav");
         int currentIndex = this.getCurrentTileIndex();
 
         System.out.println("Processing move: " + currentIndex + " -> " + targetIndex);
@@ -80,6 +82,7 @@ public class PawnCharacter extends GameObject {
         if (targetIndex > currentIndex && targetIndex - currentIndex <= 6) {
             // เดินปกติ ไม่เจอบันได
             animateStepByStep(targetIndex);
+
         } else {
             // เจองู / บันได -> กระโดด
             animateDirectJump(targetIndex);

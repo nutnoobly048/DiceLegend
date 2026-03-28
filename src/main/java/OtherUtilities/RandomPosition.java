@@ -25,13 +25,13 @@ public class RandomPosition {
 
         int head, tail;
                                 //early Game //Mid_game //End_game
-        int[][]   tileRanges   = {{1,40},{41,75},{80,98}};
+        int[][]   tileRanges   = {{1,30},{31,75},{80,98}};
 
         int[][]   snakeRanges  = {{5,15},{15,25},{25,35}};
         int[][]   ladderRanges = {{15,34},{10,25},{8,18}};
 
-        int[]     snakeCounts  = { 1, 2, 2 };
-        int[]     ladderCounts = { 1, 2, 2 };
+        int[]     snakeCounts  = { 1, 3, 2 };
+        int[]     ladderCounts = { 1, 3, 2 };
 
         for (int p = 0; p < 3; p++) {
             int tileMin = tileRanges[p][0], tileMax = tileRanges[p][1];
@@ -64,7 +64,7 @@ public class RandomPosition {
 
         int positionItems;
 
-        for ( int j = 0; j < 11; j++ ){
+        for ( int j = 0; j < 12; j++ ){
 
             do{
                 positionItems = RandomUtilities.randomInt(70) + 10;
@@ -80,7 +80,7 @@ public class RandomPosition {
 
         int positionEvents;
 
-        for ( int j = 0; j < 11; j++ ){
+        for ( int j = 0; j < 12; j++ ){
 
             do{
                 positionEvents = RandomUtilities.randomInt(70) + 10;
