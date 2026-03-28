@@ -4,6 +4,7 @@ import java.awt.*;
 import java.util.TimerTask;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import java.util.Timer;
@@ -15,6 +16,7 @@ import graphicsUtilities.FontLoader;
 import graphicsUtilities.ImagePreload;
 import graphicsUtilities.Scene;
 import graphicsUtilities.SceneUtilities;
+import misc.Player;
 import objectClass.AnimatedSprite;
 import objectClass.GameButton;
 import objectClass.GameObject;
@@ -28,6 +30,7 @@ public class RealMainMenuScene extends Scene {
 
     private boolean isInitialized = false;
     private final GameObject transition_left = new GameObject("transit_left", "TransitionArrow.png", -2400,0);
+    protected final JTextField nameTextField = new JTextField("Please set your name");
     private final GameButton createButton = new GameButton("", "mainMenu-create.png", "mainMenu-create-hover.png");
     private final GameButton joinButton = new GameButton("", "mainMenu-join.png", "mainMenu-join-hover.png");
     private final GameButton creditButton = new GameButton("", "mainMenu-credit.png", "mainMenu-credit-hover.png");
@@ -36,7 +39,7 @@ public class RealMainMenuScene extends Scene {
     private final GameObject gameLogo = new GameObject("logo",
             new AnimatedSprite("mainMenu-logo-animation.png", 0, 0, 32, 14, true, false));
 
-    private final JoinPopUp popUp = new JoinPopUp();
+    private final JoinPopUp popUp = new JoinPopUp(nameTextField);
 
     public RealMainMenuScene() {
         this.setSceneLoadoffTimesInMilisecond(1.2);
@@ -71,11 +74,21 @@ public class RealMainMenuScene extends Scene {
 
     private void setupButtons() {
         AtomicBoolean isStartedClicked = new AtomicBoolean(false);
+
+        nameTextField.setBounds(126, 130, createButton.getPreferredSize().width, createButton.getPreferredSize().height);
+        nameTextField.setFont(FontLoader.getFont(60));
+        nameTextField.setBackground(null);
+        nameTextField.setForeground(Color.white);
+        nameTextField.setBorder(BorderFactory.createMatteBorder(0, 0, 5, 0, Color.white));
+        nameTextField.setHorizontalAlignment(JTextField.CENTER);
+
         createButton.setBounds(100, 280, createButton.getPreferredSize().width, createButton.getPreferredSize().height);
         createButton.setOnButtonClicked(() -> {
 
             if (isStartedClicked.get()) return;
             isStartedClicked.set(true);
+
+            Player.setLocalPlayerName(nameTextField.getText());
 
             final String lobbyCode = String.valueOf(RandomUtilities.randomIntDigits(6));
             SceneUtilities.changeSceneTo(new LoadingScene(true, lobbyCode));
@@ -99,6 +112,7 @@ public class RealMainMenuScene extends Scene {
         exitButton.setBounds(100, 750, exitButton.getPreferredSize().width, exitButton.getPreferredSize().height);
         exitButton.setOnButtonClicked(() -> System.exit(0));
 
+        this.add(nameTextField);
         this.add(createButton);
         this.add(joinButton);
         this.add(creditButton);
@@ -162,7 +176,7 @@ class JoinPopUp extends JPanel {
     private final GameButton closeButton = new GameButton("", "mainMenu-popup-close.png", "mainMenu-popup-close.png");
     private final JTextField textField = new JTextField();
 
-    public JoinPopUp() {
+    public JoinPopUp(JTextField nameTextField) {
         this.setBounds(960-background.getWidth(null)/2, 540-background.getHeight(null)/2, background.getWidth(null), background.getHeight(null));
         this.setBackground(null);
         this.setLayout(null);
@@ -174,6 +188,9 @@ class JoinPopUp extends JPanel {
         joinButton.setOnButtonClicked(() -> {
             if (isJoinedClicked.get()) return;
             isJoinedClicked.set(true);
+
+            Player.setLocalPlayerName(nameTextField.getText());
+
             SceneUtilities.changeSceneTo(new LoadingScene(false, textField.getText()));
             new Timer().schedule(new TimerTask() {
                 @Override
