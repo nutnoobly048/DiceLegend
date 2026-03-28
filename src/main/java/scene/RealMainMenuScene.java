@@ -49,6 +49,7 @@ public class RealMainMenuScene extends Scene {
 
 
     private final JoinPopUp popUp = new JoinPopUp(nameTextField);
+    private final GameObject creditPopup = new GameObject("creditPopup", "blank.png", 960, 540);
 
     public RealMainMenuScene() {
         this.setSceneLoadoffTimesInMilisecond(1.2);
@@ -59,6 +60,8 @@ public class RealMainMenuScene extends Scene {
     @Override
     public void onCreate() {
         if (!isInitialized) {
+            creditPopup.z = 100;
+            spawnObjectAt(creditPopup);
             spawnObjectAt(transition_left);
             setupButtons();
             setupVolumeSlider();
@@ -96,7 +99,7 @@ public class RealMainMenuScene extends Scene {
     private void setupButtons() {
         AtomicBoolean isStartedClicked = new AtomicBoolean(false);
 
-        nameTextField.setBounds(126, 130, createButton.getPreferredSize().width, createButton.getPreferredSize().height);
+        nameTextField.setBounds(126, 230, createButton.getPreferredSize().width, createButton.getPreferredSize().height);
         nameTextField.setFont(FontLoader.getFont(60));
         nameTextField.setBackground(null);
         nameTextField.setForeground(Color.GRAY);
@@ -165,9 +168,18 @@ public class RealMainMenuScene extends Scene {
         creditButton.setBounds(122, 726, creditButton.getPreferredSize().width, creditButton.getPreferredSize().height);
         creditButton.setOnButtonClicked(() -> {
             AudioService.getInstance().playSFX("ButtonPressed.wav");
-            SceneUtilities.changeSceneTo(new CreditScene());
+            creditPopup.setSprite("credit-img.png");
+            creditPopup.getSprite().scaleImageByPercentage(0.5);
+            creditPopup.getSprite().offsetX = -creditPopup.getSprite().getRelativeWidth() / 2;
+            creditPopup.getSprite().offsetY = -creditPopup.getSprite().getRelativeHeight() / 2;
         });
         creditButton.setVisible(false);
+        this.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent event) {
+                creditPopup.setSprite("blank.png");
+            }
+        });
 
         exitButton.setBounds(126, 854, exitButton.getPreferredSize().width, exitButton.getPreferredSize().height);
         exitButton.setOnButtonClicked(() -> System.exit(0));
@@ -228,6 +240,7 @@ public class RealMainMenuScene extends Scene {
         super.paint(g);
         Graphics2D g2d = (Graphics2D) g;
         transition_left.getSprite().draw(g2d);
+        creditPopup.getSprite().draw(g2d);
     }
 }
 
