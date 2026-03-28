@@ -35,6 +35,7 @@ public class QuantumGateItem extends Item{
         CommandHandler.broadcastResult("MOVETO", userPawn.getNetworkId(), String.valueOf(userNewIndex));
 
         CommandHandler.broadcastResult("MOVETO", targetPawn.getNetworkId(), String.valueOf(targetNewIndex));
+        CommandHandler.broadcastResult("NOTIFY", user.getName() + " Swap The Position With ", target.getName());
     }
 
     @Override

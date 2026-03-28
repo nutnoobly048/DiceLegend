@@ -35,7 +35,7 @@ public class MoveSlow extends Event{
       if (rollValue <= 2) {
             rollValue = 2;
       }
-        CommandHandler.broadcastResult("NOTIFY", "Due to event, the player moved by : ", String.valueOf(rollValue - 2));
+        CommandHandler.broadcastResult("NOTIFY", "Due to event, the player moved by | ", String.valueOf(rollValue - 2));
         return rollValue - 2;
     }
 }

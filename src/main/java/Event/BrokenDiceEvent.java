@@ -33,7 +33,7 @@ public class BrokenDiceEvent extends Event {
 
     @Override
     public int modifyRollValue(int rollValue) {
-        CommandHandler.broadcastResult("NOTIFY", "Due to event, the player moved by : ", String.valueOf(7 - rollValue));
+        CommandHandler.broadcastResult("NOTIFY", "Due to event, the player moved by | ", String.valueOf(7 - rollValue));
         return 7 - rollValue;
     }
 }

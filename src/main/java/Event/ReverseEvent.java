@@ -15,7 +15,7 @@ public class ReverseEvent extends Event {
 
     @Override
     public String getEventName() {
-        return "Move Back!";
+        return "Moonwalk back by 3 steps!";
     }
 
 

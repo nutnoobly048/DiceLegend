@@ -30,6 +30,7 @@ public class BorealisItem extends Item{
         PawnCharacter targetPlayer = state.spawnedCharacter.get(target.getNetworkID());
 
         CommandHandler.broadcastResult("MOVETO", targetPlayer.getNetworkId(), Integer.toString(targetIndex));
+        CommandHandler.broadcastResult("NOTIFY", target.getName() + " Has Been Pulled And Locked by", " Borealis");
     }
 
     @Override

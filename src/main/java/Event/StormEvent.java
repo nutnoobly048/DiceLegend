@@ -14,7 +14,7 @@ public class StormEvent extends Event {
 
     @Override
     public String getEventName() {
-        return "The Storm";
+        return "The Storm Approaching!";
     }
 
     @Override
