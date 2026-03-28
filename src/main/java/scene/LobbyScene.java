@@ -102,7 +102,7 @@ public class LobbyScene extends Scene {
 
         setupButtonLogic();
         roomNumber.setForeground(Color.BLACK);
-        roomNumber.setFont(FontLoader.getFont(60).deriveFont(Font.BOLD));
+        roomNumber.setFont(FontLoader.getFont(80).deriveFont(Font.BOLD));
         this.add(roomNumber);
 
         this.add(backButton);
