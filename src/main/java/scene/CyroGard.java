@@ -264,15 +264,14 @@ public final class CyroGard extends Scene {
         chatScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
         chatScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         chatScrollPane.setBounds(68, 533, 336, 450);
-        chatScrollPane.setBorder(null);
+        chatScrollPane.setBorder(BorderFactory.createCompoundBorder(
+            BorderFactory.createLineBorder(Color.BLACK, borderThinkness),
+            BorderFactory.createEmptyBorder(0, padding, padding, 0)
+        ));
         chatTextArea.setFont(FontLoader.getFont(30));
         chatTextArea.setLineWrap(true);
         // chatTextArea.setWrapStyleWord(true);
         chatTextArea.setFocusable(false);
-        chatTextArea.setBorder(BorderFactory.createCompoundBorder(
-            BorderFactory.createLineBorder(Color.BLACK, borderThinkness),
-            BorderFactory.createEmptyBorder(0, padding, padding, 0)
-        ));
         
 
         add(chatTextField);
@@ -284,6 +283,18 @@ public final class CyroGard extends Scene {
             BorderFactory.createLineBorder(Color.GRAY, borderThinkness),
             BorderFactory.createEmptyBorder(0, padding, padding, 0)
         ));
+        chatTextField.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+                    String message = chatTextField.getText();
+                    if (!message.isEmpty()) {
+                        CommandHandler.sentIntent("INTENT:" + Player.getLocalPlayerId() + ":CHAT:" + message);
+                        chatTextField.setText("");
+                    }
+                }
+            }
+        });
 
         add(chatSendButton);
         chatSendButton.setBounds(318, 983, 86, 52);
@@ -294,6 +305,7 @@ public final class CyroGard extends Scene {
             String message = chatTextField.getText();
             if (!message.isEmpty()) {
                 CommandHandler.sentIntent("INTENT:" + Player.getLocalPlayerId() + ":CHAT:" + message);
+                chatTextField.setText("");
             }
         });
     }
