@@ -29,7 +29,7 @@ public class MoveFast extends Event{
     public void onEventTriggered(GameState game){broadcastContinueForAll(game);};
 
     public int modifyRollValue(int rollValue) {
-        CommandHandler.broadcastResult("NOTIFY", "Due to event, the player moved by | ", String.valueOf(rollValue + 2));
+        CommandHandler.broadcastResult("CHAT", "Due to event, the player moved by ", String.valueOf(rollValue + 2));
         return rollValue + 2;
     }
 }

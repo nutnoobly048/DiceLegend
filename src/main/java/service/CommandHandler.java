@@ -162,8 +162,7 @@ public class CommandHandler {
             }
 
             case "NOTIFY" -> {
-                String fullMessage = String.join(":", params);
-                CyroGard.chatTextArea.append(fullMessage + "\n");
+                CyroGard.chatTextArea.append(params[0] + params[1] + "\n");
                 CyroGard.chatTextArea.setCaretPosition(CyroGard.chatTextArea.getDocument().getLength());
             }
         }

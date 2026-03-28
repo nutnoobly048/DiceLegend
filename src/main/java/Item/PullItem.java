@@ -23,7 +23,7 @@ public class PullItem extends Item {
     public void broadcastResult(Player user, Player target, GameState state) {
         PawnCharacter targetPawn = state.spawnedCharacter.get(target.getNetworkID());
         CommandHandler.broadcastResult("MOVETO", targetPawn.getNetworkId(), String.valueOf(targetNewIndex));
-        CommandHandler.broadcastResult("NOTIFY", user.getName() + " Got Pulled by ", target.getName());
+        CommandHandler.broadcastResult("CHAT", user.getName() + " Got Pulled by ", target.getName());
     }
 
     @Override

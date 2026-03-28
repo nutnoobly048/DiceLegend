@@ -15,7 +15,7 @@ public class DoubleDiceItem extends Item {
 
     @Override
     public void broadcastResult(Player user, Player target, GameState state) {
-        CommandHandler.broadcastResult("NOTIFY", user.getName() + " Get Another Roll From ", " Double Dice!");
+        CommandHandler.broadcastResult("CHAT", user.getName() + " Get Another Roll From ", " Double Dice!");
 
         broadcastContinueForAll(state);
     }

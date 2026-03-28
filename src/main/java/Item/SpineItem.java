@@ -18,7 +18,7 @@ public class SpineItem extends Item{
 
     @Override
     public void broadcastResult(Player user, Player target, GameState state) {
-        CommandHandler.broadcastResult("NOTIFY", user.getName() + " Got Jailed For", " 2 Turn");
+        CommandHandler.broadcastResult("CHAT", user.getName() + " Got Jailed For", " 2 Turn");
         broadcastContinueForAll(state);
     }
 
