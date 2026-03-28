@@ -46,6 +46,7 @@ public class GameState {
     public final HashMap<String, Player> allPlayers;
     public final HashMap<String, PawnCharacter> spawnedCharacter = new HashMap<>();
 
+    public boolean isSinglePlayer = false;
 
     public enum GamePhase {
         WAIT_FOR_PLAYERS,
@@ -82,6 +83,8 @@ public class GameState {
         this.lobbyName = lobby.lobbyName;
         this.allPlayers = lobby.allPlayers; // shared reference, not a copy
         this.selectedMapId = lobby.getSelectedMapId();
+        if (this.allPlayers.size() == 1) { this.isSinglePlayer = true;}
+        else { this.isSinglePlayer = false;}
         currentGame = this;
     }
 

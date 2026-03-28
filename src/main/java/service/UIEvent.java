@@ -67,11 +67,15 @@ public class UIEvent {
                 }
             }
             case "EVENTICON" -> {
-                System.out.println("EVENT ICON !!!!!!" + args[1]);
+                String imgName = args[1] + ".png";
+                if (imgName.equals("blank.png")) {
+                    CyroGard.cardIcon.setSprite("blank.png");
+                    return;
+                }
                 CyroGard.cardIcon.setSprite(args[1] + ".png");
-                CyroGard.cardIcon.getSprite().offsetX = -ImagePreload.get(args[1] + ".png").getWidth(null) / 2;
-                CyroGard.cardIcon.getSprite().offsetY = -ImagePreload.get(args[1]+ ".png").getHeight(null) / 2;
-                //CyroGard.cardIcon.getSprite().scaleImageByPercentage(0.2);
+                CyroGard.cardIcon.getSprite().scaleImageByPercentage(0.25);
+                CyroGard.cardIcon.getSprite().offsetX = -CyroGard.cardIcon.getSprite().getRelativeWidth() / 2;
+                CyroGard.cardIcon.getSprite().offsetY = -CyroGard.cardIcon.getSprite().getRelativeHeight() / 2;
             }
         }
     }

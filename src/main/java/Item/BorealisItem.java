@@ -22,7 +22,6 @@ public class BorealisItem extends Item{
 
         targetIndex = currentPlayerIndex;
 
-
         target.increaseSkipTurns(1);
     }
 
