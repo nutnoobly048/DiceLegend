@@ -295,6 +295,13 @@ public final class CyroGard extends Scene {
             BorderFactory.createLineBorder(Color.GRAY, borderThinkness),
             BorderFactory.createEmptyBorder(0, padding, padding, 0)
         ));
+
+        chatTextField.addKeyListener(new java.awt.event.KeyAdapter() {
+            @Override
+            public void keyPressed(java.awt.event.KeyEvent e) {
+                AudioService.getInstance().playSFX("Typewriter.wav");
+            }
+        });
         chatTextField.addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
