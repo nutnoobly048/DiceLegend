@@ -40,6 +40,7 @@ public class LobbyScene extends Scene {
     private GameButton riveraCard = new GameButton("", "rivera.png", "rivera.png");
     private GameButton sylviaCard = new GameButton("", "Sylvia.png", "Sylvia.png");
 
+    ArrayList<JLabel> playerNameLabels = new ArrayList<>();
     // private JLabel player1Name = new JLabel();
     // private JLabel player2Name = new JLabel();
     // private JLabel player3Name = new JLabel();
@@ -57,7 +58,7 @@ public class LobbyScene extends Scene {
     @Override
     public void onCreate() {
 
-        // initialXofArraw();
+        // initialXofArraw(LobbyState.current);
 
         spawnObjectAt(transition_left);
 
@@ -141,6 +142,12 @@ public class LobbyScene extends Scene {
         if (LobbyState.current == null)
             return;
 
+        // Remove old player name labels before rebuilding
+        for (JLabel label : playerNameLabels) {
+            this.remove(label);
+        }
+        playerNameLabels.clear();
+
         ArrayList<String> allPlayersID = new ArrayList<>();
 
         int count = 1;
@@ -153,6 +160,7 @@ public class LobbyScene extends Scene {
             playerNameLabel.setHorizontalAlignment(JLabel.CENTER);
             this.add(playerNameLabel);
             this.setComponentZOrder(playerNameLabel, 0);
+            playerNameLabels.add(playerNameLabel);
             switch (count) {
                 case 1 -> playerNameLabel.setBounds(344-245/2, 668-playerNameLabel.getPreferredSize().height/2, 245, playerNameLabel.getPreferredSize().height);
                 case 2 -> playerNameLabel.setBounds(751-245/2, 668-playerNameLabel.getPreferredSize().height/2, 245, playerNameLabel.getPreferredSize().height);
