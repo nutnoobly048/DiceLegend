@@ -174,7 +174,10 @@ public class GameState {
         if (event != TriggerEvent.DICE_ROLL_EVENT) return;
 
         String playerId = params[0];
+        String playerName = currentGame.allPlayers.get(playerId).getName();
         int roll = Integer.parseInt(params[1]);
+
+        CommandHandler.broadcastResult("CHAT", playerName + " Just Roll : ", String.valueOf(roll));
 
         allPlayers.get(playerId).setOpenForNetworkInput(false);
 
@@ -252,6 +255,7 @@ public class GameState {
 
                 CommandHandler.broadcastResult("UIEVENT", "EVENTPOPUP", selectedEvent.getEventVisualName());
                 CommandHandler.broadcastResult("UIEVENT", "EVENTICON", selectedEvent.getEventVisualName());
+                CommandHandler.broadcastResult("CHAT", "New Event Happening : ", selectedEvent.getEventName());
 
                 System.out.println(selectedEvent.getEventVisualName());
                 Event.useEvent(selectedEvent, GameState.currentGame);
@@ -376,6 +380,7 @@ public class GameState {
         Player player = allPlayers.get(playerId);
 
         if (player.isSkipped()) {
+            CommandHandler.broadcastResult("CHAT", player.getName() + " is Jailed", " Skip Turn!");
             player.decreaseSkipTurns(1);
             advanceToNextPlayer();
             return;
@@ -385,6 +390,7 @@ public class GameState {
             p.setOpenForNetworkInput(false);
         }
         player.setOpenForNetworkInput(true);
+        CommandHandler.broadcastResult("CHAT", "Current Player Turns : ", player.getName());
         
         setAllPlayersUnreadyToContinue();
         CommandHandler.broadcastResult("UIEVENT", "WAITFOR", playerId);

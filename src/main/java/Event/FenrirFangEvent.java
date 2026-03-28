@@ -21,6 +21,7 @@ public class FenrirFangEvent extends Event{
 
     @Override
     public int modifyRollValue(int rollValue) {
+        CommandHandler.broadcastResult("CHAT", "Due to event, the player moved by : ", String.valueOf( 1));
         return 1;
     }
 

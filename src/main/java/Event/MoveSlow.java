@@ -34,7 +34,8 @@ public class MoveSlow extends Event{
     public int modifyRollValue(int rollValue) {
       if (rollValue <= 2) {
             rollValue = 2;
-        }
+      }
+        CommandHandler.broadcastResult("CHAT", "Due to event, the player moved by : ", String.valueOf(rollValue - 2));
         return rollValue - 2;
     }
 }
