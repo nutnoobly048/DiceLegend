@@ -241,36 +241,20 @@ public final class CyroGard extends Scene {
 
                 if (GameState.currentGame != null) {
                     if (getQaureand(e, b) == 1) {
-                        if (GameState.currentGame.isSinglePlayer) {
+                        if (GameState.currentGame.isSinglePlayer || !Player.localPlayer.getNetworkID().equals(playerList.get(0).getNetworkID())) {
                             CommandHandler.sentIntent("INTENT:SELF:SETTARGET:" + playerList.get(0).getNetworkID());
-                        } else {
-                            if (!Player.localPlayer.getNetworkID().equals(playerList.get(0).getNetworkID())) {
-                                CommandHandler.sentIntent("INTENT:SELF:SETTARGET:" + playerList.get(0).getNetworkID());
-                            }
                         }
                     } else if (getQaureand(e, b) == 3) {
-                        if (GameState.currentGame.isSinglePlayer) {
+                        if (GameState.currentGame.isSinglePlayer || !Player.localPlayer.getNetworkID().equals(playerList.get(1).getNetworkID())) {
                             CommandHandler.sentIntent("INTENT:SELF:SETTARGET:" + playerList.get(1).getNetworkID());
-                        } else {
-                            if (!Player.localPlayer.getNetworkID().equals(playerList.get(1).getNetworkID())) {
-                                CommandHandler.sentIntent("INTENT:SELF:SETTARGET:" + playerList.get(1).getNetworkID());
-                            }
                         }
                     } else if (getQaureand(e, b) == 2) {
-                        if (GameState.currentGame.isSinglePlayer) {
+                        if (GameState.currentGame.isSinglePlayer || !Player.localPlayer.getNetworkID().equals(playerList.get(2).getNetworkID())) {
                             CommandHandler.sentIntent("INTENT:SELF:SETTARGET:" + playerList.get(2).getNetworkID());
-                        } else {
-                            if (!Player.localPlayer.getNetworkID().equals(playerList.get(2).getNetworkID())) {
-                                CommandHandler.sentIntent("INTENT:SELF:SETTARGET:" + playerList.get(2).getNetworkID());
-                            }
                         }
                     } else if (getQaureand(e, b) == 4) {
-                        if (GameState.currentGame.isSinglePlayer) {
+                        if (GameState.currentGame.isSinglePlayer || !Player.localPlayer.getNetworkID().equals(playerList.get(3).getNetworkID())) {
                             CommandHandler.sentIntent("INTENT:SELF:SETTARGET:" + playerList.get(3).getNetworkID());
-                        } else {
-                            if (!Player.localPlayer.getNetworkID().equals(playerList.get(3).getNetworkID())) {
-                                CommandHandler.sentIntent("INTENT:SELF:SETTARGET:" + playerList.get(3).getNetworkID());
-                            }
                         }
                     }
                 }
