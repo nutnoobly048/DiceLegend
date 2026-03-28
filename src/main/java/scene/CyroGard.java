@@ -267,24 +267,38 @@ public final class CyroGard extends Scene {
     }
 
     private void setUpChat() {
+        int padding = 5;
+        int borderThinkness = 3;
         add(chatScrollPane);
         chatScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
         chatScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-        chatScrollPane.setBounds(70, 535, 333, 450);
+        chatScrollPane.setBounds(68, 533, 336, 450);
+        chatScrollPane.setBorder(null);
         chatTextArea.setFont(FontLoader.getFont(30));
         chatTextArea.setLineWrap(true);
-        chatTextArea.setWrapStyleWord(true);
+        // chatTextArea.setWrapStyleWord(true);
         chatTextArea.setFocusable(false);
+        chatTextArea.setBorder(BorderFactory.createCompoundBorder(
+            BorderFactory.createLineBorder(Color.BLACK, borderThinkness),
+            BorderFactory.createEmptyBorder(0, padding, padding, 0)
+        ));
+        
 
         add(chatTextField);
-        chatTextField.setBounds(70, 985, 250, 50);
-        chatTextField.setBackground(Color.red);
-        chatTextField.setForeground(Color.white);
+        chatTextField.setBounds(68, 983, 250, 52);
+        chatTextField.setBackground(null);
+        chatTextField.setForeground(Color.BLACK);
         chatTextField.setFont(FontLoader.getFont(30));
+        chatTextField.setBorder(BorderFactory.createCompoundBorder(
+            BorderFactory.createLineBorder(Color.GRAY, borderThinkness),
+            BorderFactory.createEmptyBorder(0, padding, padding, 0)
+        ));
 
         add(chatSendButton);
-        chatSendButton.setBounds(320, 985, 83, 50);
-        chatSendButton.setForeground(Color.black);
+        chatSendButton.setBounds(318, 983, 86, 52);
+        chatSendButton.setForeground(Color.white);
+        chatSendButton.setFont(FontLoader.getFont(30));
+        chatTextField.setMargin(new Insets(0, padding, 0, padding));
         chatSendButton.setOnButtonClicked(() -> {
             String message = chatTextField.getText();
             if (!message.isEmpty()) {
