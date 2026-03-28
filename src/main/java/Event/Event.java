@@ -7,13 +7,16 @@ import service.CommandHandler;
 public abstract class Event {
 
     public int remainingTurn;
+    private final int initialTurns; // store original value
 
-    public Event(int remainingTurn) {
-        this.remainingTurn = remainingTurn;
+    public Event(int turns) {
+        this.remainingTurn = turns;
+        this.initialTurns = turns;
     }
 
     public Event() {
         this.remainingTurn = 0;
+        this.initialTurns = 0;
     }
 
     //GAMESTATE มีหน้าที่เรียกใช้
@@ -21,6 +24,9 @@ public abstract class Event {
         event.execute(state);
     }
 
+    public int getInitialTurns() {
+        return initialTurns;
+    }
 
     public final void execute(GameState game) {
         doVisual(game);

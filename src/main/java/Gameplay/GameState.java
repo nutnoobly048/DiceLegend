@@ -260,7 +260,8 @@ public class GameState {
                 onAllClientsReady = this::advanceToNextPlayer;
                 changeStateTo(GamePhase.WAIT_FOR_ALL_CLIENTS);
 
-                Event selectedEvent = RandomEvents.resultRandomEvent(selectedMapId); //แทนที่ด้วย randomEvent() ในภายหลัง
+                Event selectedEvent = RandomEvents.resultRandomEvent(selectedMapId);
+                selectedEvent.remainingTurn = selectedEvent.getInitialTurns();//แทนที่ด้วย randomEvent() ในภายหลัง
 
                 CommandHandler.broadcastResult("UIEVENT", "EVENTPOPUP", selectedEvent.getEventVisualName());
                 CommandHandler.broadcastResult("UIEVENT", "EVENTICON", selectedEvent.getEventVisualName());

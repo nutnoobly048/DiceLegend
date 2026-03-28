@@ -4,7 +4,7 @@ import Gameplay.GameState;
 import service.CommandHandler;
 
 public class BrokenDiceEvent extends Event {
-    public BrokenDiceEvent() { super(3); }
+    public BrokenDiceEvent() { super(6); }
 
     @Override
     public String getEventVisualName() { return "BrokenDice"; }

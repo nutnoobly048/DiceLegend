@@ -6,7 +6,7 @@ import service.CommandHandler;
 public class FenrirFangEvent extends Event{
 
     public FenrirFangEvent() {
-        super(3);
+        super(4);
     }
     @Override
     public String getEventVisualName() {

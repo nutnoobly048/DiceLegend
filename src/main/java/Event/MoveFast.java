@@ -5,7 +5,7 @@ import service.CommandHandler;
 
 public class MoveFast extends Event{
     public MoveFast(){
-        super(3);
+        super(4);
     }
     public String getEventVisualName(){
         return "Faster";

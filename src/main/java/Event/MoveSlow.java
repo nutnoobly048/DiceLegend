@@ -5,7 +5,7 @@ import service.CommandHandler;
 
 public class MoveSlow extends Event{
     public MoveSlow(){
-        super(3);
+        super(4);
     }
 
     @Override

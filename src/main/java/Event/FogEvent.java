@@ -6,7 +6,7 @@ import scene.CyroGard;
 import service.CommandHandler;
 
 public class FogEvent extends Event {
-    public FogEvent() { super(2); }
+    public FogEvent() { super(4); }
 
     @Override
     public String getEventVisualName() { return "Fog"; }
