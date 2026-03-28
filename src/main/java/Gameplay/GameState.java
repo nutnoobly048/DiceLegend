@@ -233,13 +233,10 @@ public class GameState {
                 CommandHandler.broadcastResult("PLAYSFX", "VictoryTF2.wav");
 
 
-                GameModal winAlert = new GameModal(100, 100, "licoCake.png");
-                winAlert.setVisible(true);
+
 
                 int delay = 5000;
                 Timer timer = new Timer(delay, e -> {
-
-                    winAlert.setVisible(false);
                     CommandHandler.broadcastResult("CHANGESCENETO", "lobbyScene");
 
                     for (Player player : currentGame.allPlayers.values()) {
