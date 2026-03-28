@@ -13,6 +13,7 @@ import graphicsUtilities.FontLoader;
 import graphicsUtilities.Scene;
 import graphicsUtilities.SceneUtilities;
 import objectClass.GameObject;
+import service.AudioService;
 
 public class InitialScene extends Scene {
     private JLabel label = new JLabel("CLick anywhere to continue.");
@@ -43,6 +44,7 @@ public class InitialScene extends Scene {
             @Override
             public void mouseClicked(MouseEvent e) {
                 SceneUtilities.changeSceneTo(SceneUtilities.mainMenu);
+                AudioService.getInstance().playSFX("main-menu.wav");
             }
         });
     }
