@@ -41,7 +41,7 @@ public class CommandHandler {
           if (!sender.isOpenForNetworkInput() && !action.equals("CHAT")) {
                 System.out.println(senderID + " is locked. Blocking: " + action);
                 return;
-            }
+          }
         }
 
         boolean isFromHost = senderID.equals(Player.getLocalPlayerId());
@@ -158,6 +158,10 @@ public class CommandHandler {
 
             case "CHAT" -> {
                 CyroGard.chatTextArea.append(params[0] + ": " + params[1] + "\n");
+                CyroGard.chatTextArea.setCaretPosition(CyroGard.chatTextArea.getText().length());
+            }
+            case "NOTIFY" -> {
+                CyroGard.chatTextArea.append(params[0] + params[1] + "\n");
                 CyroGard.chatTextArea.setCaretPosition(CyroGard.chatTextArea.getText().length());
             }
         }

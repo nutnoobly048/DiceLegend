@@ -34,7 +34,7 @@ public class FogEvent extends Event {
     @Override
     public int modifyRollValue(int rollValue) {
         int newValue = (int)(Math.random() * 6) + 1;
-        CommandHandler.broadcastResult("CHAT", "Due to event, the player moved by : ", String.valueOf(newValue));
+        CommandHandler.broadcastResult("NOTIFY", "Due to event, the player moved by : ", String.valueOf(newValue));
         return newValue;
     }
 }
