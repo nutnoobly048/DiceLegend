@@ -18,10 +18,10 @@ public class UIEvent {
                 String thisTurnPlayerID = args[1];
                 System.out.println("UIEvent WAITFOR received for player: " + thisTurnPlayerID);
                 if (SceneUtilities.getCurrentGameScene() instanceof CyroGard cyroGard) {
-                    System.out.println("Current scene is CyroGard, calling updateTargetSelectBtnForTurn");
+//                    System.out.println("Current scene is CyroGard, calling updateTargetSelectBtnForTurn");
                     cyroGard.updateTargetSelectBtnForTurn(thisTurnPlayerID);
                 } else {
-                    System.out.println("Current scene is not CyroGard: " + SceneUtilities.getCurrentGameScene());
+//                    System.out.println("Current scene is not CyroGard: " + SceneUtilities.getCurrentGameScene());
                 }
             }
             case "ITEMPOPUP" -> {

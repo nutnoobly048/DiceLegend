@@ -25,14 +25,14 @@ public class StormEvent extends Event {
                 min = 0;
                 max = 20;
             } else if (currentPos < 30) {
-                min = 10;
-                max = 50;
+                min = 15;
+                max = 45;
             } else if (currentPos < 50) {
-                min = 30;
-                max = 70;
+                min = 35;
+                max = 65;
             } else if (currentPos <= 70) {
-                min = 40;
-                max = 70;
+                min = 55;
+                max = 85;
             } else {
                 min = 70;
                 max = 95;

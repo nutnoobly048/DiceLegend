@@ -23,7 +23,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.swing.*;
 
-public class CyroGard extends Scene {
+public final class CyroGard extends Scene {
     private final int SCREEN_W = 1920;
     private final int SCREEN_H = 1080;
     private final double TRANSITION_DURATION = 0.4;
@@ -39,7 +39,6 @@ public class CyroGard extends Scene {
     private GameObject itemFrame    = new GameObject("itemFrame", "CyroItemFrame.png", 32, 27);
     private GameObject itemDes = new GameObject("itemDes", "CyroItemDes.png", 51, 514);
     private GameObject dice = new GameObject("dice", "dice5.png", 1550, 40);
-    public static GameModal popupItem = new GameModal(1312, 756, "DestinyDices.png");
 
     public static GameObject popupSequence = new GameObject("popupSequence", "blank.png", 1920 / 2, 1080 / 2);
 
@@ -60,8 +59,6 @@ public class CyroGard extends Scene {
 
         playerList.clear();
         playerList.addAll(GameState.currentGame.allPlayers.values());
-
-//        playerList.sort(Comparator.comparing(Player::getNetworkID));
 
         int count = 1;
 
@@ -152,10 +149,6 @@ public class CyroGard extends Scene {
 
         spawnObjectAt(dice);
 
-//        popupItem.setVisible(false);
-//        add(popupItem);
-//        popupItem.setBounds(960 - popupItem.getPreferredSize().width / 2, 540 - popupItem.getPreferredSize().height/2,
-//                popupItem.getPreferredSize().width, popupItem.getPreferredSize().height);
         popupSequence.setVisible(false);
         popupSequence.z = 100;
         spawnObjectAt(popupSequence);
@@ -187,7 +180,6 @@ public class CyroGard extends Scene {
         this.add(rollBtn);
 
         targetSelectBtn = new GameButton("", "TargetSelectBtn.png", "TargetSelectBtn.png");
-        
 
         targetSelectBtn.setBounds(1524, 715, 342, 342);
         targetSelectBtn.addMouseMotionListener(new MouseMotionAdapter() {
@@ -362,10 +354,6 @@ public class CyroGard extends Scene {
         ImageIcon turnIcon = new ImageIcon(ImagePreload.get(imageName));
         targetSelectBtn.setIcon(turnIcon);
         targetSelectBtn.setPressedIcon(turnIcon);
-    }
-
-    public GameModal getPopupItem() {
-        return popupItem;
     }
 
 }
