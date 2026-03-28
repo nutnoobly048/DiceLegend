@@ -80,7 +80,7 @@ public class RandomPosition {
 
         int positionEvents;
 
-        for ( int j = 0; j < 12; j++ ){
+        for ( int j = 0; j < 10; j++ ){
 
             do{
                 positionEvents = RandomUtilities.randomInt(70) + 10;
