@@ -26,7 +26,7 @@ public class InitialScene extends Scene {
         // background
         spawnObjectAt(bg);
 
-        label.setForeground(Color.black);
+        label.setForeground(Color.white);
         label.setFont(FontLoader.getFont(100));
         
         int labelWidth = label.getPreferredSize().width;
@@ -42,7 +42,7 @@ public class InitialScene extends Scene {
         this.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                SceneUtilities.changeSceneTo(new RealMainMenuScene());
+                SceneUtilities.changeSceneTo(SceneUtilities.mainMenu);
             }
         });
     }
