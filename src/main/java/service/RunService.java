@@ -22,7 +22,6 @@ import java.util.function.Consumer;
 public class RunService {
 
     private static MainGame mainGameFrame;
-    private static UserInput userInput;
 
     private static RunService instance;
     private static boolean isRunning = false;
@@ -122,8 +121,6 @@ public class RunService {
                 SwingUtilities.invokeLater(() -> {
                     mainGameFrame.repaint();
                 });
-
-                UserInput.updateAndSync();
 
 
                 try {Thread.sleep(16);} catch (InterruptedException e) {

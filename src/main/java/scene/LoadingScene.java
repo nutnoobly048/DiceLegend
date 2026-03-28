@@ -1,8 +1,6 @@
 package scene;
 
-import Gameplay.GameState;
 import Gameplay.LobbyState;
-import Gameplay.SceneList;
 import animation.Tween;
 import animation.TweenProperty;
 import graphicsUtilities.ImagePreload;
@@ -10,7 +8,6 @@ import graphicsUtilities.Scene;
 import graphicsUtilities.SceneUtilities;
 import misc.Player;
 import objectClass.AnimatedSprite;
-import objectClass.GameButton;
 import objectClass.GameObject;
 import service.CommandHandler;
 import service.RunService;
@@ -132,16 +129,16 @@ public class LoadingScene extends Scene {
                     CommandHandler.sentIntent(
                             "INTENT:" + Player.getLocalPlayerId() + ":JOIN_GAME:" + Player.getLocalPlayerName());
 
-                    SwingUtilities.invokeLater(() -> SceneUtilities.changeSceneTo(SceneList.lobbyScene));
+                    SwingUtilities.invokeLater(() -> SceneUtilities.changeSceneTo(SceneUtilities.lobbyScene));
                 } else {
                     RunService.mqtt.disconnect();
                     LobbyState.current = null;
-                    SwingUtilities.invokeLater(() -> SceneUtilities.changeSceneTo(SceneList.mainMenu));
+                    SwingUtilities.invokeLater(() -> SceneUtilities.changeSceneTo(SceneUtilities.mainMenu));
                 }
 
             } catch (Exception e) {
                 System.err.println("Connection Failed: " + e.getMessage());
-                SwingUtilities.invokeLater(() -> SceneUtilities.changeSceneTo(SceneList.mainMenu));
+                SwingUtilities.invokeLater(() -> SceneUtilities.changeSceneTo(SceneUtilities.mainMenu));
             }
         }, "NetworkThread").start();
     }

@@ -2,14 +2,11 @@ package service;
 
 import Gameplay.GameState;
 import Gameplay.LobbyState;
-import Gameplay.SceneList;
 import OtherUtilities.RandomPosition;
 import graphicsUtilities.*;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
@@ -64,13 +61,13 @@ public class MainGame extends JFrame {
         startRunService();
         startContainerPanel();
 
-        SceneUtilities.changeSceneTo(SceneList.mainMenu);
+        SceneUtilities.changeSceneTo(SceneUtilities.mainMenu);
         if (gd.isFullScreenSupported()) {
             this.setUndecorated(true);
             gd.setFullScreenWindow(this);
         }
 
-//         AudioService.getInstance().playMusic("Forsaken.wav");
+         AudioService.getInstance().playMusic("Forsaken.wav");
     }
 
     public void startRunService() {

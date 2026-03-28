@@ -1,15 +1,17 @@
 package graphicsUtilities;
 
-import Gameplay.SceneList;
 import objectClass.GameObject;
 import scene.CyroGard;
-import scene.MysteriousJungleScene;
+import scene.LobbyScene;
+import scene.RealMainMenuScene;
 import service.MainGame;
 import service.RunService;
 
 import javax.swing.*;
 
 public class SceneUtilities {
+    public static final Scene mainMenu = new RealMainMenuScene();
+    public static final Scene lobbyScene = new LobbyScene();
     private static MainGame mainGameFrame;
     private static Scene currentGameScene;
 
@@ -24,13 +26,10 @@ public class SceneUtilities {
     }
 
     public static void changeSceneTo(String sceneName) {
-        System.out.println("changes");
         switch (sceneName) {
-            case "mysteriousJungle" -> changeSceneTo(new MysteriousJungleScene());
             case "cryoGard" -> changeSceneTo(new CyroGard());
-            case "goldenSeason" -> {}
-            case "lobbyScene" -> changeSceneTo(SceneList.lobbyScene);
-            case "main_menu" -> changeSceneTo(SceneList.mainMenu);
+            case "lobbyScene" -> changeSceneTo(lobbyScene);
+            case "main_menu" -> changeSceneTo(mainMenu);
         }
     }
 

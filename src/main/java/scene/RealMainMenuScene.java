@@ -1,18 +1,13 @@
 package scene;
 
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
 import java.util.TimerTask;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-import javax.swing.Popup;
 import java.util.Timer;
 
-import Gameplay.SceneList;
 import OtherUtilities.RandomUtilities;
 import animation.Tween;
 import animation.TweenProperty;
@@ -26,8 +21,6 @@ import objectClass.GameObject;
 import service.AudioService;
 
 import javax.swing.JSlider;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import javax.swing.plaf.basic.BasicSliderUI;
 
 
@@ -47,7 +40,7 @@ public class RealMainMenuScene extends Scene {
 
     public RealMainMenuScene() {
         this.setSceneLoadoffTimesInMilisecond(1.2);
-        this.setBackground(Color.BLACK);
+        this.setBackground(new Color(3,3,3));
         this.setOpaque(true);
     }
 

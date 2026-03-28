@@ -2,7 +2,6 @@ package scene;
 
 import Gameplay.GameState;
 import Gameplay.LobbyState;
-import Gameplay.SceneList;
 import animation.Tween;
 import animation.TweenProperty;
 import graphicsUtilities.FontLoader;
@@ -21,16 +20,12 @@ import java.util.TimerTask;
 import java.util.ArrayList;
 import java.util.Timer;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.ArrayList;
 
 public class LobbyScene extends Scene {
 
     // private final ChangeNamePopUp changeNamePopUp = new ChangeNamePopUp();
 
-    private GameObject transition_left = new GameObject("transit_left", "Transition.png", 0, 0);
-    private GameObject transition_right = new GameObject("transit_right", "Transition.png", 0, 0);
-    private GameObject transition_up = new GameObject("transit_up", "Transition.png", 0, 0);
-    private GameObject transition_down = new GameObject("transit_down", "Transition.png", 0, 0);
+    private GameObject transition_left = new GameObject("transit_left", "TransitionArrow.png", 0, 0);
 
     private GameButton roomNumber = new GameButton("", "lobbyNumber.png", "lobbyNumber.png");
 
@@ -47,9 +42,10 @@ public class LobbyScene extends Scene {
 
     private int x_arrow = 305;
 
-    private double duration = 0.5;
+    private double duration = 1;
 
     public LobbyScene() {
+        this.setSceneLoadoffTimesInMilisecond(1.0);
         setBackground(ImagePreload.get("Lobby_Background.png"));
     }
 
@@ -59,9 +55,7 @@ public class LobbyScene extends Scene {
         // initialXofArraw();
 
         spawnObjectAt(transition_left);
-        spawnObjectAt(transition_right);
-        spawnObjectAt(transition_up);
-        spawnObjectAt(transition_down);
+
 
         roomNumber.setBounds(773, 85, 422, 205);
         backButton.setBounds(0, 34, 431, 221);
@@ -126,18 +120,15 @@ public class LobbyScene extends Scene {
 
     @Override
     public void onEnter() {
-        new Tween(transition_left, TweenProperty.X, -960, -1920, duration).start();
-        new Tween(transition_right, TweenProperty.X, 960, 1920, duration).start();
-        new Tween(transition_up, TweenProperty.Y, -540, -1080, duration).start();
-        new Tween(transition_down, TweenProperty.Y, 540, 1080, duration).start();
+        new Tween(transition_left, TweenProperty.X, 0, -2400, duration).OnComplete(() -> {
+            System.out.println("ds");
+        }).start();
     }
 
     @Override
     public void onExit() {
-        new Tween(transition_left, TweenProperty.X, -1920, -960, duration).start();
-        new Tween(transition_right, TweenProperty.X, 1920, 960, duration).start();
-        new Tween(transition_up, TweenProperty.Y, -1080, -540, duration).start();
-        new Tween(transition_down, TweenProperty.Y, 1080, 540, duration).start();
+        new Tween(transition_left, TweenProperty.X, -2400, 0, duration).start();
+
     }
 
     private void initialXofArraw(LobbyState state) {
@@ -234,7 +225,7 @@ public class LobbyScene extends Scene {
 
     private void handleClientExit() {
         AtomicBoolean isMinus = new AtomicBoolean(false);
-        SceneUtilities.changeSceneTo(SceneList.mainMenu);
+        SceneUtilities.changeSceneTo(SceneUtilities.mainMenu);
 
         CommandHandler.broadcastResult("PLAYER_LEFT", Player.localPlayer.getNetworkID());
         String topicRoomAmount = "DiceLegend/" + LobbyState.current.lobbyName + "/room_amount";
@@ -267,9 +258,6 @@ public class LobbyScene extends Scene {
         Graphics2D g2d = (Graphics2D) g;
 
         transition_left.getSprite().draw(g2d);
-        transition_right.getSprite().draw(g2d);
-        transition_up.getSprite().draw(g2d);
-        transition_down.getSprite().draw(g2d);
     }
 }
 
