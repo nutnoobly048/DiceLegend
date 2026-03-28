@@ -13,6 +13,11 @@ public class ReverseEvent extends Event {
         return "Reverse";
     }
 
+    @Override
+    public String getEventName() {
+        return "Move Back!";
+    }
+
 
     @Override
     public void doVisual(GameState game) {

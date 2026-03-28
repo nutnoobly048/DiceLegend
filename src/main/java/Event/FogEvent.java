@@ -8,6 +8,10 @@ public class FogEvent extends Event {
 
     @Override
     public String getEventVisualName() { return "Fog"; }
+    @Override
+    public String getEventName() {
+        return "Fog";
+    }
 
     @Override
     public void doVisual(GameState game) {}

@@ -29,6 +29,7 @@ public abstract class Event {
 
     public abstract String getEventVisualName();
 
+    public abstract String getEventName();
 
     //ทำงาน Visual Effect เริ่มต้น
     public abstract void doVisual(GameState game);

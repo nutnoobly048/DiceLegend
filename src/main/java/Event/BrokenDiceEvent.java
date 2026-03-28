@@ -9,6 +9,10 @@ public class BrokenDiceEvent extends Event {
     public String getEventVisualName() { return "BrokenDice"; }
 
     @Override
+    public String getEventName() {
+        return "Broken Dice";
+    }
+    @Override
     public void doVisual(GameState game) {}
 
     @Override

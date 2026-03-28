@@ -13,6 +13,12 @@ public class FenrirFangEvent extends Event{
     }
 
     @Override
+    public String getEventName() {
+        return "Fenrir's Fang";
+    }
+
+
+    @Override
     public int modifyRollValue(int rollValue) {
         return 1;
     }

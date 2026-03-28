@@ -66,7 +66,6 @@ public class MainGame extends JFrame {
             this.setUndecorated(true);
             gd.setFullScreenWindow(this);
         }
-
          AudioService.getInstance().playMusic("Forsaken.wav");
     }
 

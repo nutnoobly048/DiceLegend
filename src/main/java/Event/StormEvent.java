@@ -11,6 +11,12 @@ public class StormEvent extends Event {
     @Override
     public String getEventVisualName() { return "Storm"; }
 
+
+    @Override
+    public String getEventName() {
+        return "The Storm";
+    }
+
     @Override
     public void doVisual(GameState game) {}
 

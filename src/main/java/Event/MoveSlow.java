@@ -6,9 +6,17 @@ public class MoveSlow extends Event{
     public MoveSlow(){
         super(3);
     }
+
+    @Override
     public String getEventVisualName(){
         return "Slower";
     };
+
+    @Override
+    public String getEventName() {
+        return "Slower Move";
+    }
+
 
     public void doVisual(GameState game){};
     //ทำงาน Event

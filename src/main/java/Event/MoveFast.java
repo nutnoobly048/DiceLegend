@@ -9,6 +9,11 @@ public class MoveFast extends Event{
     public String getEventVisualName(){
         return "Faster";
     };
+    @Override
+    public String getEventName() {
+        return "Faster Move";
+    }
+
 
     public void doVisual(GameState game){};
     //ทำงาน Event
