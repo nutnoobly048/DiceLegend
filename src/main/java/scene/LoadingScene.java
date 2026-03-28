@@ -17,7 +17,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-public class LoadingScene extends Scene {
+public final class LoadingScene extends Scene {
 
 
     private boolean isHost;

@@ -15,7 +15,7 @@ import graphicsUtilities.SceneUtilities;
 import objectClass.GameObject;
 import service.AudioService;
 
-public class InitialScene extends Scene {
+public final class InitialScene extends Scene {
     private JLabel label = new JLabel("CLick anywhere to continue.");
     private GameObject bg = new GameObject("ini-game-bg", "initial-bg.png", 0, 0);
 
