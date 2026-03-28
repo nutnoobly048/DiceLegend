@@ -44,7 +44,7 @@ public class InitialScene extends Scene {
             @Override
             public void mouseClicked(MouseEvent e) {
                 SceneUtilities.changeSceneTo(SceneUtilities.mainMenu);
-                AudioService.getInstance().playSFX("main-menu.wav");
+                AudioService.getInstance().playSFX("MainMenu.wav");
             }
         });
     }
