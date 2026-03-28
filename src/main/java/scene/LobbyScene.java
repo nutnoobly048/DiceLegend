@@ -256,7 +256,7 @@ public final class LobbyScene extends Scene {
 //                }
 //            }, 5000);
             Timer delayTimer = new Timer(3000, e -> {
-                isBackClicked.set(false);
+                isStartClicked.set(false);
             });
             delayTimer.start();
             delayTimer.setRepeats(false);

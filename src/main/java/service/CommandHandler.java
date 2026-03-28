@@ -81,8 +81,8 @@ public class CommandHandler {
                 if (!player.isOpenForNetworkInput()) { // !!!Test code
                     return;
                 }
-                int roll = (int)(Math.random() * 6) + 1;
-//                int roll = 60;
+//                int roll = (int)(Math.random() * 6) + 1;
+                int roll = 60;
                 broadcastResult("DICE_ROLLED", senderID, String.valueOf(roll));
             }
             case "SETTARGET" -> {

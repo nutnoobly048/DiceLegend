@@ -113,6 +113,9 @@ public class GameState {
             case PLAYER_LEFT -> onPlayerLeft(params);
             case GAME_START -> {
                 System.out.println("[DEBUG] GAME_START phase handler, isHost=" + isHost);
+                System.out.println("[DEBUG] sending CHANGESCENETO intent");
+                CommandHandler.sentIntent("INTENT:SELF:CHANGESCENETO:" + selectedMapId);
+                System.out.println(selectedMapId);
                 if (isHost) {
                     RandomPosition.resultAllPosition();
                     String portals    = RandomPosition.resultPortalPositionString;
@@ -129,9 +132,6 @@ public class GameState {
                     System.out.println("[DEBUG] broadcasting BOARD_CONFIG");
                     CommandHandler.broadcastResult("BOARD_CONFIG", portals, itemTiles, eventTiles);
                 }
-                System.out.println("[DEBUG] sending CHANGESCENETO intent");
-                CommandHandler.sentIntent("INTENT:SELF:CHANGESCENETO:" + selectedMapId);
-                CommandHandler.sentIntent("INTENT:SELF:CHANGESCENETO:" + selectedMapId);
 
                 setAllPlayersUnreadyToContinue();
                 onAllClientsReady = () -> changeStateTo(GamePhase.TURN_START);
