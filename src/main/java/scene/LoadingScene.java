@@ -74,7 +74,7 @@ public class LoadingScene extends Scene {
                         }
                     });
 
-                    Thread.sleep(2000);
+                    Thread.sleep(3000);
 
                     if (!roomTaken.get()) {
                         RunService.mqtt.subscribe(baseTopic + "/Intents",
