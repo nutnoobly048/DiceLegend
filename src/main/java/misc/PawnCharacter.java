@@ -101,8 +101,8 @@ public class PawnCharacter extends GameObject {
 
             int toX = GameState.currentGame.gameBoard.getPositionFromIndex(i)[0];
             int toY = GameState.currentGame.gameBoard.getPositionFromIndex(i)[1];
-            System.out.println("[DEBUG] step " + i + ": (" + fromX + "," + fromY + ") -> (" + toX + "," + toY
-                     + ") delay=" + delay);
+//            System.out.println("[DEBUG] step " + i + ": (" + fromX + "," + fromY + ") -> (" + toX + "," + toY
+//                     + ") delay=" + delay);
             Tween moveX = new Tween(this, TweenProperty.X, fromX, toX, moveDuration);
             Tween moveY = new Tween(this, TweenProperty.Y, fromY, toY, moveDuration);
             moveTL.add(moveX, delay);
