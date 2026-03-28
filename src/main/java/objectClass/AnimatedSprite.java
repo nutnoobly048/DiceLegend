@@ -163,4 +163,15 @@ public class AnimatedSprite implements Drawable {
         if (method == null) return;
         onCompleted = method;
     }
+
+    public void scaleImageByPercentage(double scaleFactor) {
+
+        int originalWidth = this.spriteSheet.getWidth(null);
+        int originalHeight = this.spriteSheet.getHeight(null);
+
+        int newWidth = (int) (originalWidth * scaleFactor);
+        int newHeight = (int) (originalHeight * scaleFactor);
+
+        this.spriteSheet = this.spriteSheet.getScaledInstance(newWidth, newHeight, Image.SCALE_SMOOTH);
+    }
 }
