@@ -14,7 +14,7 @@ public class StormEvent extends Event {
 
     @Override
     public String getEventName() {
-        return "The Storm";
+        return "The Storm Approaching!";
     }
 
     @Override
@@ -53,7 +53,7 @@ public class StormEvent extends Event {
     }
 
     @Override
-    public void onEventLeave(GameState game) {}
+    public void onEventLeave(GameState game) { CommandHandler.broadcastResult("UIEVENT", "EVENTICON", "blank"); }
 
     @Override
     public void onEventTriggered(GameState game) {

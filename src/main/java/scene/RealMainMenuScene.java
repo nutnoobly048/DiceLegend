@@ -68,11 +68,13 @@ public class RealMainMenuScene extends Scene {
 
     @Override
     public void onEnter() {
+        AudioService.getInstance().playMusic("8-Bit Hero.wav");
         new Tween(transition_left, TweenProperty.X, 0, -2400, 1).start();
     }
 
     @Override
     public void onExit() {
+        AudioService.getInstance().playSFX("TransitionOff.wav");
         playExitTransition();
     }
 
@@ -119,7 +121,7 @@ public class RealMainMenuScene extends Scene {
 
         createButton.setBounds(100, 280, createButton.getPreferredSize().width, createButton.getPreferredSize().height);
         createButton.setOnButtonClicked(() -> {
-
+            AudioService.getInstance().playSFX("ButtonPressed.wav");
             if (isStartedClicked.get()) return;
             isStartedClicked.set(true);
 
@@ -139,10 +141,14 @@ public class RealMainMenuScene extends Scene {
         
         joinButton.setBounds(100, 450, joinButton.getPreferredSize().width, joinButton.getPreferredSize().height);
         joinButton.setOnButtonClicked(() -> {
+            AudioService.getInstance().playSFX("ButtonPressed.wav");
             popUp.setVisible(true);
         });
 
         creditButton.setBounds(100, 600, creditButton.getPreferredSize().width, creditButton.getPreferredSize().height);
+        creditButton.setOnButtonClicked(() -> {
+            AudioService.getInstance().playSFX("ButtonPressed.wav");
+        });
 
         exitButton.setBounds(100, 750, exitButton.getPreferredSize().width, exitButton.getPreferredSize().height);
         exitButton.setOnButtonClicked(() -> System.exit(0));
@@ -248,6 +254,7 @@ class JoinPopUp extends JPanel {
         this.add(closeButton);
         closeButton.setBounds(background.getWidth(null) - 67, 0, 67, 67);
         closeButton.setOnButtonClicked(() -> {
+            AudioService.getInstance().playSFX("ButtonPressed.wav");
             this.setVisible(false);
         });
     }

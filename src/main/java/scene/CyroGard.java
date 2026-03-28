@@ -10,6 +10,7 @@ import graphicsUtilities.Scene;
 import misc.PawnCharacter;
 import misc.Player;
 import objectClass.*;
+import service.AudioService;
 import service.CommandHandler;
 
 import java.awt.*;
@@ -45,7 +46,7 @@ public final class CyroGard extends Scene {
     private JScrollPane chatScrollPane = new JScrollPane(chatTextArea);
 
     private GameObject dice = new GameObject("dice", "dice5.png", 1550, 40);
-
+    public static GameObject cardIcon = new GameObject("cardEvent", "blank.png", 230, 270);
     public static GameObject popupSequence = new GameObject("popupSequence", "blank.png", 1920 / 2, 1080 / 2);
 
     GameButton targetSelectBtn;
@@ -117,6 +118,7 @@ public final class CyroGard extends Scene {
 
     @Override
     public void onEnter() {
+        AudioService.getInstance().playMusic("Winterbliss.wav");
         setupPortals();
         playEnterTransition();
         spawnAllPawns();
@@ -130,6 +132,7 @@ public final class CyroGard extends Scene {
 
     @Override
     public void onExit() {
+        AudioService.getInstance().playSFX("TransitionOff.wav");
         playExitTransition();
     }
 
@@ -156,6 +159,9 @@ public final class CyroGard extends Scene {
 
         spawnObjectAt(dice);
 
+        cardIcon.z = 99;
+        spawnObjectAt(cardIcon);
+
         popupSequence.setVisible(false);
         popupSequence.z = 100;
         spawnObjectAt(popupSequence);
@@ -181,7 +187,7 @@ public final class CyroGard extends Scene {
                         isRolledClicked.set(false);
                     });
                 }
-            }, 5000);
+            }, 3000);
 
         });
         this.add(rollBtn);
@@ -236,18 +242,24 @@ public final class CyroGard extends Scene {
 
                 GameButton b = (GameButton) e.getSource();
 
-                if (getQaureand(e, b) == 1) {
-                    CommandHandler.sentIntent("INTENT:SELF:SETTARGET:"+playerList.get(0).getNetworkID());
-                    System.out.println("Tried to sent: " + playerList.get(0).getNetworkID());
-                } else if (getQaureand(e, b) == 3) {
-                    CommandHandler.sentIntent("INTENT:SELF:SETTARGET:"+playerList.get(1).getNetworkID());
-                    System.out.println("Tried to sent: " + playerList.get(1).getNetworkID());
-                } else if (getQaureand(e, b) == 2) {
-                    CommandHandler.sentIntent("INTENT:SELF:SETTARGET:"+playerList.get(2).getNetworkID());
-                    System.out.println("Tried to sent: " + playerList.get(2).getNetworkID());
-                } else if (getQaureand(e, b) == 4) {
-                    CommandHandler.sentIntent("INTENT:SELF:SETTARGET:"+playerList.get(3).getNetworkID());
-                    System.out.println("Tried to sent: " + playerList.get(3).getNetworkID());
+                if (GameState.currentGame != null) {
+                    if (getQaureand(e, b) == 1) {
+                        if (GameState.currentGame.isSinglePlayer || !Player.localPlayer.getNetworkID().equals(playerList.get(0).getNetworkID())) {
+                            CommandHandler.sentIntent("INTENT:SELF:SETTARGET:" + playerList.get(0).getNetworkID());
+                        }
+                    } else if (getQaureand(e, b) == 3) {
+                        if (GameState.currentGame.isSinglePlayer || !Player.localPlayer.getNetworkID().equals(playerList.get(1).getNetworkID())) {
+                            CommandHandler.sentIntent("INTENT:SELF:SETTARGET:" + playerList.get(1).getNetworkID());
+                        }
+                    } else if (getQaureand(e, b) == 2) {
+                        if (GameState.currentGame.isSinglePlayer || !Player.localPlayer.getNetworkID().equals(playerList.get(2).getNetworkID())) {
+                            CommandHandler.sentIntent("INTENT:SELF:SETTARGET:" + playerList.get(2).getNetworkID());
+                        }
+                    } else if (getQaureand(e, b) == 4) {
+                        if (GameState.currentGame.isSinglePlayer || !Player.localPlayer.getNetworkID().equals(playerList.get(3).getNetworkID())) {
+                            CommandHandler.sentIntent("INTENT:SELF:SETTARGET:" + playerList.get(3).getNetworkID());
+                        }
+                    }
                 }
 
             }
@@ -283,6 +295,13 @@ public final class CyroGard extends Scene {
             BorderFactory.createLineBorder(Color.GRAY, borderThinkness),
             BorderFactory.createEmptyBorder(0, padding, padding, 0)
         ));
+
+        chatTextField.addKeyListener(new java.awt.event.KeyAdapter() {
+            @Override
+            public void keyPressed(java.awt.event.KeyEvent e) {
+                AudioService.getInstance().playSFX("Typewriter.wav");
+            }
+        });
         chatTextField.addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {

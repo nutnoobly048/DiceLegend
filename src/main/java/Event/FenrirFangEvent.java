@@ -1,6 +1,7 @@
 package Event;
 
 import Gameplay.GameState;
+import service.CommandHandler;
 
 public class FenrirFangEvent extends Event{
 
@@ -20,6 +21,7 @@ public class FenrirFangEvent extends Event{
 
     @Override
     public int modifyRollValue(int rollValue) {
+        CommandHandler.broadcastResult("CHAT", "Due to event, the player moved by ", String.valueOf( 1));
         return 1;
     }
 
@@ -35,7 +37,7 @@ public class FenrirFangEvent extends Event{
 
     @Override
     public void onEventLeave(GameState game) {
-
+        CommandHandler.broadcastResult("UIEVENT", "EVENTICON", "blank");
     }
 
     @Override

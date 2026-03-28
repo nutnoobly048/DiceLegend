@@ -1,6 +1,7 @@
 package Event;
 
 import Gameplay.GameState;
+import service.CommandHandler;
 
 public class BrokenDiceEvent extends Event {
     public BrokenDiceEvent() { super(3); }
@@ -21,7 +22,9 @@ public class BrokenDiceEvent extends Event {
     }
 
     @Override
-    public void onEventLeave(GameState game) {}
+    public void onEventLeave(GameState game) {
+        CommandHandler.broadcastResult("UIEVENT", "EVENTICON", "blank");
+    }
 
     @Override
     public void onEventTriggered(GameState game) {
@@ -30,6 +33,7 @@ public class BrokenDiceEvent extends Event {
 
     @Override
     public int modifyRollValue(int rollValue) {
+        CommandHandler.broadcastResult("CHAT", "Due to event, the player moved by ", String.valueOf(7 - rollValue));
         return 7 - rollValue;
     }
 }

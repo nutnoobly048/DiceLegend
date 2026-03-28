@@ -14,7 +14,7 @@ import java.util.HashMap;
 public class AudioService {
 
     private static AudioService instance;
-    private static float masterVolume = 0.4f;
+    private static float masterVolume = 0.2f;
 
 
     public static AudioService getInstance() {

@@ -12,6 +12,7 @@ import misc.PawnCharacter;
 import objectClass.Board;
 import objectClass.GameModal;
 import scene.CyroGard;
+import service.AudioService;
 import service.CommandHandler;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -27,7 +28,7 @@ import javax.swing.*;
 public class GameState {
 
     public static GameState currentGame;
-    public String selectedMapId = "mysteriousJungle";
+    public String selectedMapId = "cryoGard";
 
     public final boolean isHost;
     public final String lobbyName;
@@ -46,6 +47,7 @@ public class GameState {
     public final HashMap<String, Player> allPlayers;
     public final HashMap<String, PawnCharacter> spawnedCharacter = new HashMap<>();
 
+    public boolean isSinglePlayer = false;
 
     public enum GamePhase {
         WAIT_FOR_PLAYERS,
@@ -82,6 +84,8 @@ public class GameState {
         this.lobbyName = lobby.lobbyName;
         this.allPlayers = lobby.allPlayers; // shared reference, not a copy
         this.selectedMapId = lobby.getSelectedMapId();
+        if (this.allPlayers.size() == 1) { this.isSinglePlayer = true;}
+        else { this.isSinglePlayer = false;}
         currentGame = this;
     }
 
@@ -108,6 +112,7 @@ public class GameState {
             case PLAYER_JOINED -> onPlayerJoined(params);
             case PLAYER_LEFT -> onPlayerLeft(params);
             case GAME_START -> {
+                System.out.println("[DEBUG] GAME_START phase handler, isHost=" + isHost);
                 if (isHost) {
                     RandomPosition.resultAllPosition();
                     String portals    = RandomPosition.resultPortalPositionString;
@@ -121,9 +126,11 @@ public class GameState {
                     gameBoard = new Board(
                             Board.defaultPosition, portalDecoded, itemDecoded, eventDecoded);
                     if (gameBoard != null) System.out.println(gameBoard);
-
+                    System.out.println("[DEBUG] broadcasting BOARD_CONFIG");
                     CommandHandler.broadcastResult("BOARD_CONFIG", portals, itemTiles, eventTiles);
                 }
+                System.out.println("[DEBUG] sending CHANGESCENETO intent");
+                CommandHandler.sentIntent("INTENT:SELF:CHANGESCENETO:" + selectedMapId);
                 CommandHandler.sentIntent("INTENT:SELF:CHANGESCENETO:" + selectedMapId);
 
                 setAllPlayersUnreadyToContinue();
@@ -171,7 +178,10 @@ public class GameState {
         if (event != TriggerEvent.DICE_ROLL_EVENT) return;
 
         String playerId = params[0];
+        String playerName = currentGame.allPlayers.get(playerId).getName();
         int roll = Integer.parseInt(params[1]);
+
+        CommandHandler.broadcastResult("CHAT", playerName + " Just Roll ", " " + roll);
 
         allPlayers.get(playerId).setOpenForNetworkInput(false);
 
@@ -218,6 +228,11 @@ public class GameState {
 
                 }
 
+                AudioService.getInstance().stopMusic();
+                CommandHandler.broadcastResult("STOPMUSIC");
+                CommandHandler.broadcastResult("PLAYSFX", "VictoryTF2.wav");
+
+
                 GameModal winAlert = new GameModal(100, 100, "licoCake.png");
                 winAlert.setVisible(true);
 
@@ -248,6 +263,8 @@ public class GameState {
                 Event selectedEvent = RandomEvents.resultRandomEvent(selectedMapId); //แทนที่ด้วย randomEvent() ในภายหลัง
 
                 CommandHandler.broadcastResult("UIEVENT", "EVENTPOPUP", selectedEvent.getEventVisualName());
+                CommandHandler.broadcastResult("UIEVENT", "EVENTICON", selectedEvent.getEventVisualName());
+                CommandHandler.broadcastResult("CHAT", "New Event Happening ", selectedEvent.getEventName());
 
                 System.out.println(selectedEvent.getEventVisualName());
                 Event.useEvent(selectedEvent, GameState.currentGame);
@@ -372,6 +389,7 @@ public class GameState {
         Player player = allPlayers.get(playerId);
 
         if (player.isSkipped()) {
+            CommandHandler.broadcastResult("CHAT", player.getName() + " is Jailed ", "Skip Turn!");
             player.decreaseSkipTurns(1);
             advanceToNextPlayer();
             return;
@@ -381,6 +399,7 @@ public class GameState {
             p.setOpenForNetworkInput(false);
         }
         player.setOpenForNetworkInput(true);
+        CommandHandler.broadcastResult("CHAT", "Current Player Turns ", player.getName());
         
         setAllPlayersUnreadyToContinue();
         CommandHandler.broadcastResult("UIEVENT", "WAITFOR", playerId);
