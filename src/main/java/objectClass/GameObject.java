@@ -53,6 +53,7 @@ public class GameObject implements ProcessByRunService {
 
     @Override
     public void OnUpdate(double deltaTime) {
+        System.out.println(this.networkId);
         if (!isActive || currentScene != SceneUtilities.getCurrentGameScene()) return;
 
         if (sprite != null) {

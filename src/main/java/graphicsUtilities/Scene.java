@@ -21,7 +21,9 @@ public abstract class Scene extends JPanel {
     public int sceneLoadoffTimesInMilisecond = 500;
 
     public Scene() {
-        this.setPreferredSize(new Dimension(1920, 1080));
+//        this.setPreferredSize(new Dimension(1920, 1080));
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        this.setPreferredSize(screenSize);
         this.setLayout(null);
         this.setOpaque(false);
     }
