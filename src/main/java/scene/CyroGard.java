@@ -4,6 +4,7 @@ import Gameplay.GameState;
 import Gameplay.LobbyState;
 import animation.Tween;
 import animation.TweenProperty;
+import graphicsUtilities.FontLoader;
 import graphicsUtilities.ImagePreload;
 import graphicsUtilities.Scene;
 import misc.PawnCharacter;
@@ -37,7 +38,12 @@ public class CyroGard extends Scene {
     private GameObject boardTexture = new GameObject("board", "CyroGardBoard.png", SCREEN_W / 2, SCREEN_H / 2);
     private GameObject diceBackground = new GameObject("diceBackground", "CyroDiceFrame.png", 1495, 27);
     private GameObject itemFrame    = new GameObject("itemFrame", "CyroItemFrame.png", 32, 27);
-    private GameObject itemDes = new GameObject("itemDes", "CyroItemDes.png", 51, 514);
+    private GameObject chatFrame = new GameObject("chatFrame", "CyroItemDes.png", 51, 514);
+    public static JTextArea chatTextArea = new JTextArea();
+    private JTextField chatTextField = new JTextField();
+    private GameButton chatSendButton = new GameButton("Send", "button.png", "buttonOnHover.png");
+    private JScrollPane chatScrollPane = new JScrollPane(chatTextArea);
+
     private GameObject dice = new GameObject("dice", "dice5.png", 1550, 40);
     public static GameModal popupItem = new GameModal(1312, 756, "DestinyDices.png");
 
@@ -147,8 +153,9 @@ public class CyroGard extends Scene {
         itemFrame.z = -2;
         spawnObjectAt(itemFrame);
 
-        itemDes.z = -2;
-        spawnObjectAt(itemDes);
+        chatFrame.z = -2;
+        spawnObjectAt(chatFrame);
+        setUpChat();
 
         spawnObjectAt(dice);
 
@@ -258,8 +265,30 @@ public class CyroGard extends Scene {
 
     }
 
-    private void changeTurnHighlight(GameButton rollButton) {
+    private void setUpChat() {
+        add(chatScrollPane);
+        chatScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
+        chatScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        chatScrollPane.setBounds(70, 535, 333, 450);
+        chatTextArea.setFont(FontLoader.getFont(30));
+        chatTextArea.setLineWrap(true);
+        chatTextArea.setWrapStyleWord(true);
 
+        add(chatTextField);
+        chatTextField.setBounds(70, 985, 250, 50);
+        chatTextField.setBackground(Color.red);
+        chatTextField.setForeground(Color.white);
+        chatTextField.setFont(FontLoader.getFont(30));
+
+        add(chatSendButton);
+        chatSendButton.setBounds(320, 985, 83, 50);
+        chatSendButton.setForeground(Color.black);
+        chatSendButton.setOnButtonClicked(() -> {
+            String message = chatTextField.getText();
+            if (!message.isEmpty()) {
+                CommandHandler.sentIntent("INTENT:" + Player.getLocalPlayerId() + ":CHAT:" + message);
+            }
+        });
     }
 
     private void setupPortals() {

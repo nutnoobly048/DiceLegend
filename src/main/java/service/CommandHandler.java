@@ -84,9 +84,12 @@ public class CommandHandler {
 //                int roll = 1;
                 broadcastResult("DICE_ROLLED", senderID, String.valueOf(roll));
             }
-
             case "SETTARGET" -> {
                 GameState.currentGame.handleEvent(GameState.TriggerEvent.SET_TARGET, params);
+            }   
+            case "CHAT" -> {
+                String playerName = LobbyState.current.allPlayers.get(senderID).getName();
+                broadcastResult("CHAT", playerName, params[0]);
             }
 
             default -> System.out.println("PRINT MESSAGE");
@@ -151,6 +154,11 @@ public class CommandHandler {
 
                 GameState.currentGame.gameBoard = new Board(
                         Board.defaultPosition, portals, itemTiles, eventTiles);
+            }
+
+            case "CHAT" -> {
+                CyroGard.chatTextArea.append(params[0] + ": " + params[1] + "\n");
+                CyroGard.chatTextArea.setCaretPosition(CyroGard.chatTextArea.getText().length());
             }
         }
     }

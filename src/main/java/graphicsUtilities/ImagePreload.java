@@ -31,11 +31,11 @@ public class ImagePreload {
                     // ถ้าเป็นไฟล์ -> นำไปใส่ Hashmap
                     if (element.isFile() || isImage(element.getName())) {
                         preloadedAsset.put(element.getName(), ImageIO.read(element));
-                        System.out.println("loaded image: " + element.getName());
+                        // System.out.println("loaded image: " + element.getName());
                     }
                     // ถ้าเป็น folder -> recursive 
                     else if (element.isDirectory()) {
-                        System.out.println("digging into folder: " + element.getName());
+                        // System.out.println("digging into folder: " + element.getName());
                         preloadAllImage(element.toURI());
                     }
                 }
@@ -53,11 +53,11 @@ public class ImagePreload {
                     } catch (IOException e) {
                         System.err.println(e);
                     }
-                    System.out.println("loaded image: " + element.getName());
+                    // System.out.println("loaded image: " + element.getName());
                 }
                 // ถ้าเป็น folder -> recursive 
                 else if (element.isDirectory()) {
-                    System.out.println("digging into folder: " + element.getName());
+                    // System.out.println("digging into folder: " + element.getName());
                     preloadAllImage(element.toURI());
                 }
             }
