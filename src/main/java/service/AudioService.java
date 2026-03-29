@@ -8,6 +8,7 @@ import java.io.*;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.file.Files;
 import java.util.Arrays;
 import java.util.HashMap;
 
@@ -67,7 +68,7 @@ public class AudioService {
 
     private static void loadAudioBytes(File file) {
         try {
-            byte[] rawBytes = java.nio.file.Files.readAllBytes(file.toPath());
+            byte[] rawBytes = Files.readAllBytes(file.toPath());
 
             preloadedAudio.put(file.getName(), rawBytes);
             System.out.println("[AudioService] RAW Load Success: " + file.getName() + " (" + rawBytes.length + " bytes)");
